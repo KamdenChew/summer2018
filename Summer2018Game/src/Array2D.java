@@ -1,9 +1,13 @@
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+
 /* Example Coordinates representation:
  * (0,0) (1,0) (2,0)
  * (0,1) (1,1) (2,1)
  * (0,2) (1,2) (2,2)
  */
-public class Array2D<D> {
+public class Array2D<D> implements Iterable<D> {
 	int rows;
 	int columns;
 	D[] data;
@@ -64,6 +68,40 @@ public class Array2D<D> {
 		}
 		this.data[y * columns + x] = data;
 	}
+    
+	/**
+	 * Returns an iterator that parses the Array2D in row-major order
+	 * @return an iterator for this Array2D
+	 */
+	@Override
+	public Iterator<D> iterator() {
+		// TODO Auto-generated method stub
+		return new Array2DIterator();
+	}
+	
+    private class Array2DIterator implements Iterator<D> {
+        private int i;
+        
+        
+        public Array2DIterator() {
+        	i = 0;
+        }
+
+        @Override
+        public D next() {
+        	if(!this.hasNext()) {
+        		throw new NoSuchElementException();
+        	} else {
+        		i++;
+        		return data[i - 1];
+        	}
+        }
+
+        @Override
+        public boolean hasNext() {
+            return i < data.length;
+        }
+    }
 	
 	@Override
 	public String toString() {

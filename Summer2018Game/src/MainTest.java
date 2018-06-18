@@ -8,5 +8,10 @@ public class MainTest {
 		int x = 5;
 		int y = 1;
 		System.out.println("Data at: (" + x + ", " + y + ") = " + arr.get(x, y));
+		int newData = 99;
+		System.out.println("Setting (" + x + ", " + y + ") to " + newData);
+		arr.set(x, y, newData);
+		System.out.println(arr);
+		System.out.println("Data at: (" + x + ", " + y + ") = " + arr.get(x, y));
 	}
 }

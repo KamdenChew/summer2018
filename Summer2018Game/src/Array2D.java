@@ -41,7 +41,7 @@ public class Array2D<D> {
 	 * Returns the data stored at the specified row and column of the Array2D
 	 *
 	 * @param  x: the column data is wanted from
-	 * @param  y:the row data is wanted from
+	 * @param  y: the row data is wanted from
 	 * @return the data stored in this Array2D at the specified row and column
 	 */
 	public D get(int x, int y) {
@@ -49,6 +49,20 @@ public class Array2D<D> {
 			throw new ArrayIndexOutOfBoundsException("Dimensions of this Array2D: " + rows + " x " + columns);
 		}
 		return data[y * columns + x];
+	}
+	
+	/**
+	 * Sets the data stored at the specified row and column of the Array2d to the specified data
+	 *
+	 * @param  x: the column data is overwritten at
+	 * @param  y: the row data is overwrittena t
+	 * @param data: the data to write to the specified coordinates
+	 */
+	public void set(int x, int y, D data) {
+		if(y > rows - 1 || x > columns - 1) {
+			throw new ArrayIndexOutOfBoundsException("Dimensions of this Array2D: " + rows + " x " + columns);
+		}
+		this.data[y * columns + x] = data;
 	}
 	
 	@Override

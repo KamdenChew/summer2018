@@ -1,13 +1,15 @@
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
-
-/* Example Coordinates representation:
- * (0,0) (1,0) (2,0)
- * (0,1) (1,1) (2,1)
- * (0,2) (1,2) (2,2)
- */
 public class Array2D<D> implements Iterable<D> {
+	/* Example Coordinates representation:
+	 * (0,0) (1,0) (2,0)
+	 * (0,1) (1,1) (2,1)
+	 * (0,2) (1,2) (2,2)
+	 */
+	
 	int rows;
 	int columns;
 	D[] data;
@@ -59,7 +61,7 @@ public class Array2D<D> implements Iterable<D> {
 	 * Sets the data stored at the specified row and column of the Array2d to the specified data
 	 *
 	 * @param  x: the column data is overwritten at
-	 * @param  y: the row data is overwrittena t
+	 * @param  y: the row data is overwritten at
 	 * @param data: the data to write to the specified coordinates
 	 */
 	public void set(int x, int y, D data) {
@@ -68,11 +70,67 @@ public class Array2D<D> implements Iterable<D> {
 		}
 		this.data[y * columns + x] = data;
 	}
-    
+	
 	/**
-	 * Returns an iterator that parses the Array2D in row-major order
-	 * @return an iterator for this Array2D
+	 * Returns the number of rows in this Array2D
+	 *
+	 * @return the number of rows in this Array2D
 	 */
+	public int getNumRows() {
+		return this.rows;
+	}
+	
+	/**
+	 * Returns the number of columns in this Array2D
+	 *
+	 * @return the number of columns in this Array2D
+	 */
+	public int getNumColumns() {
+		return this.columns;
+	}
+	
+	/**
+	 * Returns the neighbors of the specified element in order of North, East, South, West
+	 * If the specified element has no neighbor to that side, the neighbor in that position will be null
+	 *
+	 * @param row: the row of the element neighbors are wanted from
+	 * @param column: the column of the element neighbors are wanted from
+	 * @return the neighbors of element (row, column) in NESW order
+	 */
+	public List<D> getOrderedNeighbors(int x, int y) {
+		ArrayList<D> neighbors = new ArrayList<D>();
+		
+		//Add North Neighbor
+		if(y > 0) {
+			neighbors.add(data[(y - 1) * columns + x]);
+		} else {
+			neighbors.add(null);
+		}
+		
+		//Add East Neighbor
+		if(x < columns - 1) {
+			neighbors.add(data[y * columns + (x + 1)]);
+		} else {
+			neighbors.add(null);
+		}
+		
+		//Add South Neighbor
+		if(y < rows - 1) {
+			neighbors.add(data[(y + 1) * columns + x]);
+		} else {
+			neighbors.add(null);
+		}
+		
+		//Add West Neighbor
+		if(x > 0) {
+			neighbors.add(data[y * columns + (x - 1)]);
+		} else {
+			neighbors.add(null);
+		}
+		
+		return neighbors;
+	}
+    
 	@Override
 	public Iterator<D> iterator() {
 		// TODO Auto-generated method stub
@@ -99,7 +157,7 @@ public class Array2D<D> implements Iterable<D> {
 
         @Override
         public boolean hasNext() {
-            return i < data.length;
+        	return i < data.length;
         }
     }
 	

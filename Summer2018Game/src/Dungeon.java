@@ -1,15 +1,19 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 public class Dungeon {
 	/*
 	 * Dungeons are represented with Array2D's of ints. -1's represent the
-	 * dungeon outer boundary 0's represent a walkable path 1's represent a wall
-	 * (not walkable) 2's represent an exit from the dungeon
+	 * dungeon outer boundary, 0's represent a walkable path, 1's represent a wall
+	 * (not walkable), 2's represent a walkable path, 3's represent an exit from the dungeon
 	 */
 
-	private static Random rand = new Random();
-	private static int difficulty;
-	private static Array2D<Integer> data;
+	private Random rand = new Random();
+	private int difficulty;
+	private Array2D<Integer> data;
+	private ArrayList<Room> rooms;
 
 	private static final int MIN_ROOM_DIMENSION = 3;
 
@@ -21,6 +25,7 @@ public class Dungeon {
 	public Dungeon(int difficulty) {
 		int numDungeonRows;
 		int numDungeonColumns;
+		this.rooms = new ArrayList<Room>();
 		if (difficulty == 0) {
 			System.out.println("Difficulty set to non-hostile.");
 
@@ -55,15 +60,18 @@ public class Dungeon {
 		generateDungeon(data);
 	}
 
-	private static void generateDungeon(Array2D<Integer> data) {
+	private void generateDungeon(Array2D<Integer> data) {
 		setBoundaryWalls(data);
 		setInnerWalls(data);
 		generateRooms(data);
 		setExit(data);
 		System.out.println(data);
+		System.out.println(rooms);
+		//generatePaths(data);
+		
 	}
 
-	private static void setBoundaryWalls(Array2D<Integer> data) {
+	private void setBoundaryWalls(Array2D<Integer> data) {
 		// Set outer boundary tiles
 		for (int x = 0; x < data.getNumColumns(); x++) {
 			data.set(x, 0, -1);
@@ -77,7 +85,7 @@ public class Dungeon {
 		// System.out.println("Step 1: Set all Outer Tiles to Boundary Walls:");
 	}
 
-	private static void setInnerWalls(Array2D<Integer> data) {
+	private void setInnerWalls(Array2D<Integer> data) {
 		// Set all tiles to walls
 		for (int r = 1; r < data.getNumRows() - 1; r++) {
 			for (int c = 1; c < data.getNumColumns() - 1; c++) {
@@ -89,7 +97,7 @@ public class Dungeon {
 		// System.out.println(data);
 	}
 
-	private static void generateRooms(Array2D<Integer> data) {
+	private void generateRooms(Array2D<Integer> data) {
 
 		// Place one room guaranteed to ensure we have an escape/start room
 		int roomWidth = rand.nextInt(ROOM_DIMENSION_VARIANCE) + MIN_ROOM_DIMENSION;
@@ -103,6 +111,10 @@ public class Dungeon {
 				data.set(x, y, 0);
 			}
 		}
+		
+		//Save our guaranteed room
+		rooms.add(new Room(startRoomColumn, startRoomRow, roomWidth, roomHeight));
+		
 		// System.out.println();
 		// System.out.println("After Guaranteed room:");
 		// System.out.println(data);
@@ -167,9 +179,14 @@ public class Dungeon {
 				if (overlap) {
 					currTries++;
 
-					// Else, we add the room
+				// Else, we add the room
 				} else {
 					// System.out.println("Found no overlap! Placing room.");
+					
+					//Save the coordinates of this room
+					rooms.add(new Room(randomColumn, randomRow, roomWidth, roomHeight));
+					
+					//Apply the change to our Array2D 
 					for (int x = randomColumn; x < randomColumn + roomWidth; x++) {
 						for (int y = randomRow; y < randomRow + roomHeight; y++) {
 							data.set(x, y, 0);
@@ -188,15 +205,23 @@ public class Dungeon {
 		// System.out.println(data);
 	}
 
-	private static void setExit(Array2D<Integer> data) {
+	private void setExit(Array2D<Integer> data) {
 		boolean exitPlaced = false;
 		while (!exitPlaced) {
 			int x = rand.nextInt(data.getNumColumns() - 2) + 1;
 			int y = rand.nextInt(data.getNumRows() - 2) + 1;
 			if (data.get(x, y) == 0) {
 				exitPlaced = true;
-				data.set(x, y, 2);
+				data.set(x, y, 3);
 			}
 		}
+	}
+	
+	private void generatePaths(Array2D<Integer> data) {
+		HashSet<Room> visited = new HashSet<Room>();
+		Room initialRoom = rooms.get(0);
+		visited.add(initialRoom);
+		
+		
 	}
 }

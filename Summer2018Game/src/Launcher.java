@@ -14,6 +14,6 @@ public class Launcher {
 //			}
 //		}
 		
-		new Dungeon(0);
+		new Dungeon(1);
 	}
 }

@@ -17,10 +17,8 @@ public class Array2D<D> implements Iterable<D> {
 	 * Constructs a new generic Array2D structure with a specified columns and
 	 * rows
 	 *
-	 * @param columns:
-	 *            the amount of columns stored in the Array2D
-	 * @param rows:
-	 *            the amount of rows stored in the Array2D
+	 * @param columns the amount of columns stored in the Array2D
+	 * @param rows the amount of rows stored in the Array2D
 	 */
 	@SuppressWarnings("unchecked")
 	public Array2D(int rows, int columns) {
@@ -33,12 +31,9 @@ public class Array2D<D> implements Iterable<D> {
 	 * Constructs a new generic Array2D structure with a specified columns,
 	 * rows, and data
 	 *
-	 * @param columns:
-	 *            the amount of columns stored in the Array2D
-	 * @param rows:
-	 *            the amount of rows stored in the Array2D
-	 * @param data:
-	 *            the data to be stored in the Array2D
+	 * @param columns the amount of columns stored in the Array2D
+	 * @param rows the amount of rows stored in the Array2D
+	 * @param data the data to be stored in the Array2D
 	 */
 	public Array2D(int rows, int columns, D[] data) {
 		if (columns * rows != data.length) {
@@ -52,10 +47,8 @@ public class Array2D<D> implements Iterable<D> {
 	/**
 	 * Returns the data stored at the specified row and column of the Array2D
 	 *
-	 * @param x:
-	 *            the column data is wanted from
-	 * @param y:
-	 *            the row data is wanted from
+	 * @param x the column data is wanted from
+	 * @param y the row data is wanted from
 	 * @return the data stored in this Array2D at the specified row and column
 	 */
 	public D get(int x, int y) {
@@ -69,12 +62,9 @@ public class Array2D<D> implements Iterable<D> {
 	 * Sets the data stored at the specified row and column of the Array2d to
 	 * the specified data
 	 *
-	 * @param x:
-	 *            the column data is overwritten at
-	 * @param y:
-	 *            the row data is overwritten at
-	 * @param data:
-	 *            the data to write to the specified coordinates
+	 * @param x the column data is overwritten at
+	 * @param y the row data is overwritten at
+	 * @param data  the data to write to the specified coordinates
 	 */
 	public void set(int x, int y, D data) {
 		if (y > rows - 1 || x > columns - 1) {
@@ -84,8 +74,6 @@ public class Array2D<D> implements Iterable<D> {
 	}
 
 	/**
-	 * Returns the number of rows in this Array2D
-	 *
 	 * @return the number of rows in this Array2D
 	 */
 	public int getNumRows() {
@@ -93,8 +81,6 @@ public class Array2D<D> implements Iterable<D> {
 	}
 
 	/**
-	 * Returns the number of columns in this Array2D
-	 *
 	 * @return the number of columns in this Array2D
 	 */
 	public int getNumColumns() {
@@ -106,10 +92,8 @@ public class Array2D<D> implements Iterable<D> {
 	 * South, West If the specified element has no neighbor to that side, the
 	 * neighbor in that position will be null
 	 *
-	 * @param row:
-	 *            the row of the element neighbors are wanted from
-	 * @param column:
-	 *            the column of the element neighbors are wanted from
+	 * @param x the row of the element neighbors are wanted from
+	 * @param y the column of the element neighbors are wanted from
 	 * @return the neighbors of element (row, column) in NESW order
 	 */
 	public List<D> getOrderedNeighbors(int x, int y) {

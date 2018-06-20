@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Room {
 	/*
@@ -39,6 +41,23 @@ public class Room {
 			}
 		}
 		return contains;
+	}
+	
+	/**
+	 * @return a list of CoordinatePairs that surround the entirety of the room.
+	 */
+	public List<CoordinatePair> getBoundary() {
+		List<CoordinatePair> boundary = new ArrayList<CoordinatePair>();
+		for(int c = origin.getX() - 1; c < origin.getX() + width; c++) {
+			boundary.add(new CoordinatePair(c, origin.getY() - 1));
+			boundary.add(new CoordinatePair(c, origin.getY() + height));
+		}
+		for(int r = origin.getY(); r < origin.getY() + height; r++) {
+			boundary.add(new CoordinatePair(origin.getX() - 1, r));
+			boundary.add(new CoordinatePair(origin.getX() + width, r));
+		}
+		
+		return boundary;
 	}
 	
 	

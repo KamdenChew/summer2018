@@ -66,8 +66,9 @@ public class Dungeon {
 		generateRooms(data);
 		setExit(data);
 		System.out.println(data);
-		System.out.println(rooms);
-		//generatePaths(data);
+		generatePaths(data);
+		
+		System.out.println(data);
 		
 	}
 
@@ -221,7 +222,19 @@ public class Dungeon {
 		HashSet<Room> visited = new HashSet<Room>();
 		Room initialRoom = rooms.get(0);
 		visited.add(initialRoom);
+		int randomIndex = rand.nextInt(initialRoom.getBoundary().size());
+		CoordinatePair currTile = null;
+		while (currTile == null || data.get(currTile.getX(), currTile.getY()) == -1) {
+			currTile = initialRoom.getBoundary().get(randomIndex);
+		}
 		
+		System.out.println("Got here");
+		data.set(currTile.getX(), currTile.getY(), 2);
+		
+		//While we haven't connected all of the rooms, propagate out path
+//		while(visited.size() != rooms.size()) {
+//			
+//		}
 		
 	}
 }

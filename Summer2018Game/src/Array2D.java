@@ -88,6 +88,7 @@ public class Array2D<D> implements Iterable<D> {
 	}
 
 	/**
+	 * TODO Use CoordinatePairs functionality?
 	 * Returns the neighbors of the specified element in order of North, East,
 	 * South, West If the specified element has no neighbor to that side, the
 	 * neighbor in that position will be null

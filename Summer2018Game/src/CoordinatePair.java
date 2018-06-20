@@ -29,4 +29,9 @@ public class CoordinatePair {
 	public int getY() {
 		return this.y;
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
+	}
 }

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -91,6 +90,8 @@ public class Dungeon {
 		
 		//Step 5: Add paths to our dungeon connecting all of our rooms
 		generatePaths(data);
+		
+		
 	}
 
 	/**
@@ -245,6 +246,7 @@ public class Dungeon {
 	
 	/**
 	 * Edits the underlying Array2D structure of this dungeon by adding paths
+	 * using a randomized Prim's algorithm
 	 * @requires Dungeon rooms, inner and boundary walls have all been placed in data
 	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
 	 */
@@ -264,10 +266,122 @@ public class Dungeon {
 		
 		data.set(currTile.getX(), currTile.getY(), 2);
 		
-		//While we haven't connected all of the rooms, propagate out path
-//		while(visited.size() != rooms.size()) {
+		System.out.println("Initial:");
+		System.out.println();
+		System.out.println(data);
+		
+		ArrayList<CoordinatePair> walls = new ArrayList<CoordinatePair>();
+		
+		//Look through neighbors to find all adjacent walls
+		for(CoordinatePair neighbor: data.getOrderedNeighbors(currTile.getX(), currTile.getY())) {
+			
+			//If the neighbor is a wall, it belonds in the walls list
+			if(data.get(neighbor.getX(), neighbor.getY()) == 1) {
+				walls.add(neighbor);
+			}
+		}
+		
+		System.out.println();
+		
+		//TODO remove iterator i and debug sets
+		int i = 0;
+		//While there are still walls
+		while(walls.size() > 0 && i < 1000) {
+			
+			//Select a random adjacent wall
+			randomIndex = rand.nextInt(walls.size());
+			CoordinatePair randomWall = walls.get(randomIndex);
+			
+			int numAdjacentPaths = 0;
+			
+			//If we are looking at the wall to the left or the right of us, we want to check
+			//the tiles above and below the wall
+			boolean separatesPaths = false;
+			ArrayList<CoordinatePair> wallNeighbors = data.getOrderedNeighbors(randomWall.getX(), randomWall.getY());
+			
+			for(CoordinatePair neighbor: wallNeighbors) {
+				if(neighbor != null && data.get(neighbor.getX(), neighbor.getY()) == 2) {
+					numAdjacentPaths++;
+				}
+			}
+			
+//			CoordinatePair northernNeighbor = wallNeighbors.get(0);
+//			CoordinatePair easternNeighbor = wallNeighbors.get(1);
+//			CoordinatePair southernNeighbor = wallNeighbors.get(2);
+//			CoordinatePair westernNeighbor = wallNeighbors.get(3);
 //			
-//		}
+//			
+//			
+//			//If both North and South neighbors are paths, then this wall does separate paths
+//			if(data.get(northernNeighbor.getX(), northernNeighbor.getY()) == 2 && data.get(southernNeighbor.getX(), southernNeighbor.getY()) == 2) {
+//				separatesPaths = true;
+//			}
+//			
+//			//If both East and West neighbors are paths, then this wall does separate paths
+//			if(data.get(easternNeighbor.getX(), easternNeighbor.getY()) == 2 && data.get(westernNeighbor.getX(), westernNeighbor.getY()) == 2) {
+//				separatesPaths = true;
+//			}
+			
+//			if(randomWall.getX() > currTile.getX() || randomWall.getX() < currTile.getX()) {
+//				
+//				//Look through the neighbors of the wall we just selected, and see if it is
+//				//valid to set to a path. To be a valid path, it cannot separate 2 paths on
+//				//either side of the axis drawn between the wall and our current path we are 
+//				//propagating from
+//				ArrayList<CoordinatePair> wallNeighbors = data.getOrderedNeighbors(randomWall.getX(), randomWall.getY());
+//				
+//				//If Northern neighbor is valid, check if path
+//				CoordinatePair northernNeighbor = wallNeighbors.get(0);
+//				if(northernNeighbor != null && data.get(northernNeighbor.getX(), northernNeighbor.getY()) == 2) {
+//					numAdjacentPaths++;
+//				}
+//				
+//				//If Southern neighbor is valid, check if path
+//				CoordinatePair southernNeighbor = wallNeighbors.get(2);
+//				if(southernNeighbor != null && data.get(southernNeighbor.getX(), southernNeighbor.getY()) == 2) {
+//					numAdjacentPaths++;
+//				}
+//				
+//			//Else we are looking at the wall above or below us, we want to check the tils to the left and the right
+//			} else {
+//				
+//				ArrayList<CoordinatePair> wallNeighbors = data.getOrderedNeighbors(randomWall.getX(), randomWall.getY());
+//				
+//				//If Eastern neighbor is valid, check if path
+//				CoordinatePair easternNeighbor = wallNeighbors.get(1);
+//				if(easternNeighbor != null && data.get(easternNeighbor.getX(), easternNeighbor.getY()) == 2) {
+//					numAdjacentPaths++;
+//				}
+//				
+//				//If Western neighbor is valid, check if path
+//				CoordinatePair westernNeighbor = wallNeighbors.get(3);
+//				if(westernNeighbor != null && data.get(westernNeighbor.getX(), westernNeighbor.getY()) == 2) {
+//					numAdjacentPaths++;
+//				}
+//			}
+			
+			//If this is a valid path
+			if(numAdjacentPaths < 2) {
+				
+				//Set this wall to a path
+				data.set(randomWall.getX(), randomWall.getY(), 2);
+				
+				//Look through neighbors to find all adjacent walls
+				for(CoordinatePair neighbor: data.getOrderedNeighbors(randomWall.getX(), randomWall.getY())) {
+					
+					//If the neighbor is a wall, it belonds in the walls list
+					if(data.get(neighbor.getX(), neighbor.getY()) == 1) {
+						walls.add(neighbor);
+					}
+				}
+			}
+			walls.remove(randomWall);
+			System.out.println();
+			System.out.println("i: " + i);
+			System.out.println();
+			System.out.println(data);
+			i++;
+		}
 		
 	}
 }

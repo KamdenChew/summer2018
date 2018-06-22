@@ -57,8 +57,6 @@ public class Room {
 			boundary.add(new CoordinatePair(origin.getX() + width, r));
 		}
 		
-		System.out.println("Boundary: " + boundary);
-		
 		return boundary;
 	}
 	

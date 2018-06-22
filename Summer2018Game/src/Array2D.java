@@ -98,7 +98,7 @@ public class Array2D<D> implements Iterable<D> {
 	 * @param y the column of the element neighbors are wanted from
 	 * @return the neighbors of element (row, column) in NESW order
 	 */
-	public List<CoordinatePair> getOrderedNeighbors(int x, int y) {
+	public ArrayList<CoordinatePair> getOrderedNeighbors(int x, int y) {
 		ArrayList<CoordinatePair> neighbors = new ArrayList<CoordinatePair>();
 
 		// Add North Neighbor

@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Room {
 	/*
-	 * Represents a rectangular dungeon room
+	 * Represents a rectangular 2D dungeon room
 	 */
 	
 	private CoordinatePair origin;
@@ -48,7 +48,7 @@ public class Room {
 	 */
 	public List<CoordinatePair> getBoundary() {
 		List<CoordinatePair> boundary = new ArrayList<CoordinatePair>();
-		for(int c = origin.getX() - 1; c < origin.getX() + width; c++) {
+		for(int c = origin.getX(); c < origin.getX() + width; c++) {
 			boundary.add(new CoordinatePair(c, origin.getY() - 1));
 			boundary.add(new CoordinatePair(c, origin.getY() + height));
 		}
@@ -56,6 +56,8 @@ public class Room {
 			boundary.add(new CoordinatePair(origin.getX() - 1, r));
 			boundary.add(new CoordinatePair(origin.getX() + width, r));
 		}
+		
+		System.out.println("Boundary: " + boundary);
 		
 		return boundary;
 	}

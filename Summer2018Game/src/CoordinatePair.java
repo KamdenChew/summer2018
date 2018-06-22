@@ -1,12 +1,12 @@
 public class CoordinatePair {
 	
-	// Represents a cartesian 2 dimensional coordinate pair
+	// Represents a Cartesian 2D coordinate pair
 	 
 	private int x;
 	private int y;
 	
 	/**
-	 * Constructs a new CooridnatePair with a specified x and y coordinate
+	 * Constructs a new CoordinatePair with a specified x and y coordinate
 	 *
 	 * @param x the x component of this CoordinatePair
 	 * @param y the y component of this CoordinatePair

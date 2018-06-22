@@ -14,6 +14,9 @@ public class Dungeon {
 	private int difficulty;
 	private Array2D<Integer> data;
 	private ArrayList<Room> rooms;
+	
+	//Room Count Coefficient controls how many attempts we give to generating rooms. See generateRooms()
+	private static final int ROOM_COUNT_COEFFICIENT = 5;
 
 	private static final int MIN_ROOM_DIMENSION = 3;
 
@@ -22,6 +25,12 @@ public class Dungeon {
 	// then the Max Room Dimension is 5
 	private static final int ROOM_DIMENSION_VARIANCE = 2;
 
+	
+	/**
+	 * Constructs a new Dungeon with a specified difficulty level
+	 *
+	 * @param difficulty an int representing the difficulty level of the Dungeon
+	 */
 	public Dungeon(int difficulty) {
 		int numDungeonRows;
 		int numDungeonColumns;
@@ -60,18 +69,35 @@ public class Dungeon {
 		generateDungeon(data);
 	}
 
+	/**
+	 * Edits the underlying Array2D structure of this dungeon to represent
+	 * a randomly generated dungeon
+	 *
+	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
+	 */
 	private void generateDungeon(Array2D<Integer> data) {
+		
+		//Step 1: Add boundary walls
 		setBoundaryWalls(data);
+		
+		//Step 2: Set all internal data in the Array2D to walls 
 		setInnerWalls(data);
+		
+		//Step 3: Overwrite some of the walls to be randomly generated rooms
 		generateRooms(data);
+		
+		//Step 4: Put an exit from the dungeon in one of the rooms
 		setExit(data);
-		System.out.println(data);
+		
+		//Step 5: Add paths to our dungeon connecting all of our rooms
 		generatePaths(data);
-		
-		System.out.println(data);
-		
 	}
 
+	/**
+	 * Edits the underlying Array2D structure of this dungeon by adding boundary walls
+	 *
+	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
+	 */
 	private void setBoundaryWalls(Array2D<Integer> data) {
 		// Set outer boundary tiles
 		for (int x = 0; x < data.getNumColumns(); x++) {
@@ -83,9 +109,13 @@ public class Dungeon {
 			data.set(0, y, -1);
 			data.set(data.getNumColumns() - 1, y, -1);
 		}
-		// System.out.println("Step 1: Set all Outer Tiles to Boundary Walls:");
 	}
-
+	
+	/**
+	 * Edits the underlying Array2D structure of this dungeon by setting all internal data to walls
+	 * 
+	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
+	 */
 	private void setInnerWalls(Array2D<Integer> data) {
 		// Set all tiles to walls
 		for (int r = 1; r < data.getNumRows() - 1; r++) {
@@ -94,10 +124,13 @@ public class Dungeon {
 			}
 		}
 
-		// System.out.println("Step 2: Set all Inner Tiles to Walls:");
-		// System.out.println(data);
 	}
 
+	/**
+	 * Edits the underlying Array2D structure of this dungeon by adding rooms
+	 * @requires internal and boundary walls have already been placed in data
+	 * @param data an Array2D<Integer> intended to be edited to reflect a Dungeon
+	 */
 	private void generateRooms(Array2D<Integer> data) {
 
 		// Place one room guaranteed to ensure we have an escape/start room
@@ -115,12 +148,8 @@ public class Dungeon {
 		
 		//Save our guaranteed room
 		rooms.add(new Room(startRoomColumn, startRoomRow, roomWidth, roomHeight));
-		
-		// System.out.println();
-		// System.out.println("After Guaranteed room:");
-		// System.out.println(data);
 
-		int roomCountTries = 5 * difficulty;
+		int roomCountTries = ROOM_COUNT_COEFFICIENT * difficulty;
 
 		// If the game is set to non-hostile, give 3 tries
 		if (difficulty == 0) {
@@ -135,19 +164,10 @@ public class Dungeon {
 			int randomRow = rand.nextInt(data.getNumRows() - 1) + 1;
 			int randomColumn = rand.nextInt(data.getNumColumns() - 1) + 1;
 
-			// System.out.println("Parameters for Room Placement:");
-			// System.out.println("RoomWidth: " + roomWidth);
-			// System.out.println("RoomHeight: " + roomHeight);
-			// System.out.println("RandomRow: " + randomRow);
-			// System.out.println("RandomColumn: " + randomColumn);
-			// System.out.println();
-
 			// Preliminary check to see if the room will go out of bounds
 			if (randomColumn + roomWidth > data.getNumColumns() || randomRow + roomHeight > data.getNumRows()) {
 				currTries++;
-				// System.out.println("(" + randomRow + ", " + randomColumn + ")
-				// was going to generate out of bounds");
-				// System.out.println();
+
 			} else {
 				// Check to see if placing the room would overlap with another
 				// room, if it does, then we fail and we add a try to our count
@@ -159,7 +179,12 @@ public class Dungeon {
 
 						// Check all neighbors to see if we will end up creating
 						// a combined room (Unwanted)
-						for (Integer tileVal : data.getOrderedNeighbors(x, y)) {
+						for (CoordinatePair neighbor : data.getOrderedNeighbors(x, y)) {
+							Integer tileVal = null;
+							if(neighbor != null) {
+								tileVal = data.get(neighbor.getX(), neighbor.getY());
+							} 
+							
 							if (tileVal != null && tileVal == 0) {
 								neighborRoom = true;
 							}
@@ -169,8 +194,6 @@ public class Dungeon {
 						// rooms, we want to set a flag
 						if (data.get(x, y) == 0 || data.get(x, y) == -1 || neighborRoom) {
 							overlap = true;
-							// System.out.println("Found overlap at: (" + x + ",
-							// " + y + ")");
 							break;
 						}
 					}
@@ -182,7 +205,6 @@ public class Dungeon {
 
 				// Else, we add the room
 				} else {
-					// System.out.println("Found no overlap! Placing room.");
 					
 					//Save the coordinates of this room
 					rooms.add(new Room(randomColumn, randomRow, roomWidth, roomHeight));
@@ -197,16 +219,19 @@ public class Dungeon {
 					// Reset our counter to allow roomCountTries number of
 					// attempts to place the next room
 					currTries = 0;
-					// System.out.println("After placing room:");
-					// System.out.println(data);
 				}
 			}
 		}
-		// System.out.println("Step 3: Randomly Generate Rooms:");
-		// System.out.println(data);
 	}
-
+	
+	/**
+	 * Edits the underlying Array2D structure of this dungeon by adding an exit in a room.
+	 * @requires Dungeon rooms have already been placed in data
+	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
+	 */
 	private void setExit(Array2D<Integer> data) {
+		//Add an exit in an existing room
+		
 		boolean exitPlaced = false;
 		while (!exitPlaced) {
 			int x = rand.nextInt(data.getNumColumns() - 2) + 1;
@@ -218,17 +243,25 @@ public class Dungeon {
 		}
 	}
 	
+	/**
+	 * Edits the underlying Array2D structure of this dungeon by adding paths
+	 * @requires Dungeon rooms, inner and boundary walls have all been placed in data
+	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
+	 */
 	private void generatePaths(Array2D<Integer> data) {
 		HashSet<Room> visited = new HashSet<Room>();
 		Room initialRoom = rooms.get(0);
 		visited.add(initialRoom);
+		
 		int randomIndex = rand.nextInt(initialRoom.getBoundary().size());
 		CoordinatePair currTile = null;
+		
+		//Pick a place to start creating paths from. This should be a tile
+		//adjacent to a room, but shouldn't be on the outer boundary.
 		while (currTile == null || data.get(currTile.getX(), currTile.getY()) == -1) {
 			currTile = initialRoom.getBoundary().get(randomIndex);
 		}
 		
-		System.out.println("Got here");
 		data.set(currTile.getX(), currTile.getY(), 2);
 		
 		//While we haven't connected all of the rooms, propagate out path

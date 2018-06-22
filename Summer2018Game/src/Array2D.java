@@ -5,13 +5,15 @@ import java.util.NoSuchElementException;
 
 public class Array2D<D> implements Iterable<D> {
 	/*
-	 * Example Coordinates representation: (0,0) (1,0) (2,0) (0,1) (1,1) (2,1)
+	 * Example Coordinates representation: 
+	 * (0,0) (1,0) (2,0) 
+	 * (0,1) (1,1) (2,1)
 	 * (0,2) (1,2) (2,2)
 	 */
 
-	int rows;
-	int columns;
-	D[] data;
+	private int rows;
+	private int columns;
+	private D[] data;
 
 	/**
 	 * Constructs a new generic Array2D structure with a specified columns and
@@ -88,42 +90,41 @@ public class Array2D<D> implements Iterable<D> {
 	}
 
 	/**
-	 * TODO Use CoordinatePairs functionality?
-	 * Returns the neighbors of the specified element in order of North, East,
-	 * South, West If the specified element has no neighbor to that side, the
-	 * neighbor in that position will be null
+	 * Returns the CoordinatePair neighbors of the specified element in order of 
+	 * North, East, South, West If the specified element has no neighbor to that 
+	 * side, the neighbor in that position will be null
 	 *
 	 * @param x the row of the element neighbors are wanted from
 	 * @param y the column of the element neighbors are wanted from
 	 * @return the neighbors of element (row, column) in NESW order
 	 */
-	public List<D> getOrderedNeighbors(int x, int y) {
-		ArrayList<D> neighbors = new ArrayList<D>();
+	public List<CoordinatePair> getOrderedNeighbors(int x, int y) {
+		ArrayList<CoordinatePair> neighbors = new ArrayList<CoordinatePair>();
 
 		// Add North Neighbor
 		if (y > 0) {
-			neighbors.add(data[(y - 1) * columns + x]);
+			neighbors.add(new CoordinatePair(x, y - 1));
 		} else {
 			neighbors.add(null);
 		}
 
 		// Add East Neighbor
 		if (x < columns - 1) {
-			neighbors.add(data[y * columns + (x + 1)]);
+			neighbors.add(new CoordinatePair(x + 1, y));
 		} else {
 			neighbors.add(null);
 		}
 
 		// Add South Neighbor
 		if (y < rows - 1) {
-			neighbors.add(data[(y + 1) * columns + x]);
+			neighbors.add(new CoordinatePair(x, y + 1));
 		} else {
 			neighbors.add(null);
 		}
 
 		// Add West Neighbor
 		if (x > 0) {
-			neighbors.add(data[y * columns + (x - 1)]);
+			neighbors.add(new CoordinatePair(x - 1, y));
 		} else {
 			neighbors.add(null);
 		}

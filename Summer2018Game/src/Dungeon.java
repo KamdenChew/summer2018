@@ -67,6 +67,10 @@ public class Dungeon {
 		data = new Array2D<Integer>(numDungeonRows + 2, numDungeonColumns + 2);
 		generateDungeon(data);
 	}
+	
+	public Array2D<Integer> getData() { 
+		return new Array2D<Integer>(this.data);
+	}
 
 	/**
 	 * Edits the underlying Array2D structure of this dungeon to represent
@@ -266,9 +270,9 @@ public class Dungeon {
 		
 		data.set(currTile.getX(), currTile.getY(), 2);
 		
-		System.out.println("Initial:");
-		System.out.println();
-		System.out.println(data);
+//		System.out.println("Initial:");
+//		System.out.println();
+//		System.out.println(data);
 		
 		ArrayList<CoordinatePair> walls = new ArrayList<CoordinatePair>();
 		
@@ -281,7 +285,7 @@ public class Dungeon {
 			}
 		}
 		
-		System.out.println();
+//		System.out.println();
 		
 		//TODO remove iterator i and debug sets
 		int i = 0;
@@ -376,10 +380,10 @@ public class Dungeon {
 				}
 			}
 			walls.remove(randomWall);
-			System.out.println();
-			System.out.println("i: " + i);
-			System.out.println();
-			System.out.println(data);
+//			System.out.println();
+//			System.out.println("i: " + i);
+//			System.out.println();
+//			System.out.println(data);
 			i++;
 		}
 		

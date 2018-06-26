@@ -45,6 +45,21 @@ public class Array2D<D> implements Iterable<D> {
 		this.rows = rows;
 		this.data = data;
 	}
+	
+	/**
+	 * Constructs a copy of the generic Array2D structure that is passed in
+	 *
+	 * @param data the Array2D to copy
+	 */
+	@SuppressWarnings("unchecked")
+	public Array2D(Array2D<D> data) {
+		if (data == null) {
+			throw new IllegalArgumentException("Cannot copy from null Array2D");
+		}
+		this.columns = data.getNumColumns();
+		this.rows = data.getNumRows();
+		this.data = data.data;
+	}
 
 	/**
 	 * Returns the data stored at the specified row and column of the Array2D

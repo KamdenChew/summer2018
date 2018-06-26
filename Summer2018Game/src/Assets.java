@@ -1,12 +1,12 @@
-package game.gfx;
+
 
 import java.awt.image.BufferedImage;
 
 public class Assets {
 	
 	//For future use if using spritesheet
-	private static final int WIDTH = 50;
-	private static final int HEIGHT = 50;
+//	private static final int WIDTH = 50;
+//	private static final int HEIGHT = 50;
 	
 	public static BufferedImage dirt, stone, wall, empty;
 	

@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Array2D<D> implements Iterable<D> {
@@ -51,7 +50,6 @@ public class Array2D<D> implements Iterable<D> {
 	 *
 	 * @param data the Array2D to copy
 	 */
-	@SuppressWarnings("unchecked")
 	public Array2D(Array2D<D> data) {
 		if (data == null) {
 			throw new IllegalArgumentException("Cannot copy from null Array2D");

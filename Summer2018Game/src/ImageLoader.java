@@ -1,4 +1,4 @@
-package game.gfx;
+
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

@@ -1,17 +1,12 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-
-import game.gfx.Assets;
-import game.gfx.ImageLoader;
 
 public class Game implements Runnable {
 
 	private final boolean DEBUG_FPS = false;
 	
-	private static int width = 600;
-	private static int height = 600;
+	private int width;
+	private int height;
 	private static final String TITLE = "Dungeon Explorer";
 	private int difficulty;
 	private Dungeon dungeon;
@@ -21,6 +16,9 @@ public class Game implements Runnable {
 	private Display display;
 	private BufferStrategy bs;
 	private Graphics graphics;
+	
+	//States
+	private State gameState;
 	
 	public Game(int difficulty) {
 		this.difficulty = difficulty;
@@ -33,12 +31,15 @@ public class Game implements Runnable {
 	private void init() {
 		this.display = new Display(TITLE, width, height);
 		Assets.init();
+		
+		gameState = new GameState(this.dungeon);
+		State.setState(gameState);
 	}
 	
-	int x = 0;
-	
 	private void update() {
-		x += 1;
+		if(State.getState() != null) {
+			State.getState().update();
+		}
 	}
 	
 	private void render() {
@@ -58,20 +59,8 @@ public class Game implements Runnable {
 //		graphics.setColor(Color.red);
 //		graphics.fillRect(10, 50, 50, 70);
 //		graphics.drawImage(Assets.empty, x, 20, null);
-		Array2D<Integer> data = dungeon.getData();
-		
-		int columns = data.getNumColumns();
-		int rows = data.getNumRows();
-		for(int x = 0; x < columns; x++) {
-			for(int y = 0; y < rows; y++) {
-				if(Math.abs(data.get(x, y)) == 1) {
-					graphics.drawImage(Assets.wall, x * 50, y * 50, null);
-				} else if(data.get(x, y) == 0) {
-					graphics.drawImage(Assets.stone, x * 50, y * 50, null);
-				} else if(data.get(x, y) == 2) {
-					graphics.drawImage(Assets.dirt, x * 50, y * 50, null);
-				}
-			}
+		if(State.getState() != null) {
+			State.getState().render(graphics);
 		}
 		
 		//Re-render

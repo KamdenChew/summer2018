@@ -26,16 +26,17 @@ public class Room {
 	/**
 	 * Returns a boolean for whether or not the specified coordinates are within this room
 	 *
-	 * @param pair the CoordinatePair that is being checked to be within this room
-	 * @return a boolean for whether or not pair is in this room
+	 * @param x the x coordinate of the point to check
+	 * @param y the y coordinate of the point to check
+	 * @return a boolean for whether or not (x, y) is in this room
 	 */
-	public boolean containsCoordinatePair(CoordinatePair pair) {
-		int x = origin.getX();
-		int y = origin.getY();
+	public boolean containsCoordinatePair(int x, int y) {
+		int originX = origin.getX();
+		int originY = origin.getY();
 		boolean contains = false;
-		for(int c = x; c < x + width; c++) {
-			for(int r = y; r < y + height; r++) {
-				if(pair.getX() == c && pair.getY() == r) {
+		for(int c = originX; c < originX + width; c++) {
+			for(int r = originY; r < originY + height; r++) {
+				if(x == c && y == r) {
 					contains = true;
 				}
 			}

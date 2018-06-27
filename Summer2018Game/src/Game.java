@@ -19,6 +19,7 @@ public class Game implements Runnable {
 	
 	//States
 	private State gameState;
+	private State mainMenuState;
 	
 	public Game(int difficulty) {
 		this.difficulty = difficulty;
@@ -33,6 +34,8 @@ public class Game implements Runnable {
 		Assets.init();
 		
 		gameState = new GameState(this.dungeon);
+		mainMenuState = new MainMenuState();
+		
 		State.setState(gameState);
 	}
 	

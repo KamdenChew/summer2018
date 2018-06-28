@@ -24,13 +24,20 @@ public class Room {
 	}
 	
 	/**
+	 * @return a CoordinatePair representing the upperleft most point of the room
+	 */
+	public CoordinatePair getOrigin() {
+		return this.origin;
+	}
+	
+	/**
 	 * Returns a boolean for whether or not the specified coordinates are within this room
 	 *
 	 * @param x the x coordinate of the point to check
 	 * @param y the y coordinate of the point to check
 	 * @return a boolean for whether or not (x, y) is in this room
 	 */
-	public boolean containsCoordinatePair(int x, int y) {
+	public boolean contains(int x, int y) {
 		int originX = origin.getX();
 		int originY = origin.getY();
 		boolean contains = false;

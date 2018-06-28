@@ -34,4 +34,23 @@ public class CoordinatePair {
 	public String toString() {
 		return "(" + x + ", " + y + ")";
 	}
+	
+	@Override
+	public int hashCode() {
+		return 8 * this.x + 6 * this.getY() + 37;
+	}
+	
+	@Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        
+        if (!(o instanceof CoordinatePair)) {
+            return false;
+        }
+         
+        CoordinatePair other = (CoordinatePair) o;
+        return this.x == other.getX() && this.y == other.getY();
+    }
 }

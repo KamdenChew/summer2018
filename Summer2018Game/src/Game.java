@@ -1,5 +1,6 @@
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 
 public class Game implements Runnable {
 
@@ -21,7 +22,7 @@ public class Game implements Runnable {
 	private State gameState;
 	private State mainMenuState;
 	
-	public Game(int difficulty) {
+	public Game(int difficulty) throws IOException {
 		this.difficulty = difficulty;
 		
 		this.dungeon = new Dungeon(difficulty);

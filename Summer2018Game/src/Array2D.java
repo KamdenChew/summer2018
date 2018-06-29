@@ -16,7 +16,7 @@ public class Array2D<D> implements Iterable<D> {
 
 	/**
 	 * Constructs a new generic Array2D structure with a specified columns and
-	 * rows
+	 * rows, all data initialized to null
 	 *
 	 * @param columns the amount of columns stored in the Array2D
 	 * @param rows the amount of rows stored in the Array2D
@@ -183,8 +183,10 @@ public class Array2D<D> implements Iterable<D> {
 
 		// Save the longest elements length so we can print neatly
 		for (D element : data) {
-			if (element.toString().length() > maxElementLength) {
-				maxElementLength = element.toString().length();
+			if(element != null) {
+				if (element.toString().length() > maxElementLength) {
+					maxElementLength = element.toString().length();
+				}
 			}
 		}
 

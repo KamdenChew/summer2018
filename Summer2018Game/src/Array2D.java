@@ -56,7 +56,10 @@ public class Array2D<D> implements Iterable<D> {
 		}
 		this.columns = data.getNumColumns();
 		this.rows = data.getNumRows();
-		this.data = data.data;
+		this.data = (D[]) new Object[columns * rows];
+		
+		//Deep copy elements
+		System.arraycopy(data.data, 0, this.data, 0, data.data.length);
 	}
 
 	/**

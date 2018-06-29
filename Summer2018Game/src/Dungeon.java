@@ -19,6 +19,10 @@ public class Dungeon {
 	private Array2D<Integer> data;
 	private ArrayList<Room> rooms;
 	
+	//Max path generation iterations controls how long we continue trying to propagate paths before we restart the algorithm.
+	//This is as a fail safe for any random path generations that get stuck
+	private static final int MAX_PATH_GENERATION_ITERATIONS = 5000;
+	
 	//Room Count Coefficient controls how many attempts we give to generating rooms. See generateRooms()
 	private static final int ROOM_COUNT_COEFFICIENT = 5;
 
@@ -254,6 +258,12 @@ public class Dungeon {
 			}
 		}
 	}
+	
+//	private boolean isValidPath(Array2D<Integer> data, CoordinatePair point) {
+//		
+//		
+//		return false;
+//	}
 	
 	/**
 	 * Edits the underlying Array2D structure of this dungeon by adding paths

@@ -1,3 +1,4 @@
+package game;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;

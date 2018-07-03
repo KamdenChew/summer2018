@@ -1,3 +1,4 @@
+package game;
 public class CoordinatePair {
 	
 	// Represents a Cartesian 2D coordinate pair
@@ -51,6 +52,6 @@ public class CoordinatePair {
         }
          
         CoordinatePair other = (CoordinatePair) o;
-        return this.x == other.getX() && this.y == other.getY();
+        return (this.x == other.getX() && this.y == other.getY());
     }
 }

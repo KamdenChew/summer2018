@@ -1,3 +1,4 @@
+package game;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,9 +20,11 @@ public class Dungeon {
 	private Array2D<Integer> data;
 	private ArrayList<Room> rooms;
 	
-	//Max path generation iterations controls how long we continue trying to propagate paths before we restart the algorithm.
+	//Max path generation iterations controls how long we continue trying to propagate paths before we restart the generatePaths() method.
+	//Max entrance iterations controls how many times we attempt to randomly place a path on the boundary of a room before we restart the generatePaths() method.
 	//This is as a fail safe for any random path generations that get stuck
 	private static final int MAX_PATH_GENERATION_ITERATIONS = 5000;
+	private static final int MAX_ENTRANCE_ITERATIONS = 25;
 	
 	//Room Count Coefficient controls how many attempts we give to generating rooms. See generateRooms()
 	private static final int ROOM_COUNT_COEFFICIENT = 5;
@@ -39,35 +42,36 @@ public class Dungeon {
 	 *
 	 * @param difficulty an int representing the difficulty level of the Dungeon
 	 * @throws IOException 
+	 * 
 	 */
 	public Dungeon(int difficulty) throws IOException {
 		int numDungeonRows;
 		int numDungeonColumns;
 		this.rooms = new ArrayList<Room>();
 		if (difficulty == 0) {
-			System.out.println("Difficulty set to non-hostile.");
+//			System.out.println("Difficulty set to non-hostile.");
 
 			// Set Fixed size for non-hostile dungeons
 			numDungeonRows = 10;
 			numDungeonColumns = 10;
 		} else if (difficulty == 1) {
-			System.out.println("Difficulty set to easy.");
+//			System.out.println("Difficulty set to easy.");
 
 			// Set size to between 10x10 and 15x15 for easy dungeons
 			numDungeonRows = rand.nextInt(6) + 10;
 			numDungeonColumns = rand.nextInt(6) + 10;
 		} else if (difficulty == 2) {
-			System.out.println("Difficulty set to normal.");
+//			System.out.println("Difficulty set to normal.");
 
-			// Set size to between 20x20 and 35x35 for easy dungeons
-			numDungeonRows = rand.nextInt(16) + 20;
-			numDungeonColumns = rand.nextInt(16) + 20;
+			// Set size to between 15x15 and 20x20 for easy dungeons
+			numDungeonRows = rand.nextInt(6) + 15;
+			numDungeonColumns = rand.nextInt(6) + 15;
 		} else if (difficulty == 3) {
-			System.out.println("Difficulty set to hard.");
+//			System.out.println("Difficulty set to hard.");
 
-			// Set size to between 35x35 and 50x50 for easy dungeons
-			numDungeonRows = rand.nextInt(16) + 35;
-			numDungeonColumns = rand.nextInt(16) + 35;
+			// Set size to between 20x20 and 25x25 for easy dungeons
+			numDungeonRows = rand.nextInt(6) + 20;
+			numDungeonColumns = rand.nextInt(6) + 20;
 		} else {
 			throw new IllegalArgumentException("Difficulty should be an integer value from 0-3.");
 		}
@@ -88,6 +92,7 @@ public class Dungeon {
 	 *
 	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
 	 * @throws IOException 
+	 * 
 	 */
 	private void generateDungeon(Array2D<Integer> data) throws IOException {
 		
@@ -258,12 +263,6 @@ public class Dungeon {
 			}
 		}
 	}
-	
-//	private boolean isValidPath(Array2D<Integer> data, CoordinatePair point) {
-//		
-//		
-//		return false;
-//	}
 	
 	/**
 	 * Edits the underlying Array2D structure of this dungeon by adding paths

@@ -23,7 +23,7 @@ public class Game implements Runnable {
 	private State gameState;
 	private State mainMenuState;
 	
-	public Game(int difficulty) throws IOException {
+	public Game(int difficulty) {
 		this.difficulty = difficulty;
 		
 		this.dungeon = new Dungeon(difficulty);

@@ -28,9 +28,9 @@ public class GameState extends State{
 					graphics.drawImage(Assets.wall, x * 50, y * 50, null);
 				} else if(data.get(x, y) == 0) {
 					graphics.drawImage(Assets.stone, x * 50, y * 50, null);
-				} else if(data.get(x, y) == 2) {
+				} else if(data.get(x, y) != -2){//if(data.get(x, y) == 2) {
 					graphics.drawImage(Assets.dirt, x * 50, y * 50, null);
-				}
+				} 
 			}
 		}
 	}

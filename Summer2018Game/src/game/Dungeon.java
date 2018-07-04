@@ -1,18 +1,13 @@
 package game;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
-
-import org.omg.CORBA.SystemException;
 
 public class Dungeon {
 	/*
 	 * Dungeons are represented with Array2D's of ints. -1's represent the
 	 * dungeon outer boundary, 0's represent a walkable path, 1's represent a wall
-	 * (not walkable), 2's represent a walkable path, 3's represent an exit from the dungeon
+	 * (not walkable), 2's represent a walkable path, -2's represent an exit from the dungeon
 	 */
 
 	private Random rand = new Random();
@@ -41,10 +36,10 @@ public class Dungeon {
 	 * Constructs a new Dungeon with a specified difficulty level
 	 *
 	 * @param difficulty an int representing the difficulty level of the Dungeon
-	 * @throws IOException 
+	 *  
 	 * 
 	 */
-	public Dungeon(int difficulty) throws IOException {
+	public Dungeon(int difficulty)  {
 		int numDungeonRows;
 		int numDungeonColumns;
 		this.rooms = new ArrayList<Room>();
@@ -91,10 +86,10 @@ public class Dungeon {
 	 * a randomly generated dungeon
 	 *
 	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
-	 * @throws IOException 
+	 *  
 	 * 
 	 */
-	private void generateDungeon(Array2D<Integer> data) throws IOException {
+	private void generateDungeon(Array2D<Integer> data)  {
 		
 		//Step 1: Add boundary walls
 		setBoundaryWalls(data);
@@ -108,8 +103,12 @@ public class Dungeon {
 		//Step 4: Put an exit from the dungeon in one of the rooms
 		setExit(data);
 		
-		//Step 5: Add paths to our dungeon connecting all of our rooms
-		generatePaths(data);
+		//Step 5: Add paths to our dungeon, disjoint from the rooms
+		generatePaths(data, null, 2);
+		
+//		System.out.println(data);
+		
+		connect(data);
 		
 		
 	}
@@ -259,7 +258,7 @@ public class Dungeon {
 			int y = rand.nextInt(data.getNumRows() - 2) + 1;
 			if (data.get(x, y) == 0) {
 				exitPlaced = true;
-				data.set(x, y, 3);
+				data.set(x, y, -2);
 			}
 		}
 	}
@@ -268,264 +267,256 @@ public class Dungeon {
 	 * Edits the underlying Array2D structure of this dungeon by adding paths
 	 * using a randomized Prim's algorithm
 	 * @requires Dungeon rooms, inner and boundary walls have all been placed in data
-	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
-	 * @throws IOException 
+	 * @param data an Array2D<Integer> intended to be edited to reflect a Dungeon
+	 * @param validPaths a set of CoordinatePairs that can be validly turned to paths
+	 * @param identifier an int for identifying a disjoint set from the rest of the walkable tiles, the identifiers will later be used to connect the sets
 	 */
-	private void generatePaths(Array2D<Integer> data) throws IOException {
+	private void generatePaths(Array2D<Integer> data, HashSet<CoordinatePair> validPaths, int identifier)  {
 		
-//		System.out.println("Method Called!");
+		//If this is the initial call, then we won't know validPath tiles
+		if(validPaths == null) {
+			validPaths = new HashSet<CoordinatePair>();
+			for(int x = 1; x < data.getNumColumns() - 1; x++) {
+				for(int y = 1; y < data.getNumRows() - 1; y++) {
+					CoordinatePair potentialPath = new CoordinatePair(x, y);
+					if(canBePath(data, potentialPath)) {
+						validPaths.add(potentialPath);
+					}
+				}
+			}
+		}
 		
-		Array2D<Integer> originalCopy = new Array2D<Integer>(data);
-		
-		PrintWriter out = new PrintWriter(new FileWriter("./debug.txt"));
-		
-		out.println("Initial:");
-		out.println();
-		out.println(data);
-		out.println();
-		
-		//TODO fix visited flag, currently allows disjoint sets, remove iterator i and debug prints
-		int i = 0;
-		int j = 0;
-		ArrayList<CoordinatePair> walls = new ArrayList<CoordinatePair>();
-		HashSet<Room> visited = new HashSet<Room>();
-		HashSet<Room> adjacentRooms = new HashSet<Room>();
 		int randomIndex;
+		CoordinatePair start = null;
+		while(start == null || !canBePath(data, start)) {
+			randomIndex = rand.nextInt(validPaths.size());
+			start = (CoordinatePair) validPaths.toArray()[randomIndex];
+		}
 		
-		//While we don't have all the rooms connected
-		while(visited.size() < rooms.size() && i < MAX_PATH_GENERATION_ITERATIONS) {
+		ArrayList<CoordinatePair> walls = new ArrayList<CoordinatePair>();
+		data.set(start.getX(), start.getY(), identifier);
+		validPaths.remove(start);
+		for(CoordinatePair neighbor: data.getOrderedNeighbors(start.getX(), start.getY())) {
+			if(canBePath(data, neighbor)) {
+				if(!walls.contains(neighbor)) {
+					walls.add(neighbor);
+//					System.out.println("Added " + neighbor + " to the walls set because it neighbors: " + start);	
+				}
+			}
+		}
+		
+//		System.out.println("New Loop");
+		while(!walls.isEmpty()) {
+			//Pick a random wall from the wall list
+			randomIndex = rand.nextInt(walls.size());
+			CoordinatePair randomWall = walls.get(randomIndex);
 			
-//			System.out.println("1");
-			
-			out.println("Top of loop");
-			out.println("Still rooms left to connect on iteration: " + i);
-			//If we are out of options for this path, and haven't visited all the rooms, pick a new starting point
-			if(walls.size() == 0) {
-				
-				out.println("Out of walls, picking new random room");
-				//If we are starting a new path, reset the adjacentRooms to empty
-				//We will add adjacent rooms as the path propagates
-				adjacentRooms = new HashSet<Room>();
-				
-				//Find an unvisited random room
-				randomIndex = rand.nextInt(rooms.size());
-				Room randomRoom = null;
-				while(randomRoom == null || visited.contains(randomRoom)) {
-					
-//					System.out.println("2");
-					
-					randomRoom = rooms.get(randomIndex);
-					randomIndex = rand.nextInt(rooms.size());
-				}
-				
-				//Pick a place to start creating paths from. This should be a tile
-				//adjacent to the random room, shouldn't be on the boundary, and shouldn't
-				//be adjacent to another path on the boundary
-				CoordinatePair startTile = null;
-				randomIndex = rand.nextInt(randomRoom.getBoundary().size());
-				
-				//Only check 100 random tiles on the boundary, if we can't find an eligible tile after that, there is high likelihood that
-				//there are no eligible tiles.
-				j = 0;
-				while (j < 100 && (startTile == null || data.get(startTile.getX(), startTile.getY()) == -1 || !canBePath(data, startTile))) {
-					
-//					System.out.println("3");
-					
-					startTile = randomRoom.getBoundary().get(randomIndex);
-					randomIndex = rand.nextInt(randomRoom.getBoundary().size());
-					j++;
-				}
-				
-				if(j == 100) {
-					System.out.println("Couldn't find a starting point for the path");
-					break;
-				}
-				
-				//Set our first path tile
-				data.set(startTile.getX(), startTile.getY(), 2);
-				
-				
-				//Look through neighbors to find all adjacent walls
-				for(CoordinatePair neighbor: data.getOrderedNeighbors(startTile.getX(), startTile.getY())) {
-					
-					//If the neighbor is a wall, it belongs in the walls list
-					if(data.get(neighbor.getX(), neighbor.getY()) == 1) {
+			//If it can be a path, add all neighboring walls to wall list, and set the wall to a path
+			if(canBePath(data, randomWall)) {
+				for(CoordinatePair neighbor: data.getOrderedNeighbors(randomWall.getX(), randomWall.getY())) {
+					if(neighbor != null && canBePath(data, neighbor) && !walls.contains(neighbor)) {
 						walls.add(neighbor);
+//						System.out.println("Added " + neighbor + " to the walls set because it neighbors: " + randomWall);
 					}
 				}
-				
-				//If we haven't visited any rooms yet, then add this room as the first visited room, otherwise
-				//we will mark this room as visited later when it connects to other elements of the visited set
-				if(visited.size() == 0) {
-					visited.add(randomRoom);
-					out.println("Added initial room to visited: " + randomRoom.getOrigin());
-				}
+				data.set(randomWall.getX(), randomWall.getY(), identifier);
+//				System.out.println("Data after setting " + randomWall + " to a path");
+//				System.out.println(data);
 			}
-			
-			//While there are still walls to propagate to
-			while(walls.size() > 0) {
-				
-//				System.out.println("4");
-				
-				//Select a random wall
-				randomIndex = rand.nextInt(walls.size());
-				CoordinatePair randomWall = walls.get(randomIndex);
-				
-				
-				boolean isValidPath = canBePath(data, randomWall);
-				
-				if(isValidPath) {
-					
-					//If we are adding this tile to our path, we must add all adjacent rooms to this tile to our adjacent rooms set for the path
-					for(Room newAdjacentRoom: getAdjacentRooms(data, randomWall)) {
-						adjacentRooms.add(newAdjacentRoom);
-					}
-					
-					boolean connected = false;
-					//Check if we connected to any visited rooms
-					for(Room adjacentRoom: adjacentRooms) {
-						if(visited.contains(adjacentRoom)) {
-							connected = true;
-							break;
-						}
-					}
-					
-					int prevSize = visited.size();
-					
-					if(connected) {
-						//If we did, then we have now connected all the rooms that this path connects
-						for(Room adjacentRoom: adjacentRooms) {
-							visited.add(adjacentRoom);
-						}
-					}
-					out.println("Added " + (visited.size() - prevSize) + " rooms to visited");
-					out.println("visitied now contains: ");
-					for(Room room: visited) {
-						out.println(room.getOrigin());
-					}
-					
-					//Set this wall to a path
-					data.set(randomWall.getX(), randomWall.getY(), 2);
-					
-					//Look through neighbors to find all adjacent walls
-					for(CoordinatePair neighbor: data.getOrderedNeighbors(randomWall.getX(), randomWall.getY())) {
-						
-						//If the neighbor is a wall, it belongs in the walls list
-						if(data.get(neighbor.getX(), neighbor.getY()) == 1) {
-							walls.add(neighbor);
-						}
-					}
-				}
-				
-				//The randomWall was assigned to a path, remove from walls
-				walls.remove(randomWall);
-				out.println();
-				out.println("i: " + i);
-				out.println();
-				out.println(data);
-				i++;
-			}
+			walls.remove(randomWall);
+			validPaths.remove(randomWall);
 		}
 		
-		if(i == MAX_PATH_GENERATION_ITERATIONS || j == 100) {
-			if(j == 100 && i != MAX_PATH_GENERATION_ITERATIONS) {
-				System.out.println("Found a new case!");
-			}
-			
-			System.out.print("Original Copy before call: ");
-			System.out.println(originalCopy);
-			System.out.println("Maximum Iteration Threshold Achieved");
-			generatePaths(originalCopy);
-			this.data = originalCopy;
-			
-			System.out.println("Original Copy after call: ");
-			System.out.print(originalCopy);
-			
-			System.out.println("Data after call: ");
-			System.out.println(this.data);
-			
+		//If there's still places we can put paths, call generatePaths again
+		if(!validPaths.isEmpty()) {
+			generatePaths(data, validPaths, identifier + 1);
 		}
-		out.close();
+
 	}
 	
 	private boolean canBePath(Array2D<Integer> data, CoordinatePair point) {
 		
 		//Check criteria for this wall becoming a path
-		HashSet<Room> adjacentRooms = new HashSet<Room>();
 		int numAdjacentPaths = 0;
-		int numEntrances = 0;
-		boolean exceedsThreeEntrances = false;
-		boolean adjacentEntrance = false;
-		boolean leadsToExit = false;
+		boolean adjacentExit = false;
+		boolean adjacentRoom = false;
+		boolean isInnerWall = false;
+		
+		if(data.get(point.getX(), point.getY()) == 1) {
+			isInnerWall = true;
+		}
 		
 		//Get all the neighbors of this potential new path
 		ArrayList<CoordinatePair> wallNeighbors = data.getOrderedNeighbors(point.getX(), point.getY());
 		
 		for(CoordinatePair neighbor: wallNeighbors) {
-			
 			//Count the number of adjacent paths that would be connected to this tile if it became a path
-			if(neighbor != null && data.get(neighbor.getX(), neighbor.getY()) == 2) {
+			if(neighbor != null && data.get(neighbor.getX(), neighbor.getY()) >= 2) {
 				numAdjacentPaths++;
 			}
 			
-			if(data.get(neighbor.getX(), neighbor.getY()) == 3) {
-				leadsToExit = true;
+			//If we are connecting to the exit, flag it
+			if(neighbor != null && data.get(neighbor.getX(), neighbor.getY()) == -2) {
+				adjacentExit = true;
 			}
 			
-			//If we are connecting to any rooms, add them to the adjacentRooms set
-			if(data.get(neighbor.getX(), neighbor.getY()) == 0 || data.get(neighbor.getX(), neighbor.getY()) == 3) {
+			//If we are connecting to any rooms flag it
+			if(neighbor != null && data.get(neighbor.getX(), neighbor.getY()) == 0) {
+				adjacentRoom = true;
+			}
+		}
+		
+		return (numAdjacentPaths < 2 && !adjacentExit && !adjacentRoom && isInnerWall);
+	}
+	
+	private void connect(Array2D<Integer> data) {
+		
+		//Find all the possible connectors
+		ArrayList<CoordinatePair> connectors = new ArrayList<CoordinatePair>();
+		
+		HashSet<Integer> uniquePathIdentifiers = new HashSet<Integer>();
+		
+		for(int x = 1; x < data.getNumColumns() - 1; x++) {
+			for(int y = 1; y < data.getNumRows() - 1; y++) {
 				
-				//Find the room we are adjacent to and add it
-				for(Room room: rooms) {
-					if(room.contains(neighbor.getX(), neighbor.getY())) {
-						adjacentRooms.add(room);
-						
-						//Count the number of entrances this room already has, and check if any would be adjacent to this potential entrance
-						for(CoordinatePair tile: room.getBoundary()) {
+				//Save all unique path values for later use
+				if(data.get(x, y) >= 2) {
+					uniquePathIdentifiers.add(data.get(x, y));
+				}
+				
+				//A connector is an inner wall that has at least 2 disjoint walkable sets as neighbors
+				HashSet<Integer> neighboringPathIdentifiers = new HashSet<Integer>();
+				HashSet<Room> uniqueRooms = new HashSet<Room>();
+				if(data.get(x, y) == 1) {
+					for(CoordinatePair neighbor: data.getOrderedNeighbors(x, y)) {
+						if(neighbor != null) {
+							int val = data.get(neighbor.getX(), neighbor.getY());
 							
-							//A path on the boundary is equivalent to an entrance
-							if(data.get(tile.getX(), tile.getY()) == 2) {
-								numEntrances++;
-								
-								//Check if this entrance is adjacent to our new potential entrance
-								for(CoordinatePair adjacent: wallNeighbors) {
-									if(adjacent.equals(tile)) {
-										adjacentEntrance = true;
+							//If adjacent to a path, save it's identifier
+							if(val >= 2) {
+								neighboringPathIdentifiers.add(val);
+							}
+							
+							//If adjacent to a room, save it
+							if(val == 0 || val == -2) {
+								for(Room room: rooms) {
+									if(room.contains(neighbor.getX(), neighbor.getY())) {
+										uniqueRooms.add(room);
 									}
 								}
+							}
+							
+						}
+					}
+				}
+				if(neighboringPathIdentifiers.size() + uniqueRooms.size() >= 2) {
+					connectors.add(new CoordinatePair(x, y));
+				}
+			}
+		}
+		
+		//Set connectors to white for visualization
+//		for(CoordinatePair connector: connectors) {
+//			data.set(connector.getX(), connector.getY(), -2);
+//		}
+		
+		HashSet<Room> visitedRooms = new HashSet<Room>();
+		HashSet<Integer> visitedPathIdentifiers = new HashSet<Integer>();
+		
+		//Pick a random room to count as our first visited
+		int randomIndex = rand.nextInt(rooms.size());
+		Room randomRoom = rooms.get(randomIndex);
+		visitedRooms.add(randomRoom);
+		
+		while(!connectors.isEmpty()) {
+
+			//Find a connector that's adjacent to something we've visited
+			CoordinatePair possibleConnector = null;
+			boolean adjacent = false;
+			while(possibleConnector == null || !adjacent) {
+				randomIndex = rand.nextInt(connectors.size());
+				possibleConnector = (CoordinatePair) connectors.toArray()[randomIndex];
+				
+				//Check if adjacent to a visited path
+				for(CoordinatePair neighbor: data.getOrderedNeighbors(possibleConnector.getX(), possibleConnector.getY())) {
+					if(visitedPathIdentifiers.contains(data.get(neighbor.getX(), neighbor.getY()))) {
+						adjacent = true;
+						break;
+					}
+				}
+				
+				//Check if adjacent to a visited room
+				for(Room room: visitedRooms) {
+					//TODO replace iterations over boundaries to contains like this
+					if(room.getBoundary().contains(possibleConnector)) {
+						adjacent = true;
+						break;
+					}
+				}
+				
+				
+			}
+			
+			//Set new connectors to -4, we will set all unique paths and connectors to 2 after we are all connected
+			data.set(possibleConnector.getX(), possibleConnector.getY(), -4);
+			
+			//We now have a valid connector, add the new adjacent paths and rooms
+			
+			for(CoordinatePair neighbor: data.getOrderedNeighbors(possibleConnector.getX(), possibleConnector.getY())) {
+				
+				
+				int val = data.get(neighbor.getX(), neighbor.getY());
+				
+				
+				//If we haven't seen the adjacent room before, add to newRooms
+				if(val == 0) {
+					for(Room room: rooms) {
+						if(room.contains(neighbor.getX(), neighbor.getY()) && !visitedRooms.contains(room)) {
+							visitedRooms.add(room);
+						}
+					}
+				}
+				
+				//If we haven't seen the adjacent path before, add to newPathIdentifiers
+				if((val >= 2) && !visitedPathIdentifiers.contains(val)) {
+					visitedPathIdentifiers.add(val);
+				}
+			} 
+			
+			//Remove all connectors that only connect known sections
+			boolean connectsToNew = false;
+			for(int i = 0; i < connectors.size(); i++) {
+				
+				CoordinatePair connector = connectors.get(i);
+				for(CoordinatePair neighbor: data.getOrderedNeighbors(connector.getX(), connector.getY())) {
+					int val = data.get(neighbor.getX(), neighbor.getY());
+					if((val >= 2) && !visitedPathIdentifiers.contains(val)) {
+						connectsToNew = true;
+					}
+					
+					if(val == 0) {
+						for(Room room: rooms) {
+							if(room.contains(neighbor.getX(), neighbor.getY()) && !visitedRooms.contains(room)) {
+								connectsToNew = true;
 							}
 						}
 					}
 				}
 				
-				//If we already have 3 entrances, set our flag
-				if(numEntrances >= 3) {
-					exceedsThreeEntrances = true;
+				if(!connectsToNew) {
+					connectors.remove(connector);
+					i--;
+				}
+			}
+		}	
+		
+		//Set all connectors and paths to value 2
+		for(int x = 1; x < data.getNumColumns() - 1; x++) {
+			for(int y = 1; y < data.getNumRows() - 1; y++) {
+				if(data.get(x, y) == -4 || data.get(x, y) > 2) {
+					data.set(x, y, 2);
 				}
 			}
 		}
-		
-		return (numAdjacentPaths < 2 && !exceedsThreeEntrances && !adjacentEntrance && !leadsToExit);
-	}
-	
-	private HashSet<Room> getAdjacentRooms(Array2D<Integer> data, CoordinatePair point) {
-		ArrayList<CoordinatePair> neighbors = data.getOrderedNeighbors(point.getX(), point.getY());
-		
-		HashSet<Room> adjacentRooms = new HashSet<Room>();
-		
-		for(CoordinatePair neighbor: neighbors) {
-			
-			//For every neighboring tile that is a room, find which room it is, and put it in the set
-			if(data.get(neighbor.getX(), neighbor.getY()) == 0) {
-				for(Room room: rooms) {
-					
-					if(room.contains(neighbor.getX(), neighbor.getY())) {
-						adjacentRooms.add(room);
-					}
-				}
-			}
-		}
-		
-		return adjacentRooms;
 	}
 }

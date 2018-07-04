@@ -1,6 +1,5 @@
 package test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
@@ -16,40 +15,40 @@ public class DungeonTest {
 	private Random rand = new Random();
 
 	@Test
-	public void testDungeonConstruction() throws IOException {
+	public void testDungeonConstruction()  {
 		boolean passed = true;
 		for(int i = 0; i < 1000; i++) {
 			Dungeon nonHostileDungeon = new Dungeon(0);
 			if(!isValidDungeon(nonHostileDungeon)) {
-				System.out.println("Failed on nonHostile:");
+				System.out.println("Failed on nonHostile iteration: " + i);
 				System.out.println(nonHostileDungeon.getData());
 				passed = false;
 				break;
 			}
 			
-//			Dungeon easyDungeon = new Dungeon(1);
-//			if(!isValidDungeon(easyDungeon)) {
-//				System.out.println("Failed on easy:");
-//				System.out.println(easyDungeon.getData());
-//				passed = false;
-//				break;
-//			}
-//			
-//			Dungeon normalDungeon = new Dungeon(2);
-//			if(!isValidDungeon(normalDungeon)) {
-//				System.out.println("Failed on normal:");
-//				System.out.println(normalDungeon.getData());
-//				passed = false;
-//				break;
-//			}
-//			
-//			Dungeon hardDungeon = new Dungeon(3);
-//			if(!isValidDungeon(hardDungeon)) {
-//				System.out.println("Failed on hard:");
-//				System.out.println(hardDungeon.getData());
-//				passed = false;
-//				break;
-//			}
+			Dungeon easyDungeon = new Dungeon(1);
+			if(!isValidDungeon(easyDungeon)) {
+				System.out.println("Failed on easy:");
+				System.out.println(easyDungeon.getData());
+				passed = false;
+				break;
+			}
+			
+			Dungeon normalDungeon = new Dungeon(2);
+			if(!isValidDungeon(normalDungeon)) {
+				System.out.println("Failed on normal:");
+				System.out.println(normalDungeon.getData());
+				passed = false;
+				break;
+			}
+			
+			Dungeon hardDungeon = new Dungeon(3);
+			if(!isValidDungeon(hardDungeon)) {
+				System.out.println("Failed on hard:");
+				System.out.println(hardDungeon.getData());
+				passed = false;
+				break;
+			}
 		}
 		
 		assert(passed);
@@ -66,7 +65,7 @@ public class DungeonTest {
 			for(int y = 0; y < data.getNumRows(); y++) {
 				
 				//Add all path, room, and exit tiles to the walkable set.
-				if(data.get(x, y) == 0 || data.get(x, y) == 3 || data.get(x, y) == 2) {
+				if(data.get(x, y) == 0 || data.get(x, y) == -2 || data.get(x, y) == 2) {
 					allWalkableTiles.add(new CoordinatePair(x,y));
 				}
 			}
@@ -93,7 +92,7 @@ public class DungeonTest {
 			for(CoordinatePair neighbor: data.getOrderedNeighbors(boundaryTile.getX(), boundaryTile.getY())) {
 				int x = neighbor.getX();
 				int y = neighbor.getY();
-				if((data.get(x, y) == 0 || data.get(x, y) == 3 || data.get(x, y) == 2) && !visited.contains(neighbor) && !boundary.contains(neighbor)) {
+				if((data.get(x, y) == 0 || data.get(x, y) == -2 || data.get(x, y) == 2) && !visited.contains(neighbor) && !boundary.contains(neighbor)) {
 					boundary.add(neighbor);
 				}
 			}

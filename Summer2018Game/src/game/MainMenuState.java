@@ -2,8 +2,9 @@ package game;
 import java.awt.Graphics;
 
 public class MainMenuState extends State {
-
-	public MainMenuState() {
+	
+	public MainMenuState(Game game) {
+		super(game);
 		
 	}
 	

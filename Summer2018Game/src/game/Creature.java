@@ -1,13 +1,15 @@
 package game;
 
-import java.awt.Graphics;
-
 public abstract class Creature extends Entity{
 	
+	protected int coordinateX;
+	protected int coordianteY;
 	protected int health;
 	
-	public Creature(float x, float y) {
+	public Creature(float x, float y, int coordinateX, int coordinateY) {
 		super(x, y);
+		this.coordinateX = coordinateX;
+		this.coordianteY = coordinateY;
 		health = 10;
 	}
 	

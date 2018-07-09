@@ -11,7 +11,7 @@ public class Game implements Runnable {
 	private int height;
 	private static final String TITLE = "Dungeon Explorer";
 	private int difficulty;
-	private Dungeon dungeon;
+	protected Dungeon dungeon;
 	private Thread thread;
 	private boolean running;
 	
@@ -23,25 +23,41 @@ public class Game implements Runnable {
 	private State gameState;
 	private State mainMenuState;
 	
+	//Keyboard Input
+	private KeyManager keyManager;
+	
 	public Game(int difficulty) {
 		this.difficulty = difficulty;
 		
 		this.dungeon = new Dungeon(difficulty);
 		this.height = (dungeon.getData().getNumRows()) * 50;
 		this.width = (dungeon.getData().getNumColumns()) * 50;
+		
+		keyManager = new KeyManager();
 	}
 	
 	private void init() {
+		//Prepare Display
 		this.display = new Display(TITLE, width, height);
+		this.display.getFrame().addKeyListener(keyManager);
+		
+		//Initialize Assets
 		Assets.init();
 		
-		gameState = new GameState(this.dungeon);
-		mainMenuState = new MainMenuState();
+		//Initialize States
+		gameState = new GameState(this);
+		mainMenuState = new MainMenuState(this);
 		
 		State.setState(gameState);
 	}
 	
+	public KeyManager getKeyManager() {
+		return this.keyManager;
+	}
+	
 	private void tick() {
+		keyManager.tick();
+		
 		if(State.getState() != null) {
 			State.getState().tick();
 		}

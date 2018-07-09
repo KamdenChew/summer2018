@@ -2,15 +2,28 @@ package game;
 
 
 import java.awt.Graphics;
+import java.util.Random;
 
 public class GameState extends State{
 
 	private Dungeon dungeon;
 	private Player player;
+	private Random rand = new Random();
 	
-	public GameState(Dungeon dungeon) {
-		this.dungeon = dungeon;
-		this.player = new Player(100, 100);
+	public GameState(Game game) {
+		super(game);
+		this.game = game;
+		this.dungeon = game.dungeon;
+		
+		CoordinatePair startCoordinates = null;
+		Array2D<Integer> data = game.dungeon.getData();
+		while(startCoordinates == null || data.get(startCoordinates.getX(), startCoordinates.getY()) != 0) {
+			int randomColumn = rand.nextInt(data.getNumColumns() - 2)  + 1;
+			int randomRow = rand.nextInt(data.getNumRows() - 2) + 1;
+			startCoordinates = new CoordinatePair(randomColumn, randomRow);
+		}
+		System.out.println("Starting at: " + startCoordinates);
+		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY());
 	}
 	
 	@Override

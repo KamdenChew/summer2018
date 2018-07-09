@@ -41,9 +41,9 @@ public class Game implements Runnable {
 		State.setState(gameState);
 	}
 	
-	private void update() {
+	private void tick() {
 		if(State.getState() != null) {
-			State.getState().update();
+			State.getState().tick();
 		}
 	}
 	
@@ -104,7 +104,7 @@ public class Game implements Runnable {
 			
 			//If we have accumulated 1 unit, then it's time to update and render again
 			if(delta >= 1) {
-				update();
+				tick();
 				render();
 				
 				//Update ticks performed

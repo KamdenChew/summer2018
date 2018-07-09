@@ -13,7 +13,7 @@ public abstract class State {
 		return currentState;
 	}
 	
-	public abstract void update();
+	public abstract void tick();
 	
 	public abstract void render(Graphics graphic);
 }

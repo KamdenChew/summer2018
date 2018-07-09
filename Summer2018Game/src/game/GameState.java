@@ -6,20 +6,21 @@ import java.awt.Graphics;
 public class GameState extends State{
 
 	private Dungeon dungeon;
-	private Array2D<Integer> data;
+	private Player player;
 	
 	public GameState(Dungeon dungeon) {
 		this.dungeon = dungeon;
-		this.data = dungeon.getData();
+		this.player = new Player(100, 100);
 	}
 	
 	@Override
-	public void update() {
-		
+	public void tick() {
+		player.tick();
 	}
 
 	@Override
 	public void render(Graphics graphics) {
+		Array2D<Integer> data = this.dungeon.getData();
 		int columns = data.getNumColumns();
 		int rows = data.getNumRows();
 		for(int x = 0; x < columns; x++) {
@@ -33,6 +34,7 @@ public class GameState extends State{
 				} 
 			}
 		}
+		player.render(graphics);
 	}
 
 }

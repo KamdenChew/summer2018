@@ -8,7 +8,7 @@ public class MainMenuState extends State {
 	}
 	
 	@Override
-	public void update() {
+	public void tick() {
 		// TODO Auto-generated method stub
 		
 	}

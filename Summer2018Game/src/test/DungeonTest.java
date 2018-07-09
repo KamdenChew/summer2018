@@ -17,7 +17,7 @@ public class DungeonTest {
 	@Test
 	public void testDungeonConstruction()  {
 		boolean passed = true;
-		for(int i = 0; i < 250000; i++) {
+		for(int i = 0; i < 25000; i++) {
 			Dungeon nonHostileDungeon = new Dungeon(0);
 			if(!isValidDungeon(nonHostileDungeon)) {
 				System.out.println("Failed on nonHostile iteration: " + i);

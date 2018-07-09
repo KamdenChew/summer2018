@@ -6,8 +6,8 @@ public abstract class Creature extends Entity{
 	protected int coordianteY;
 	protected int health;
 	
-	public Creature(float x, float y, int coordinateX, int coordinateY) {
-		super(x, y);
+	public Creature(Game game, float x, float y, int coordinateX, int coordinateY) {
+		super(game, x, y);
 		this.coordinateX = coordinateX;
 		this.coordianteY = coordinateY;
 		health = 10;

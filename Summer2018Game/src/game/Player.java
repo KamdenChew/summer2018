@@ -5,16 +5,14 @@ import java.awt.Graphics;
 public class Player extends Creature{
 	private final int NUM_TICKS_MOVEMENT_DELAY = 10;
 	
-	private Game game;
 	private int coordinateX;
 	private int coordinateY;
 	private int tickDelay = 0;
 	
 	public Player(Game game, int coordinateX, int coordinateY) {
-		super(coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
+		super(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
 		this.coordinateX = coordinateX;
 		this.coordinateY = coordinateY;
-		this.game = game;
 	}
 
 	@Override
@@ -29,7 +27,7 @@ public class Player extends Creature{
 				y -= 50;
 				coordinateY--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
-			} else if(game.getKeyManager().down && (downVal == 0 || downVal == 2 || downVal == 22)) {
+			} else if(game.getKeyManager().down && (downVal == 0 || downVal == 2 || downVal == -2)) {
 				y += 50;
 				coordinateY++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;

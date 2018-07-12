@@ -18,11 +18,10 @@ public class Dungeon {
 	//Room Count Coefficient controls how many attempts we give to generating rooms. See generateRooms()
 	private static final int ROOM_COUNT_COEFFICIENT = 8;
 
-	private static final int MIN_ROOM_DIMENSION = 3;
-
 	// Room Dimension Variance is additive, meaning if the Min Room Dimension is
 	// 3, and the Room Dimension Variance is 2
 	// then the Max Room Dimension is 5
+	private static final int MIN_ROOM_DIMENSION = 3;
 	private static final int ROOM_DIMENSION_VARIANCE = 2;
 
 	
@@ -30,7 +29,7 @@ public class Dungeon {
 	 * Constructs a new Dungeon with a specified difficulty level
 	 *
 	 * @param difficulty an int representing the difficulty level of the Dungeon
-	 *  
+	 *  @throws IllegalArgumentException if not passes a valid difficulty int
 	 * 
 	 */
 	public Dungeon(int difficulty)  {
@@ -131,7 +130,7 @@ public class Dungeon {
 	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
 	 */
 	private void setInnerWalls(Array2D<Integer> data) {
-		// Set all tiles to walls
+		// Set all inner tiles to walls
 		for (int r = 1; r < data.getNumRows() - 1; r++) {
 			for (int c = 1; c < data.getNumColumns() - 1; c++) {
 				data.set(c, r, 1);
@@ -142,6 +141,7 @@ public class Dungeon {
 
 	/**
 	 * Edits the underlying Array2D structure of this dungeon by adding rooms
+	 * 
 	 * @requires internal and boundary walls have already been placed in data
 	 * @param data an Array2D<Integer> intended to be edited to reflect a Dungeon
 	 */
@@ -262,7 +262,8 @@ public class Dungeon {
 	
 	/**
 	 * Edits the underlying Array2D structure of this dungeon by adding an exit in a room.
-	 * @requires Dungeon rooms have already been placed in data
+	 * 
+	 * @requires Boundary walls, inner walls, and Dungeon rooms have already been placed in data
 	 * @param data and Array2D<Integer> intended to be edited to reflect a Dungeon
 	 */
 	private void setExit(Array2D<Integer> data) {
@@ -282,6 +283,7 @@ public class Dungeon {
 	/**
 	 * Edits the underlying Array2D structure of this dungeon by adding paths
 	 * using a randomized Prim's algorithm
+	 * 
 	 * @requires Dungeon rooms, inner and boundary walls have all been placed in data
 	 * @param data an Array2D<Integer> intended to be edited to reflect a Dungeon
 	 * @param validPaths a set of CoordinatePairs that can be validly turned to paths
@@ -316,13 +318,12 @@ public class Dungeon {
 			if(canBePath(data, neighbor)) {
 				if(!walls.contains(neighbor)) {
 					walls.add(neighbor);
-//					System.out.println("Added " + neighbor + " to the walls set because it neighbors: " + start);	
 				}
 			}
 		}
 		
-//		System.out.println("New Loop");
 		while(!walls.isEmpty()) {
+			
 			//Pick a random wall from the wall list
 			randomIndex = rand.nextInt(walls.size());
 			CoordinatePair randomWall = walls.get(randomIndex);
@@ -332,12 +333,9 @@ public class Dungeon {
 				for(CoordinatePair neighbor: data.getOrderedNeighbors(randomWall.getX(), randomWall.getY())) {
 					if(neighbor != null && canBePath(data, neighbor) && !walls.contains(neighbor)) {
 						walls.add(neighbor);
-//						System.out.println("Added " + neighbor + " to the walls set because it neighbors: " + randomWall);
 					}
 				}
 				data.set(randomWall.getX(), randomWall.getY(), identifier);
-//				System.out.println("Data after setting " + randomWall + " to a path");
-//				System.out.println(data);
 			}
 			walls.remove(randomWall);
 			validPaths.remove(randomWall);
@@ -350,6 +348,16 @@ public class Dungeon {
 
 	}
 	
+	/**
+	 * Checks a given CoordinatePair location in an Array2D of a Dungeon to see if it can be a path.
+	 * A tile can be a path if it isn't adjacent to more than 1 other path, it is not adjacent to a room,
+	 * it isn't adjacent to the exit, and it is currently an inner wall tile
+	 * 
+	 * @requires Dungeon rooms, inner and boundary walls have all been placed in data
+	 * @param data an Array2D<Integer> that represents a Dungeon
+	 * @param point a CoordinatePair representing the coordinates within data that we are checking for path eligibility
+	 * @return a boolean value representing if this CoordinatePair in the given Array2D can be a path.
+	 */
 	private boolean canBePath(Array2D<Integer> data, CoordinatePair point) {
 		
 		//Check criteria for this wall becoming a path
@@ -385,6 +393,12 @@ public class Dungeon {
 		return (numAdjacentPaths < 2 && !adjacentExit && !adjacentRoom && isInnerWall);
 	}
 	
+	/**
+	 * Edits the underlying Array2D structure of this dungeon by connecting paths to rooms and other paths, making the Dungeon complete.
+	 * 
+	 * @requires Dungeon rooms, paths, inner and boundary walls have all been placed in data
+	 * @param data an Array2D<Integer> intended to be edited to reflect a Dungeon
+	 */
 	private void connect(Array2D<Integer> data) {
 		
 		//Find all the possible connectors
@@ -392,12 +406,8 @@ public class Dungeon {
 		
 		HashSet<Integer> uniquePathIdentifiers = new HashSet<Integer>();
 		
-		
-//		System.out.println("Finding connectors and uniquePathIdentifiers");
 		for(int x = 1; x < data.getNumColumns() - 1; x++) {
 			for(int y = 1; y < data.getNumRows() - 1; y++) {
-				
-//				System.out.println("Checking: " + "(" + x + ", " + y +") for connector status");
 				
 				//Save all unique path values for later use
 				if(data.get(x, y) >= 2) {
@@ -431,22 +441,9 @@ public class Dungeon {
 				}
 				if(neighboringPathIdentifiers.size() + uniqueRooms.size() >= 2) {
 					connectors.add(new CoordinatePair(x, y));
-//					System.out.println("Added new connector " + "(" + x + ", " + y +") because it had:");
-//					System.out.println("Adjacent rooms: " + uniqueRooms);
-//					System.out.println("Adjacent paths: " + neighboringPathIdentifiers);
 				}
 			}
 		}
-		
-//		System.out.println("Connectors: " + connectors);
-//		System.out.println("Data: ");
-//		System.out.println(data);
-//		System.out.println("uniquePathIdentifiers: " + uniquePathIdentifiers);
-		
-		//Set connectors to white for visualization
-//		for(CoordinatePair connector: connectors) {
-//			data.set(connector.getX(), connector.getY(), -2);
-//		}
 		
 		HashSet<Room> visitedRooms = new HashSet<Room>();
 		HashSet<Integer> visitedPathIdentifiers = new HashSet<Integer>();
@@ -456,8 +453,6 @@ public class Dungeon {
 		Room randomRoom = rooms.get(randomIndex);
 		visitedRooms.add(randomRoom);
 		
-//		System.out.println("Selecting connectors to become path");
-//		System.out.println("Starting knowing room: " + randomRoom.getOrigin());
 		while(!connectors.isEmpty()) {
 
 			//Find a connector that's adjacent to something we've visited
@@ -474,10 +469,8 @@ public class Dungeon {
 				for(CoordinatePair neighbor: data.getOrderedNeighbors(possibleConnector.getX(), possibleConnector.getY())) {
 					if(visitedPathIdentifiers.contains(data.get(neighbor.getX(), neighbor.getY()))) {
 						adjacentToVisited = true;
-//						System.out.println(possibleConnector + " is adjacent to the visited path value: " + data.get(neighbor.getX(), neighbor.getY()));
 					} else if(!visitedPathIdentifiers.contains(data.get(neighbor.getX(), neighbor.getY())) && data.get(neighbor.getX(), neighbor.getY()) >= 2){
 						adjacentToUnvisited = true;
-//						System.out.println(possibleConnector + " is adjacent to the unvisited path value: " + data.get(neighbor.getX(), neighbor.getY()));
 					}
 				}
 				
@@ -486,15 +479,11 @@ public class Dungeon {
 					//TODO replace iterations over boundaries to contains like this
 					if(visitedRooms.contains(room) && room.getBoundary().contains(possibleConnector)) {
 						adjacentToVisited = true;
-//						System.out.println(possibleConnector + " is adjacent to the visited room: " + room.getOrigin());
 					} else if(!visitedRooms.contains(room) && room.getBoundary().contains(possibleConnector)) {
 						adjacentToUnvisited = true;
-//						System.out.println(possibleConnector + " is adjacent to the unvisited room: " + room.getOrigin());
 					}
 				}
 			}
-			
-//			System.out.println("Selected Connector: " + possibleConnector);
 			
 			//Set new connectors to -4, we will set all unique paths and connectors to 2 after we are all connected
 			data.set(possibleConnector.getX(), possibleConnector.getY(), -4);
@@ -512,7 +501,6 @@ public class Dungeon {
 					for(Room room: rooms) {
 						if(room.contains(neighbor.getX(), neighbor.getY()) && !visitedRooms.contains(room)) {
 							visitedRooms.add(room);
-//							System.out.println("By adding " + possibleConnector + " we have added a new room " + room.getOrigin());
 						}
 					}
 				}
@@ -520,7 +508,6 @@ public class Dungeon {
 				//If we haven't seen the adjacent path before, add to newPathIdentifiers
 				if((val >= 2) && !visitedPathIdentifiers.contains(val)) {
 					visitedPathIdentifiers.add(val);
-//					System.out.println("By adding " + possibleConnector + " we have added a new path value " + val);
 				}
 			} 
 			

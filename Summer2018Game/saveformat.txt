@@ -1,0 +1,9 @@
+Score
+NumPeacefulCompleted
+NumEasyCompleted
+NumMediumCompleted
+NumHardCompleted
+NumDeaths
+CurrentLayout Data
+Items?
+Health

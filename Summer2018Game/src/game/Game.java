@@ -23,8 +23,9 @@ public class Game implements Runnable {
 	private State gameState;
 	private State mainMenuState;
 	
-	//Keyboard Input
+	//User Inputs
 	private KeyManager keyManager;
+	private MouseManager mouseManager;
 	
 	public Game(int difficulty) {
 		this.difficulty = difficulty;
@@ -34,13 +35,17 @@ public class Game implements Runnable {
 		this.width = (dungeon.getData().getNumColumns()) * 50;
 		
 		keyManager = new KeyManager();
+		mouseManager = new MouseManager();
 	}
 	
 	private void init() {
 		//Prepare Display
 		this.display = new Display(TITLE, width, height);
 		this.display.getFrame().addKeyListener(keyManager);
-		
+		this.display.getFrame().addMouseListener(mouseManager);
+		this.display.getFrame().addMouseMotionListener(mouseManager);
+		this.display.getCanvas().addMouseListener(mouseManager);
+		this.display.getCanvas().addMouseMotionListener(mouseManager);
 		//Initialize Assets
 		Assets.init();
 		
@@ -53,6 +58,10 @@ public class Game implements Runnable {
 	
 	public KeyManager getKeyManager() {
 		return this.keyManager;
+	}
+	
+	public MouseManager getMouseManager() {
+		return this.mouseManager;
 	}
 	
 	private void tick() {

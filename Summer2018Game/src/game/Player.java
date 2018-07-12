@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 public class Player extends Creature{
 	private final int NUM_TICKS_MOVEMENT_DELAY = 10;
+	private static final int RENDER_DISTANCE = 3;
 	
 	private int coordinateX;
 	private int coordinateY;
@@ -27,24 +28,43 @@ public class Player extends Creature{
 				y -= 50;
 				coordinateY--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
+				updateSeen();
 			} else if(game.getKeyManager().down && (downVal == 0 || downVal == 2 || downVal == -2)) {
 				y += 50;
 				coordinateY++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
+				updateSeen();
 			} else if(game.getKeyManager().left && (leftVal == 0 || leftVal == 2 || leftVal == -2)) {
 				x -= 50;
 				coordinateX--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
+				updateSeen();
 			} else if(game.getKeyManager().right && (rightVal == 0 || rightVal == 2 || rightVal == -2)) {
 				x += 50;
 				coordinateX++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
+				updateSeen();
 			}
 		} else {
 			tickDelay--;
 		}
 		
 		
+	}
+	
+	private void updateSeen() {
+		for(int x = coordinateX - RENDER_DISTANCE; x <= coordinateX + RENDER_DISTANCE; x++) {
+			for(int y = coordinateY - RENDER_DISTANCE; y <= coordinateY + RENDER_DISTANCE; y++) {
+				
+				//Set seen if it's in bounds
+				if(x >= 0 &&
+				   x < game.dungeon.getSeen().getNumColumns() &&
+				   y >= 0 &&
+				   y < game.dungeon.getSeen().getNumRows()) {
+					game.dungeon.getSeen().set(x, y, true);
+				}
+			}
+		}
 	}
 
 	@Override

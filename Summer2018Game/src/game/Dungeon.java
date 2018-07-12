@@ -13,7 +13,10 @@ public class Dungeon {
 	private Random rand = new Random();
 	private int difficulty;
 	private Array2D<Integer> data;
+	private Array2D<Boolean> seen;
 	private ArrayList<Room> rooms;
+	private int numDungeonRows;
+	private int numDungeonColumns;
 	
 	//Room Count Coefficient controls how many attempts we give to generating rooms. See generateRooms()
 	private static final int ROOM_COUNT_COEFFICIENT = 8;
@@ -33,45 +36,57 @@ public class Dungeon {
 	 * 
 	 */
 	public Dungeon(int difficulty)  {
-		int numDungeonRows;
-		int numDungeonColumns;
 		this.rooms = new ArrayList<Room>();
 		if (difficulty == 0) {
-//			System.out.println("Difficulty set to non-hostile.");
 
 			// Set Fixed size for non-hostile dungeons
-			numDungeonRows = 10;
-			numDungeonColumns = 10;
+			this.numDungeonRows = 10;
+			this.numDungeonColumns = 10;
 		} else if (difficulty == 1) {
-//			System.out.println("Difficulty set to easy.");
 
 			// Set size to between 10x10 and 15x15 for easy dungeons
-			numDungeonRows = rand.nextInt(6) + 10;
-			numDungeonColumns = rand.nextInt(6) + 10;
+			this.numDungeonRows = rand.nextInt(6) + 10;
+			this.numDungeonColumns = rand.nextInt(6) + 10;
 		} else if (difficulty == 2) {
-//			System.out.println("Difficulty set to normal.");
 
-			// Set size to between 15x15 and 20x20 for easy dungeons
-			numDungeonRows = rand.nextInt(6) + 15;
-			numDungeonColumns = rand.nextInt(6) + 15;
+			// Set size to between 15x15 and 20x20 for medium dungeons
+			this.numDungeonRows = rand.nextInt(6) + 15;
+			this.numDungeonColumns = rand.nextInt(6) + 15;
 		} else if (difficulty == 3) {
-//			System.out.println("Difficulty set to hard.");
 
-			// Set size to between 20x20 and 25x25 for easy dungeons
-			numDungeonRows = rand.nextInt(6) + 20;
-			numDungeonColumns = rand.nextInt(6) + 20;
+			// Set size to between 20x20 and 25x25 for hard dungeons
+			this.numDungeonRows = rand.nextInt(6) + 20;
+			this.numDungeonColumns = rand.nextInt(6) + 20;
 		} else {
 			throw new IllegalArgumentException("Difficulty should be an integer value from 0-3.");
 		}
 
 		// System.out.println();
 		this.difficulty = difficulty;
-		data = new Array2D<Integer>(numDungeonRows + 2, numDungeonColumns + 2);
+		this.data = new Array2D<Integer>(numDungeonRows + 2, numDungeonColumns + 2);
+		this.seen = new Array2D<Boolean>(numDungeonRows + 2, numDungeonColumns + 2);
+		initializeSeen();
+		
 		generateDungeon(data);
+	}
+	
+	/**
+	 * Initializes all values of the seen Array2D to false
+	 */
+	public void initializeSeen() {
+		for(int x = 0; x < this.numDungeonColumns + 2; x++) {
+			for(int y = 0; y < this.numDungeonRows + 2; y++) {
+				this.seen.set(x, y, false);
+			}
+		}
 	}
 	
 	public Array2D<Integer> getData() { 
 		return new Array2D<Integer>(this.data);
+	}
+	
+	public Array2D<Boolean> getSeen() {
+		return this.seen;
 	}
 
 	/**

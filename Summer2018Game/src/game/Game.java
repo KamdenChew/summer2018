@@ -19,6 +19,7 @@ public class Game implements Runnable {
 	private BufferStrategy bs;
 	private Graphics graphics;
 	
+	
 	//States
 	private State gameState;
 	private State mainMenuState;
@@ -46,6 +47,7 @@ public class Game implements Runnable {
 		this.display.getFrame().addMouseMotionListener(mouseManager);
 		this.display.getCanvas().addMouseListener(mouseManager);
 		this.display.getCanvas().addMouseMotionListener(mouseManager);
+		
 		//Initialize Assets
 		Assets.init();
 		

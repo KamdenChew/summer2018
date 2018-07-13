@@ -5,25 +5,28 @@ import java.awt.image.BufferedImage;
 
 public class UIImageButton extends UIObject{
 
-	private BufferedImage[] images;
+	private BufferedImage image;
+	private BufferedImage hoverImage;
 	private ClickListener clickListener;
 	
-	public UIImageButton(float x, float y, int width, int height, BufferedImage[] images, ClickListener clickListener) {
+	public UIImageButton(float x, float y, int width, int height, BufferedImage image, BufferedImage hoverImage, ClickListener clickListener) {
 		super(x, y, width, height);
-		this.images = images;
+		this.image = image;
+		this.hoverImage = hoverImage;
 		this.clickListener = clickListener;
 	}
 
 	@Override
 	public void tick() {
+		
 	}
 
 	@Override
 	public void render(Graphics graphics) {
 		if(hovering) {
-			graphics.drawImage(images[1], (int) x, (int) y, width, height, null);
+			graphics.drawImage(hoverImage, (int) x, (int) y, width, height, null);
 		} else {
-			graphics.drawImage(images[0], (int) x, (int) y, width, height, null);
+			graphics.drawImage(image, (int) x, (int) y, width, height, null);
 		}
 	}
 

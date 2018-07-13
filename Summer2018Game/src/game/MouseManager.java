@@ -3,9 +3,11 @@ package game;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 
 public class MouseManager implements MouseListener, MouseMotionListener{
 
+	private ArrayList<UIObject> uiObjects = new ArrayList<UIObject>();
 	private boolean leftPressed;
 	private boolean rightPressed;
 	public int mouseX;
@@ -37,6 +39,12 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 	public void mouseMoved(MouseEvent e) {
 		mouseX = e.getX();
 		mouseY = e.getY();
+		
+		if(uiObjects != null) {
+			for(UIObject object: uiObjects) {
+				object.onMouseMove(e);
+			}
+		}
 	}
 
 	@Override
@@ -61,6 +69,12 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 		} else if(e.getButton() == MouseEvent.BUTTON3) {
 			rightPressed = false;
 		}
+		
+		if(uiObjects != null) {
+			for(UIObject object: uiObjects) {
+				object.onMouseRelease(e);
+			}
+		}
 	}
 
 	@Override
@@ -73,6 +87,14 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void addUIObject(UIObject object) {
+		uiObjects.add(object);
+	}
+	
+	public void removeUIObject(UIObject object) {
+		uiObjects.remove(object);
 	}
 
 }

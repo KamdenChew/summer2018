@@ -7,8 +7,8 @@ public class Game implements Runnable {
 
 	private final boolean DEBUG_FPS = false;
 	
-	private int width;
-	private int height;
+	private static final int WIDTH = 500;
+	private static final int HEIGHT = 500;
 	private static final String TITLE = "Dungeon Explorer";
 	private int difficulty;
 	protected Dungeon dungeon;
@@ -32,8 +32,8 @@ public class Game implements Runnable {
 		this.difficulty = difficulty;
 		
 		this.dungeon = new Dungeon(difficulty);
-		this.height = (dungeon.getData().getNumRows()) * 50;
-		this.width = (dungeon.getData().getNumColumns()) * 50;
+//		this.height = (dungeon.getData().getNumRows()) * 50;
+//		this.width = (dungeon.getData().getNumColumns()) * 50;
 		
 		keyManager = new KeyManager();
 		mouseManager = new MouseManager();
@@ -41,7 +41,7 @@ public class Game implements Runnable {
 	
 	private void init() {
 		//Prepare Display
-		this.display = new Display(TITLE, width, height);
+		this.display = new Display(TITLE, WIDTH, HEIGHT);
 		this.display.getFrame().addKeyListener(keyManager);
 		this.display.getFrame().addMouseListener(mouseManager);
 		this.display.getFrame().addMouseMotionListener(mouseManager);
@@ -55,9 +55,17 @@ public class Game implements Runnable {
 		gameState = new GameState(this);
 		mainMenuState = new MainMenuState(this);
 		
-		State.setState(gameState);
+		State.setState(mainMenuState);
 	}
 	
+	public State getGameState() {
+		return gameState;
+	}
+
+	public Display getDisplay() {
+		return display;
+	}
+
 	public KeyManager getKeyManager() {
 		return this.keyManager;
 	}
@@ -85,7 +93,7 @@ public class Game implements Runnable {
 		
 		graphics = bs.getDrawGraphics();
 		//Clear previous render
-		graphics.clearRect(0, 0, width, height);
+		graphics.clearRect(0, 0, WIDTH, HEIGHT);
 		
 		//Drawing
 //		graphics.setColor(Color.red);

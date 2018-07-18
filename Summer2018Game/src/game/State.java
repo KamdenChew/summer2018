@@ -19,7 +19,9 @@ public abstract class State {
 		return currentState;
 	}
 	
+	public abstract Array2D<Integer> getData();
+	
 	public abstract void tick();
 	
-	public abstract void render(Graphics graphic);
+	public abstract void render(Graphics graphics);
 }

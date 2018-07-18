@@ -1,48 +1,23 @@
 package game;
 
-
 import java.awt.Graphics;
-import java.util.Random;
 
-public class GameState extends State{
-
-	private static final int RENDER_DISTANCE = 3;
-	private Dungeon dungeon;
-	private Player player;
-	private Random rand = new Random();
+public class TownState extends State{
 	
-	public GameState(Game game) {
+	private static final int RENDER_DISTANCE = 3;
+	Array2D<Integer> data = new Array2D<Integer>(6, 6, new Integer[]{1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1});
+	private Player player;
+	
+	public TownState(Game game) {
 		super(game);
-		this.dungeon = game.dungeon;
-		
-		CoordinatePair startCoordinates = null;
-		Array2D<Integer> data = dungeon.getData();
-		while(startCoordinates == null || data.get(startCoordinates.getX(), startCoordinates.getY()) != 0) {
-			int randomColumn = rand.nextInt(data.getNumColumns() - 2)  + 1;
-			int randomRow = rand.nextInt(data.getNumRows() - 2) + 1;
-			startCoordinates = new CoordinatePair(randomColumn, randomRow);
-		}
-		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY());
-		
-		for(int x = player.getCoordinateX() - RENDER_DISTANCE; x <= player.getCoordinateX() + RENDER_DISTANCE; x++) {
-			for(int y = player.getCoordinateY() - RENDER_DISTANCE; y <= player.getCoordinateY() + RENDER_DISTANCE; y++) {
-				
-				//If it's in bounds, mark nearby tiles as seen!
-				if(x >= 0 &&
-						   x < game.dungeon.getSeen().getNumColumns() &&
-						   y >= 0 &&
-						   y < game.dungeon.getSeen().getNumRows()) {
-					dungeon.getSeen().set(x, y, true);
-				}
-			}
-		}
+		this.player = new Player(game, 2, 2);
 	}
 	
 	@Override
 	public Array2D<Integer> getData() {
-		return this.dungeon.getData();
+		return this.data;
 	}
-	
+
 	@Override
 	public void tick() {
 		this.player.tick();
@@ -50,7 +25,6 @@ public class GameState extends State{
 
 	@Override
 	public void render(Graphics graphics) {
-		Array2D<Integer> data = this.dungeon.getData();
 		int columns = data.getNumColumns();
 		int rows = data.getNumRows();
 		int xOffSet = player.getCoordinateX() - RENDER_DISTANCE;

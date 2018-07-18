@@ -5,9 +5,6 @@ import java.awt.Graphics;
 public class Player extends Creature{
 	private final int NUM_TICKS_MOVEMENT_DELAY = 10;
 	private static final int RENDER_DISTANCE = 3;
-	
-	private int coordinateX;
-	private int coordinateY;
 	private int tickDelay = 0;
 	
 	public Player(Game game, int coordinateX, int coordinateY) {
@@ -18,30 +15,30 @@ public class Player extends Creature{
 
 	@Override
 	public void tick() {
-		if(tickDelay == 0) {
-			int upVal = this.game.dungeon.getData().get(coordinateX, coordinateY - 1);
-			int downVal = this.game.dungeon.getData().get(coordinateX, coordinateY + 1);
-			int leftVal = this.game.dungeon.getData().get(coordinateX - 1, coordinateY);
-			int rightVal = this.game.dungeon.getData().get(coordinateX + 1, coordinateY);
+		if(tickDelay == 0 && State.getState().getData() != null) {
+			int upVal = State.getState().getData().get(coordinateX, coordinateY - 1);
+			int downVal = State.getState().getData().get(coordinateX, coordinateY + 1);
+			int leftVal = State.getState().getData().get(coordinateX - 1, coordinateY);
+			int rightVal = State.getState().getData().get(coordinateX + 1, coordinateY);
 			
 			if(game.getKeyManager().up && (upVal == 0 || upVal == 2 || upVal == -2)) {
 				y -= 50;
-				coordinateY--;
+				this.coordinateY--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 			} else if(game.getKeyManager().down && (downVal == 0 || downVal == 2 || downVal == -2)) {
 				y += 50;
-				coordinateY++;
+				this.coordinateY++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 			} else if(game.getKeyManager().left && (leftVal == 0 || leftVal == 2 || leftVal == -2)) {
 				x -= 50;
-				coordinateX--;
+				this.coordinateX--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 			} else if(game.getKeyManager().right && (rightVal == 0 || rightVal == 2 || rightVal == -2)) {
 				x += 50;
-				coordinateX++;
+				this.coordinateX++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 			}
@@ -69,7 +66,7 @@ public class Player extends Creature{
 
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(Assets.player, (int) x, (int) y, null);
+		graphics.drawImage(Assets.player, 150, 150, null);
 	}
 	
 }

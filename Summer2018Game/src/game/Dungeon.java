@@ -6,7 +6,7 @@ import java.util.Random;
 public class Dungeon {
 	/*
 	 * Dungeons are represented with Array2D's of ints. -1's represent the
-	 * dungeon outer boundary, 0's represent a walkable path, 1's represent a wall
+	 * dungeon outer boundary, 0's represent a walkable room, 1's represent a wall
 	 * (not walkable), 2's represent a walkable path, -2's represent an exit from the dungeon
 	 */
 

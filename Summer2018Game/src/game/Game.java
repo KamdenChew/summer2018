@@ -7,8 +7,8 @@ public class Game implements Runnable {
 
 	private final boolean DEBUG_FPS = false;
 	
-	private static final int WIDTH = 500;
-	private static final int HEIGHT = 500;
+	private static final int WIDTH = 350;
+	private static final int HEIGHT = 350;
 	private static final String TITLE = "Dungeon Explorer";
 	private int difficulty;
 	protected Dungeon dungeon;
@@ -23,6 +23,7 @@ public class Game implements Runnable {
 	//States
 	private State gameState;
 	private State mainMenuState;
+	private State townState;
 	
 	//User Inputs
 	private KeyManager keyManager;
@@ -54,10 +55,19 @@ public class Game implements Runnable {
 		//Initialize States
 		gameState = new GameState(this);
 		mainMenuState = new MainMenuState(this);
+		townState = new TownState(this);
 		
 		State.setState(mainMenuState);
 	}
 	
+	public State getMainMenuState() {
+		return mainMenuState;
+	}
+
+	public State getTownState() {
+		return townState;
+	}
+
 	public State getGameState() {
 		return gameState;
 	}

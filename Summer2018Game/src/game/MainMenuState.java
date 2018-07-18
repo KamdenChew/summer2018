@@ -4,31 +4,41 @@ import java.awt.Graphics;
 
 public class MainMenuState extends State {
 	
-	private UIImageButton startButton = new UIImageButton(200, 225, 100, 50, Assets.newGame, Assets.newGameHover, new ClickListener(){
+	private UIImageButton newGameButton = new UIImageButton(125, 100, 100, 50, Assets.newGame, Assets.newGameHover, new ClickListener(){
 
 		@Override
 		public void onClick() {
-			State.setState(game.getGameState());
-			int width = game.dungeon.getData().getNumColumns() * 50;
-			int height = game.dungeon.getData().getNumRows() * 50;
-			game.getDisplay().getFrame().setSize(width, height);
-			System.out.println(new CoordinatePair(game.getDisplay().getFrame().getWidth(), game.getDisplay().getFrame().getHeight()));
-			//TODO make sure display size is correct
+			State.setState(game.getTownState());
+		}});
+	
+	private UIImageButton loadGameButton = new UIImageButton(125, 200, 100, 50, Assets.loadGame, Assets.loadGameHover, new ClickListener(){
+		
+		@Override
+		public void onClick() {
+			System.out.println("Load Game Clicked!");
 		}});
 	
 	public MainMenuState(Game game) {
 		super(game);
-		this.game.getMouseManager().addUIObject(startButton);
+		this.game.getMouseManager().addUIObject(newGameButton);
+		this.game.getMouseManager().addUIObject(loadGameButton);
 	}
 	
 	@Override
 	public void tick() {
-		startButton.tick();
+		newGameButton.tick();
+		loadGameButton.tick();
 	}
 
 	@Override
 	public void render(Graphics graphics) {
-		startButton.render(graphics);
+		newGameButton.render(graphics);
+		loadGameButton.render(graphics);
+	}
+
+	@Override
+	public Array2D<Integer> getData() {
+		return null;
 	}
 
 }

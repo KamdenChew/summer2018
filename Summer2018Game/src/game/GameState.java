@@ -2,6 +2,8 @@ package game;
 
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameState extends State{
@@ -46,6 +48,9 @@ public class GameState extends State{
 	@Override
 	public void tick() {
 		this.player.tick();
+		if(this.game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
+			State.setState(new MenuState(this.game, this));
+		}
 	}
 
 	@Override
@@ -93,4 +98,9 @@ public class GameState extends State{
 		player.render(graphics);
 	}
 
+	@Override
+	public ArrayList<UIObject> getUIOBjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

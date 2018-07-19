@@ -20,7 +20,7 @@ public class Game implements Runnable {
 	private Graphics graphics;
 	
 	
-	//States
+	//Main States
 	private State gameState;
 	private State mainMenuState;
 	private State townState;

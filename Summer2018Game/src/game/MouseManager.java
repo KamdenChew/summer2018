@@ -62,6 +62,7 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1) {
@@ -69,9 +70,9 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 		} else if(e.getButton() == MouseEvent.BUTTON3) {
 			rightPressed = false;
 		}
-		
 		if(uiObjects != null) {
-			for(UIObject object: uiObjects) {
+			UIObject[] uiObjectArray =  uiObjects.toArray(new UIObject[uiObjects.size()]);
+			for(UIObject object: uiObjectArray) {
 				object.onMouseRelease(e);
 			}
 		}
@@ -93,8 +94,8 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 		uiObjects.add(object);
 	}
 	
-	public void removeUIObject(UIObject object) {
-		uiObjects.remove(object);
+	public void removeUIObjects() {
+		uiObjects.clear();
 	}
 
 }

@@ -1,6 +1,7 @@
 package game;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class MainMenuState extends State {
 	
@@ -41,4 +42,11 @@ public class MainMenuState extends State {
 		return null;
 	}
 
+	@Override
+	public ArrayList<UIObject> getUIOBjects() {
+		ArrayList<UIObject> uiObjects = new ArrayList<UIObject>();
+		uiObjects.add(newGameButton);
+		uiObjects.add(loadGameButton);
+		return uiObjects;
+	}
 }

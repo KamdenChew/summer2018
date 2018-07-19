@@ -1,12 +1,15 @@
 package game;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class TownState extends State{
 	
 	private static final int RENDER_DISTANCE = 3;
-	Array2D<Integer> data = new Array2D<Integer>(6, 6, new Integer[]{1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1});
+	private Array2D<Integer> data = new Array2D<Integer>(6, 6, new Integer[]{1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1});
 	private Player player;
+	
 	
 	public TownState(Game game) {
 		super(game);
@@ -21,6 +24,9 @@ public class TownState extends State{
 	@Override
 	public void tick() {
 		this.player.tick();
+		if(this.game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
+			State.setState(new MenuState(this.game, this));
+		}
 	}
 
 	@Override
@@ -46,25 +52,32 @@ public class TownState extends State{
 					} else if(val != -2){//if(data.get(x, y) == 2) {
 						graphics.drawImage(Assets.dirt, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
 					} 
-					
-//					//If we've seen it, go ahead and render it normally
-//					if(dungeon.getSeen().get(x, y)) {
-//						if(Math.abs(val) == 1) {
-//							graphics.drawImage(Assets.wall, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
-//						} else if(val == 0) {
-//							graphics.drawImage(Assets.stone, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
-//						} else if(val != -2){//if(data.get(x, y) == 2) {
-//							graphics.drawImage(Assets.dirt, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
-//						} 
-//						
-//					//If we haven't seen it, render darkness
-//					} else {
-//						graphics.drawImage(Assets.empty, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
-//					}
 				}
 			}
 		}
 		player.render(graphics);
 	}
+
+	@Override
+	public ArrayList<UIObject> getUIOBjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+//Code for rendering a map
+//	//If we've seen it, go ahead and render it normally
+//	if(dungeon.getSeen().get(x, y)) {
+//		if(Math.abs(val) == 1) {
+//			graphics.drawImage(Assets.wall, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
+//		} else if(val == 0) {
+//			graphics.drawImage(Assets.stone, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
+//		} else if(val != -2){//if(data.get(x, y) == 2) {
+//			graphics.drawImage(Assets.dirt, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
+//		} 
+//		
+//	//If we haven't seen it, render darkness
+//	} else {
+//		graphics.drawImage(Assets.empty, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
+//	}
 
 }

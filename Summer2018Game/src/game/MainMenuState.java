@@ -2,6 +2,7 @@ package game;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MainMenuState extends State {
 	
@@ -17,6 +18,13 @@ public class MainMenuState extends State {
 		@Override
 		public void onClick() {
 			System.out.println("Load Game Clicked!");
+			
+			//TODO remove console input to program and replace with UI
+			Scanner scanner = new Scanner(System.in);  // Reading from System.in
+			System.out.println("Enter a saved game file path: ");
+			String filePath = scanner.nextLine();
+			scanner.close();
+			GameLoader.loadGame(game, filePath);
 		}});
 	
 	public MainMenuState(Game game) {

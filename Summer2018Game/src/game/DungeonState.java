@@ -6,14 +6,14 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class GameState extends State{
+public class DungeonState extends State{
 
 	private static final int RENDER_DISTANCE = 3;
 	private Dungeon dungeon;
 	private Player player;
 	private Random rand = new Random();
 	
-	public GameState(Game game) {
+	public DungeonState(Game game) {
 		super(game);
 		this.dungeon = game.dungeon;
 		
@@ -38,6 +38,12 @@ public class GameState extends State{
 				}
 			}
 		}
+	}
+	
+	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
+		super(game);
+		this.dungeon = new Dungeon(difficulty, data, seen, numDungeonRows, numDungeonColumns);
+		this.player = new Player(game, x, y);
 	}
 	
 	@Override
@@ -77,21 +83,6 @@ public class GameState extends State{
 					} else if(val != -2){//if(data.get(x, y) == 2) {
 						graphics.drawImage(Assets.dirt, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
 					} 
-					
-//					//If we've seen it, go ahead and render it normally
-//					if(dungeon.getSeen().get(x, y)) {
-//						if(Math.abs(val) == 1) {
-//							graphics.drawImage(Assets.wall, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
-//						} else if(val == 0) {
-//							graphics.drawImage(Assets.stone, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
-//						} else if(val != -2){//if(data.get(x, y) == 2) {
-//							graphics.drawImage(Assets.dirt, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
-//						} 
-//						
-//					//If we haven't seen it, render darkness
-//					} else {
-//						graphics.drawImage(Assets.empty, (x - RENDER_DISTANCE) * 50, (y - RENDER_DISTANCE) * 50, null);
-//					}
 				}
 			}
 		}

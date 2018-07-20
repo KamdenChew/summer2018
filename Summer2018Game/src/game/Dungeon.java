@@ -70,6 +70,15 @@ public class Dungeon {
 		generateDungeon(data);
 	}
 	
+	//TODO add javadoc and also add rooms as paramater to this constructor?
+	public Dungeon(int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
+		this.difficulty = difficulty;
+		this.data = data;
+		this.seen = seen;
+		this.numDungeonColumns = numDungeonColumns;
+		this.numDungeonRows = numDungeonRows;
+	}
+	
 	/**
 	 * Initializes all values of the seen Array2D to false
 	 */

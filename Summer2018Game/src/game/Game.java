@@ -10,7 +10,6 @@ public class Game implements Runnable {
 	private static final int WIDTH = 350;
 	private static final int HEIGHT = 350;
 	private static final String TITLE = "Dungeon Explorer";
-	private int difficulty;
 	protected Dungeon dungeon;
 	private Thread thread;
 	private boolean running;
@@ -21,7 +20,7 @@ public class Game implements Runnable {
 	
 	
 	//Main States
-	private State gameState;
+	private State dungeonState;
 	private State mainMenuState;
 	private State townState;
 	
@@ -29,8 +28,21 @@ public class Game implements Runnable {
 	private KeyManager keyManager;
 	private MouseManager mouseManager;
 	
+	//Game Statistics
+	private int difficulty;
+	private int score;
+	private int numPeacefulCompleted;
+	private int numEasyCompleted;
+	private int numMediumCompleted;
+	private int numHardCompleted;
+	
 	public Game(int difficulty) {
 		this.difficulty = difficulty;
+		this.score = 0;
+		this.numPeacefulCompleted = 0;
+		this.numEasyCompleted = 0;
+		this.numMediumCompleted = 0;
+		this.numHardCompleted = 0;
 		
 		this.dungeon = new Dungeon(difficulty);
 //		this.height = (dungeon.getData().getNumRows()) * 50;
@@ -40,6 +52,46 @@ public class Game implements Runnable {
 		mouseManager = new MouseManager();
 	}
 	
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getNumPeacefulCompleted() {
+		return numPeacefulCompleted;
+	}
+
+	public void setNumPeacefulCompleted(int numPeacefulCompleted) {
+		this.numPeacefulCompleted = numPeacefulCompleted;
+	}
+
+	public int getNumEasyCompleted() {
+		return numEasyCompleted;
+	}
+
+	public void setNumEasyCompleted(int numEasyCompleted) {
+		this.numEasyCompleted = numEasyCompleted;
+	}
+
+	public int getNumMediumCompleted() {
+		return numMediumCompleted;
+	}
+
+	public void setNumMediumCompleted(int numMediumCompleted) {
+		this.numMediumCompleted = numMediumCompleted;
+	}
+
+	public int getNumHardCompleted() {
+		return numHardCompleted;
+	}
+
+	public void setNumHardCompleted(int numHardCompleted) {
+		this.numHardCompleted = numHardCompleted;
+	}
+
 	private void init() {
 		//Prepare Display
 		this.display = new Display(TITLE, WIDTH, HEIGHT);
@@ -53,9 +105,9 @@ public class Game implements Runnable {
 		Assets.init();
 		
 		//Initialize States
-		gameState = new GameState(this);
+		dungeonState = new DungeonState(this);
 		mainMenuState = new MainMenuState(this);
-		townState = new TownState(this);
+		townState = new TownState(this, 2, 2);
 		
 		State.setState(mainMenuState);
 	}
@@ -68,8 +120,8 @@ public class Game implements Runnable {
 		return townState;
 	}
 
-	public State getGameState() {
-		return gameState;
+	public State getDungeonState() {
+		return dungeonState;
 	}
 
 	public Display getDisplay() {

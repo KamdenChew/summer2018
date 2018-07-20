@@ -18,29 +18,34 @@ public class GameLoader {
 		
 		//First line is the positions of the player
 		String positionString = scanner.nextLine();
-		int x = Integer.parseInt(positionString.substring(0,1));
-		int y = Integer.parseInt(positionString.substring(2,3));
+		Scanner lineScanner = new Scanner(positionString);
+		int x = Integer.parseInt(lineScanner.next());
+		int y = Integer.parseInt(lineScanner.next());
+		lineScanner.close();
 		System.out.println("X: " + x);
 		System.out.println("Y: " + y);
 		
 		//Second line is the Array2D's width
 		int width = Integer.parseInt(scanner.nextLine());
+		System.out.println("Width: " + width);
 		
 		//Third line is the Array2D's height
 		int height = Integer.parseInt(scanner.nextLine());
+		System.out.println("Height: " + height);
 		
 		//Fourth line is the tile data
 		String tileDataString = scanner.nextLine();
-		Scanner lineScanner = new Scanner(tileDataString);
+		System.out.println("tileDataString: " + tileDataString);
 		Integer[] tileData = new Integer[width * height];
-		lineScanner.close();
 		lineScanner = new Scanner(tileDataString);
 		int i = 0;
-		while(scanner.hasNext()) {
-			tileData[i] = Integer.parseInt(scanner.next());
+		while(lineScanner.hasNext()) {
+			tileData[i] = Integer.parseInt(lineScanner.next());
 			i++;
 		}
 		Array2D<Integer> data = new Array2D<Integer>(height, width, tileData);
+		System.out.println("Data: ");
+		System.out.println(data);;
 		lineScanner.close();
 		
 		//Fifth line is the difficulty (-1 if TownState)
@@ -51,16 +56,19 @@ public class GameLoader {
 		lineScanner = new Scanner(seenDataString);
 		Boolean[] seenData = new Boolean[width * height];
 		i = 0;
-		while(scanner.hasNext()) {
-			String val = scanner.next();
-			if(val == "T") {
+		while(lineScanner.hasNext()) {
+			String val = lineScanner.next();
+			if(val.equals("T")) {
 				seenData[i] = true;
-			} else if(val == "F") {
+			} else if(val.equals("F")) {
 				seenData[i] = false;
 			}
 			i++;
 		}
+		System.out.println("seenData: " + seenData.toString());
 		Array2D<Boolean> seen = new Array2D<Boolean>(height, width, seenData);
+		System.out.println("Seen: ");
+		System.out.println(seen);
 		lineScanner.close();
 
 		//TownState if difficulty is -1
@@ -94,6 +102,7 @@ public class GameLoader {
 		
 		if(loadedState != null) {
 			State.setState(loadedState);
+			System.out.println("State not null, switching.");
 		} else {
 			System.exit(1);
 		}

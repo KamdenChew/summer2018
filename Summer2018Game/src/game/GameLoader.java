@@ -23,20 +23,15 @@ public class GameLoader {
 		int x = Integer.parseInt(lineScanner.next());
 		int y = Integer.parseInt(lineScanner.next());
 		lineScanner.close();
-		System.out.println("X: " + x);
-		System.out.println("Y: " + y);
 		
 		//Second line is the Array2D's width
 		int width = Integer.parseInt(scanner.nextLine());
-		System.out.println("Width: " + width);
 		
 		//Third line is the Array2D's height
 		int height = Integer.parseInt(scanner.nextLine());
-		System.out.println("Height: " + height);
 		
 		//Fourth line is the tile data
 		String tileDataString = scanner.nextLine();
-		System.out.println("tileDataString: " + tileDataString);
 		Integer[] tileData = new Integer[width * height];
 		lineScanner = new Scanner(tileDataString);
 		int i = 0;
@@ -45,8 +40,6 @@ public class GameLoader {
 			i++;
 		}
 		Array2D<Integer> data = new Array2D<Integer>(height, width, tileData);
-		System.out.println("Data: ");
-		System.out.println(data);;
 		lineScanner.close();
 		
 		//Fifth line is the difficulty (-1 if TownState)
@@ -66,10 +59,7 @@ public class GameLoader {
 			}
 			i++;
 		}
-		System.out.println("seenData: " + seenData.toString());
 		Array2D<Boolean> seen = new Array2D<Boolean>(height, width, seenData);
-		System.out.println("Seen: ");
-		System.out.println(seen);
 		lineScanner.close();
 
 		//TownState if difficulty is -1
@@ -78,12 +68,10 @@ public class GameLoader {
 		
 		if(difficulty == -1) {
 			loadedState = new TownState(game, x, y);
-			System.out.println("Town State loaded");
 			
 		//If difficulty falls in our defined dungeon difficulty bounds, then it's a dungeon state
 		} else if(difficulty >= 0 && difficulty <= 3) {
 			loadedState = new DungeonState(game, x, y, difficulty, data, seen, height, width);
-			System.out.println("Dungeon State loaded");
 		}
 		
 		//Seventh line is score
@@ -103,7 +91,6 @@ public class GameLoader {
 		
 		if(loadedState != null) {
 			State.setState(loadedState);
-			System.out.println("State not null, switching.");
 		} else {
 			System.exit(1);
 		}

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class TownState extends State{
 	
-	private Array2D<Integer> data = new Array2D<Integer>(6, 6, new Integer[]{1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1});
+	private Array2D<Integer> data = new Array2D<Integer>(15, 15, new Integer[]{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,-3,0,0,0,-4,0,0,0,-5,0,0,0,-6,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1});
 	private Player player;
 	
 	
@@ -53,9 +53,17 @@ public class TownState extends State{
 						graphics.drawImage(Assets.wall, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
 					} else if(val == 0) {
 						graphics.drawImage(Assets.stone, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
-					} else if(val != -2){//if(data.get(x, y) == 2) {
+					} else if(val == 2){
 						graphics.drawImage(Assets.dirt, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
-					} 
+					} else if(val == -3) {
+						graphics.drawImage(Assets.peacefulWarp, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+					} else if(val == -4) {
+						graphics.drawImage(Assets.easyWarp, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+					} else if(val == -5) {
+						graphics.drawImage(Assets.mediumWarp, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+					} else if(val == -6) {
+						graphics.drawImage(Assets.hardWarp, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+					}
 				}
 			}
 		}

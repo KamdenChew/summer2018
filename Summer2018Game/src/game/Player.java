@@ -21,26 +21,30 @@ public class Player extends Creature{
 			int leftVal = State.getState().getData().get(coordinateX - 1, coordinateY);
 			int rightVal = State.getState().getData().get(coordinateX + 1, coordinateY);
 			
-			if(game.getKeyManager().up && (upVal == 0 || upVal == 2 || upVal == -2)) {
+			if(game.getKeyManager().up && (Math.abs(upVal) != 1)) {
 				y -= 50;
 				this.coordinateY--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
-			} else if(game.getKeyManager().down && (downVal == 0 || downVal == 2 || downVal == -2)) {
+				System.out.println("Player coordinates: " + new CoordinatePair(coordinateX, coordinateY));
+			} else if(game.getKeyManager().down && (Math.abs(downVal) != 1)) {
 				y += 50;
 				this.coordinateY++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
-			} else if(game.getKeyManager().left && (leftVal == 0 || leftVal == 2 || leftVal == -2)) {
+				System.out.println("Player coordinates: " + new CoordinatePair(coordinateX, coordinateY));
+			} else if(game.getKeyManager().left && (Math.abs(leftVal) != 1)) {
 				x -= 50;
 				this.coordinateX--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
-			} else if(game.getKeyManager().right && (rightVal == 0 || rightVal == 2 || rightVal == -2)) {
+				System.out.println("Player coordinates: " + new CoordinatePair(coordinateX, coordinateY));
+			} else if(game.getKeyManager().right && (Math.abs(rightVal) != 1)) {
 				x += 50;
 				this.coordinateX++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
+				System.out.println("Player coordinates: " + new CoordinatePair(coordinateX, coordinateY));
 			}
 		} else {
 			tickDelay--;

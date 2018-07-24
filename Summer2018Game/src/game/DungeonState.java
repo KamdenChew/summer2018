@@ -38,8 +38,13 @@ public class DungeonState extends State{
 				}
 			}
 		}
+		game.setPlayer(this.player);
 	}
 	
+	public Player getPlayer() {
+		return player;
+	}
+
 	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
 		super(game);
 		this.dungeon = new Dungeon(difficulty, data, seen, numDungeonRows, numDungeonColumns);
@@ -80,9 +85,11 @@ public class DungeonState extends State{
 						graphics.drawImage(Assets.wall, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
 					} else if(val == 0) {
 						graphics.drawImage(Assets.stone, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
-					} else if(val != -2){//if(data.get(x, y) == 2) {
+					} else if(val == 2){
 						graphics.drawImage(Assets.dirt, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
-					} 
+					} else if(val == -2) {
+						graphics.drawImage(Assets.exit, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+					}
 				}
 			}
 		}

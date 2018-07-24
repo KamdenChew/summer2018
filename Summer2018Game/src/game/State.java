@@ -14,6 +14,16 @@ public abstract class State {
 	
 	public static void setState(State state) {
 		currentState = state;
+		if(state instanceof DungeonState) {
+			//TODO don't hardcode difficulty, set for debugging
+			System.out.println("We're in a dungeon now");
+			game.setDifficulty(1);
+			game.setPlayer(((DungeonState) state).getPlayer());
+		} else if(state instanceof TownState) {
+			System.out.println("We're in a town now");
+			game.setDifficulty(-1);
+			game.setPlayer(new Player(game, 7,7));
+		}
 		game.getMouseManager().removeUIObjects();
 		if(state.getUIOBjects() != null) {
 			for(UIObject object: state.getUIOBjects()) {

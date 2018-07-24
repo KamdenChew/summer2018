@@ -78,6 +78,7 @@ public class GameSaver {
 				
 				output.flush();
 				output.close();
+				System.out.println("Save complete.");
 				
 			} else {
 				System.out.println("getData or getSeen was null...");

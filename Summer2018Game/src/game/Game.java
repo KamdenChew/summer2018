@@ -135,7 +135,7 @@ public class Game implements Runnable {
 		//Initialize States
 		dungeonState = new DungeonState(this);
 		mainMenuState = new MainMenuState(this);
-		townState = new TownState(this, 2, 2);
+		townState = new TownState(this, 7, 7);
 		
 		State.setState(mainMenuState);
 	}

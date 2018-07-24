@@ -9,7 +9,7 @@ public class MainMenuState extends State {
 
 		@Override
 		public void onClick() {
-			State.setState(game.getTownState());
+			State.setState(new TownState(game, 7, 7));
 		}});
 	
 	private UIImageButton loadGameButton = new UIImageButton(game.getWidth() / 2 - 50, game.getHeight() / 2 + 25, 100, 50, Assets.loadGame, Assets.loadGameHover, new ClickListener(){

@@ -20,6 +20,10 @@ public class TownState extends State{
 		game.setPlayer(this.player);
 	}
 	
+	public Player getPlayer() {
+		return player;
+	}
+
 	@Override
 	public Array2D<Integer> getData() {
 		return this.data;
@@ -28,6 +32,7 @@ public class TownState extends State{
 	@Override
 	public void tick() {
 		this.player.tick();
+		
 		if(this.game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
 			State.setState(new MenuState(this.game, this));
 		}

@@ -18,15 +18,8 @@ public class Game implements Runnable {
 	private BufferStrategy bs;
 	private Graphics graphics;
 	
-	protected Dungeon dungeon;
 	private Thread thread;
 	private Player player;
-	
-	
-	//Main States
-	private State dungeonState;
-	private State mainMenuState;
-	private State townState;
 	
 	//User Inputs
 	private KeyManager keyManager;
@@ -50,8 +43,6 @@ public class Game implements Runnable {
 		this.numMediumCompleted = 0;
 		this.numHardCompleted = 0;
 		
-		this.dungeon = new Dungeon(difficulty);
-		
 		keyManager = new KeyManager();
 		mouseManager = new MouseManager();
 	}
@@ -67,7 +58,7 @@ public class Game implements Runnable {
 	public int getDifficulty() {
 		return difficulty;
 	}
-
+	
 	public void setDifficulty(int difficulty) {
 		this.difficulty = difficulty;
 	}
@@ -132,28 +123,11 @@ public class Game implements Runnable {
 		//Initialize Assets
 		Assets.init();
 		
-		//Initialize States
-		dungeonState = new DungeonState(this);
-		mainMenuState = new MainMenuState(this);
-		townState = new TownState(this, 7, 7);
-		
-		State.setState(mainMenuState);
+		State.setState(new MainMenuState(this));
 	}
 	
 	public Scanner getScanner() {
 		return scanner;
-	}
-	
-	public State getMainMenuState() {
-		return mainMenuState;
-	}
-
-	public State getTownState() {
-		return townState;
-	}
-
-	public State getDungeonState() {
-		return dungeonState;
 	}
 
 	public Display getDisplay() {

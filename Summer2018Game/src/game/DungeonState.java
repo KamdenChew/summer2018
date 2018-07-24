@@ -11,11 +11,14 @@ public class DungeonState extends State{
 	private Dungeon dungeon;
 	private Player player;
 	private Random rand = new Random();
+	private int difficulty;
 	
-	public DungeonState(Game game) {
+	public DungeonState(Game game, int difficulty) {
 		super(game);
-		this.dungeon = game.dungeon;
-		
+		this.game.setDifficulty(difficulty);
+		System.out.println("Set difficulty to: " + difficulty);
+		this.dungeon = new Dungeon(difficulty);
+		this.difficulty = difficulty;
 		CoordinatePair startCoordinates = null;
 		Array2D<Integer> data = dungeon.getData();
 		while(startCoordinates == null || data.get(startCoordinates.getX(), startCoordinates.getY()) != 0) {
@@ -31,9 +34,9 @@ public class DungeonState extends State{
 				
 				//If it's in bounds, mark nearby tiles as seen!
 				if(x >= 0 &&
-						   x < game.dungeon.getSeen().getNumColumns() &&
+						   x < dungeon.getSeen().getNumColumns() &&
 						   y >= 0 &&
-						   y < game.dungeon.getSeen().getNumRows()) {
+						   y < dungeon.getSeen().getNumRows()) {
 					dungeon.getSeen().set(x, y, true);
 				}
 			}
@@ -41,12 +44,17 @@ public class DungeonState extends State{
 		game.setPlayer(this.player);
 	}
 	
+	public int getDifficulty() {
+		return difficulty;
+	}
+
 	public Player getPlayer() {
 		return player;
 	}
 
 	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
 		super(game);
+		game.setDifficulty(difficulty);
 		this.dungeon = new Dungeon(difficulty, data, seen, numDungeonRows, numDungeonColumns);
 		this.player = new Player(game, x, y);
 	}

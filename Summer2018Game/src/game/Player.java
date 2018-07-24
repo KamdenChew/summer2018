@@ -3,7 +3,7 @@ package game;
 import java.awt.Graphics;
 
 public class Player extends Creature{
-	private final int NUM_TICKS_MOVEMENT_DELAY = 10;
+	private static final int NUM_TICKS_MOVEMENT_DELAY = 10;
 	private static final int RENDER_DISTANCE = 3;
 	private int tickDelay = 0;
 	
@@ -66,7 +66,7 @@ public class Player extends Creature{
 
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(Assets.player, 150, 150, null);
+		graphics.drawImage(Assets.player, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
 	}
 	
 }

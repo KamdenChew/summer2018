@@ -6,7 +6,8 @@ import java.util.Scanner;
 
 public class GameLoader {
 
-	public static void loadGame(Game game, String filePath) {
+	public static void loadGame(Game game, String fileName) {
+		String filePath = "./res/saves/" + fileName;
 		File file = new File(filePath);
 		Scanner scanner = null;
 		try {
@@ -58,9 +59,9 @@ public class GameLoader {
 		i = 0;
 		while(lineScanner.hasNext()) {
 			String val = lineScanner.next();
-			if(val.equals("T")) {
+			if(val.equals("true")) {
 				seenData[i] = true;
-			} else if(val.equals("F")) {
+			} else if(val.equals("false")) {
 				seenData[i] = false;
 			}
 			i++;
@@ -76,7 +77,7 @@ public class GameLoader {
 		State loadedState = null;
 		
 		if(difficulty == -1) {
-			loadedState = new MenuState(game, new TownState(game, x, y));
+			loadedState = new TownState(game, x, y);
 			System.out.println("Town State loaded");
 			
 		//If difficulty falls in our defined dungeon difficulty bounds, then it's a dungeon state

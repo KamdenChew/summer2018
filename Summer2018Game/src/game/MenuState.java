@@ -2,19 +2,23 @@ package game;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MenuState extends State {
 
 	private State prevState;
 	
-	private UIImageButton saveGameButton = new UIImageButton(125, 100, 100, 50, Assets.saveGame, Assets.saveGameHover, new ClickListener(){
+	private UIImageButton saveGameButton = new UIImageButton(game.getWidth() / 2 - 50, game.getHeight() / 2 - 75, 100, 50, Assets.saveGame, Assets.saveGameHover, new ClickListener(){
 
 		@Override
 		public void onClick() {
 			System.out.println("Save Game Clicked!");
+			System.out.print("Please enter a name for your save file: ");
+			String fileName = game.getScanner().nextLine();
+			GameSaver.saveGame(game, fileName);
 		}});
 	
-	private UIImageButton closeMenuButton = new UIImageButton(125, 200, 100, 50, Assets.closeMenu, Assets.closeMenuHover, new ClickListener(){
+	private UIImageButton closeMenuButton = new UIImageButton(game.getWidth() / 2 - 50, game.getHeight() / 2 + 25, 100, 50, Assets.closeMenu, Assets.closeMenuHover, new ClickListener(){
 
 		@Override
 		public void onClick() {
@@ -31,8 +35,12 @@ public class MenuState extends State {
 
 	@Override
 	public Array2D<Integer> getData() {
-		// TODO Auto-generated method stub
-		return null;
+		return prevState.getData();
+	}
+	
+	@Override
+	public Array2D<Boolean> getSeen() {
+		return prevState.getSeen();
 	}
 
 	@Override

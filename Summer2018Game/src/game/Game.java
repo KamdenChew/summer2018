@@ -1,22 +1,26 @@
 package game;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.io.IOException;
+import java.util.Scanner;
 
 public class Game implements Runnable {
 
 	private final boolean DEBUG_FPS = false;
 	
-	private static final int WIDTH = 350;
-	private static final int HEIGHT = 350;
+	//Display parameters
+	private final int RENDER_DISTANCE = 6;
+	private final int WIDTH = 50 * (RENDER_DISTANCE * 2 + 1);
+	private final int HEIGHT = 50 * (RENDER_DISTANCE * 2 + 1);
+
 	private static final String TITLE = "Dungeon Explorer";
-	protected Dungeon dungeon;
-	private Thread thread;
 	private boolean running;
-	
 	private Display display;
 	private BufferStrategy bs;
 	private Graphics graphics;
+	
+	protected Dungeon dungeon;
+	private Thread thread;
+	private Player player;
 	
 	
 	//Main States
@@ -27,9 +31,11 @@ public class Game implements Runnable {
 	//User Inputs
 	private KeyManager keyManager;
 	private MouseManager mouseManager;
+	private Scanner scanner = new Scanner(System.in);
 	
 	//Game Statistics
 	private int difficulty;
+	
 	private int score;
 	private int numPeacefulCompleted;
 	private int numEasyCompleted;
@@ -45,13 +51,35 @@ public class Game implements Runnable {
 		this.numHardCompleted = 0;
 		
 		this.dungeon = new Dungeon(difficulty);
-//		this.height = (dungeon.getData().getNumRows()) * 50;
-//		this.width = (dungeon.getData().getNumColumns()) * 50;
 		
 		keyManager = new KeyManager();
 		mouseManager = new MouseManager();
 	}
 	
+	public int getWidth() {
+		return WIDTH;
+	}
+
+	public int getHeight() {
+		return HEIGHT;
+	}
+	
+	public int getDifficulty() {
+		return difficulty;
+	}
+
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
 	public int getScore() {
 		return score;
 	}
@@ -112,6 +140,10 @@ public class Game implements Runnable {
 		State.setState(mainMenuState);
 	}
 	
+	public Scanner getScanner() {
+		return scanner;
+	}
+	
 	public State getMainMenuState() {
 		return mainMenuState;
 	}
@@ -126,6 +158,10 @@ public class Game implements Runnable {
 
 	public Display getDisplay() {
 		return display;
+	}
+	
+	public int getRenderDistance() {
+		return RENDER_DISTANCE;
 	}
 
 	public KeyManager getKeyManager() {

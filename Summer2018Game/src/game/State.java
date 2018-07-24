@@ -27,7 +27,10 @@ public abstract class State {
 	}
 	
 	public abstract ArrayList<UIObject> getUIOBjects();	
+	
 	public abstract Array2D<Integer> getData();
+	
+	public abstract Array2D<Boolean> getSeen();
 	
 	public abstract void tick();
 	

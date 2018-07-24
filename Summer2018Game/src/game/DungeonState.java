@@ -8,7 +8,6 @@ import java.util.Random;
 
 public class DungeonState extends State{
 
-	private static final int RENDER_DISTANCE = 3;
 	private Dungeon dungeon;
 	private Player player;
 	private Random rand = new Random();
@@ -25,9 +24,10 @@ public class DungeonState extends State{
 			startCoordinates = new CoordinatePair(randomColumn, randomRow);
 		}
 		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY());
+		game.setPlayer(this.player);
 		
-		for(int x = player.getCoordinateX() - RENDER_DISTANCE; x <= player.getCoordinateX() + RENDER_DISTANCE; x++) {
-			for(int y = player.getCoordinateY() - RENDER_DISTANCE; y <= player.getCoordinateY() + RENDER_DISTANCE; y++) {
+		for(int x = player.getCoordinateX() - game.getRenderDistance(); x <= player.getCoordinateX() + game.getRenderDistance(); x++) {
+			for(int y = player.getCoordinateY() - game.getRenderDistance(); y <= player.getCoordinateY() + game.getRenderDistance(); y++) {
 				
 				//If it's in bounds, mark nearby tiles as seen!
 				if(x >= 0 &&
@@ -64,10 +64,10 @@ public class DungeonState extends State{
 		Array2D<Integer> data = this.dungeon.getData();
 		int columns = data.getNumColumns();
 		int rows = data.getNumRows();
-		int xOffSet = player.getCoordinateX() - RENDER_DISTANCE;
-		int yOffSet = player.getCoordinateY() - RENDER_DISTANCE;
-		for(int x = player.getCoordinateX() - RENDER_DISTANCE; x <= player.getCoordinateX() + RENDER_DISTANCE; x++) {
-			for(int y = player.getCoordinateY() - RENDER_DISTANCE; y <= player.getCoordinateY() + RENDER_DISTANCE; y++) {
+		int xOffSet = player.getCoordinateX() - game.getRenderDistance();
+		int yOffSet = player.getCoordinateY() - game.getRenderDistance();
+		for(int x = player.getCoordinateX() - game.getRenderDistance(); x <= player.getCoordinateX() + game.getRenderDistance(); x++) {
+			for(int y = player.getCoordinateY() - game.getRenderDistance(); y <= player.getCoordinateY() + game.getRenderDistance(); y++) {
 
 				//If it's off the board just visualize it as a wall
 				if(x < 0 || x >= columns || y < 0 || y >= rows) {
@@ -93,5 +93,10 @@ public class DungeonState extends State{
 	public ArrayList<UIObject> getUIOBjects() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Array2D<Boolean> getSeen() {
+		return this.dungeon.getSeen();
 	}
 }

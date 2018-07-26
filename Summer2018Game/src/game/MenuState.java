@@ -12,18 +12,22 @@ public class MenuState extends State {
 
 		@Override
 		public void onClick() {
-			System.out.println("Save Game Clicked!");
-			System.out.print("Please enter a name for your save file: ");
-			String fileName = game.getScanner().nextLine();
-			GameSaver.saveGame(game, fileName);
+			if(game.isPrimaryWindow()) {
+				System.out.println("Save Game Clicked!");
+				System.out.print("Please enter a name for your save file: ");
+				String fileName = game.getScanner().nextLine();
+				GameSaver.saveGame(game, fileName);
+			}
 		}});
 	
 	private UIImageButton closeMenuButton = new UIImageButton(game.getWidth() / 2 - 50, game.getHeight() / 2 + 25, 100, 50, Assets.closeMenu, Assets.closeMenuHover, new ClickListener(){
 
 		@Override
 		public void onClick() {
-			System.out.println("Close Menu Clicked!");
-			State.setState(prevState);
+			if(game.isPrimaryWindow()) {
+				System.out.println("Close Menu Clicked!");
+				State.setState(prevState);
+			}
 		}});
 	
 	public MenuState(Game game, State prevState) {

@@ -1,0 +1,116 @@
+package game;
+
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class LoadWindow {
+	private JFrame frame;
+	private JButton loadButton;
+	private JButton cancelButton;
+	private JLabel label;
+	private Game game;
+	private String[] fileNames;
+	private JComboBox box;
+	private String selected = "";
+	
+//	//TODO Make sure main program can't be accessed while load menu is open
+	
+	public LoadWindow(final Game game) {
+		this.game = game;
+		
+		//Initialize load button
+		this.loadButton = new JButton();
+		loadButton.setText("Load");
+		loadButton.setPreferredSize(new Dimension(100, 30));
+		loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		loadButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				if(!selected.equals("")) {
+					GameLoader.loadGame(game, selected);
+					frame.dispose();
+					game.setPrimaryWindow(true);
+				}
+			}
+		});
+		
+		//Initialize cancel button
+		this.cancelButton = new JButton();
+		cancelButton.setText("Cancel");
+		cancelButton.setPreferredSize(new Dimension(100, 30));
+		cancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		cancelButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				game.setPrimaryWindow(true);
+			}
+		});
+		
+		//Initialize frame
+		this.frame = new JFrame();
+		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+		this.frame.setTitle("Load Game");
+		this.frame.setPreferredSize(new Dimension(300, 200));
+		
+		//Get save files for drop down menu
+		File saveFolder = new File("./res/saves");
+		fileNames = saveFolder.list();
+		if(fileNames.length > 0) {
+			this.label = new JLabel("Load " +  fileNames[0] + "?");
+			selected = fileNames[0];
+		} else {
+			this.label = new JLabel("No Saves Found");
+		}
+		
+		//Initialize drop down menu of save names
+		this.box = new JComboBox<String>(fileNames);
+		
+		this.box.addItemListener(new ItemListener() {
+					
+			public void itemStateChanged(ItemEvent e) {
+					if(e.getStateChange() == ItemEvent.SELECTED) {
+						selected = fileNames[box.getSelectedIndex()];
+						label.setText("Load " + selected +  "?");
+					}
+			}
+		});
+		
+		//Add components to panels
+		JPanel justBox = new JPanel();
+		justBox.add(box);
+		
+		JPanel justText = new JPanel();
+		justText.add(label);
+		
+		JPanel buttons = new JPanel();
+		buttons.add(loadButton);
+		buttons.add(cancelButton);
+		
+		//Add panels to frame
+		frame.add(justBox);
+		frame.add(justText);
+		frame.add(buttons);
+		
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.pack();
+		frame.setVisible(true);
+		
+	}
+}

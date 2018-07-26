@@ -14,6 +14,7 @@ public class Game implements Runnable {
 
 	private static final String TITLE = "Dungeon Explorer";
 	private boolean running;
+	private boolean primaryWindow;
 	private Display display;
 	private BufferStrategy bs;
 	private Graphics graphics;
@@ -35,8 +36,11 @@ public class Game implements Runnable {
 	private int numMediumCompleted;
 	private int numHardCompleted;
 	
+	
+	//TODO remove difficulty parameter from constructor
 	public Game(int difficulty) {
 		this.difficulty = difficulty;
+		this.primaryWindow = true;
 		this.score = 0;
 		this.numPeacefulCompleted = 0;
 		this.numEasyCompleted = 0;
@@ -47,6 +51,14 @@ public class Game implements Runnable {
 		mouseManager = new MouseManager();
 	}
 	
+	public boolean isPrimaryWindow() {
+		return primaryWindow;
+	}
+
+	public void setPrimaryWindow(boolean primaryWindow) {
+		this.primaryWindow = primaryWindow;
+	}
+
 	public int getWidth() {
 		return WIDTH;
 	}
@@ -147,37 +159,40 @@ public class Game implements Runnable {
 	}
 	
 	private void tick() {
-		keyManager.tick();
-		
-		if(State.getState() != null) {
-			State.getState().tick();
+		if(isPrimaryWindow()) {
+			keyManager.tick();
+			if(State.getState() != null) {
+				State.getState().tick();
+			}
 		}
 	}
 	
 	private void render() {
-		this.bs = this.display.getCanvas().getBufferStrategy();
-		
-		//If no buffers, set to 3
-		if(bs == null) {
-			this.display.getCanvas().createBufferStrategy(3);
-			return;
+		if(isPrimaryWindow()) {
+			this.bs = this.display.getCanvas().getBufferStrategy();
+			
+			//If no buffers, set to 3
+			if(bs == null) {
+				this.display.getCanvas().createBufferStrategy(3);
+				return;
+			}
+			
+			graphics = bs.getDrawGraphics();
+			//Clear previous render
+			graphics.clearRect(0, 0, WIDTH, HEIGHT);
+			
+			//Drawing
+//			graphics.setColor(Color.red);
+//			graphics.fillRect(10, 50, 50, 70);
+//			graphics.drawImage(Assets.empty, x, 20, null);
+			if(State.getState() != null) {
+				State.getState().render(graphics);
+			}
+			
+			//Re-render
+			bs.show();
+			graphics.dispose();
 		}
-		
-		graphics = bs.getDrawGraphics();
-		//Clear previous render
-		graphics.clearRect(0, 0, WIDTH, HEIGHT);
-		
-		//Drawing
-//		graphics.setColor(Color.red);
-//		graphics.fillRect(10, 50, 50, 70);
-//		graphics.drawImage(Assets.empty, x, 20, null);
-		if(State.getState() != null) {
-			State.getState().render(graphics);
-		}
-		
-		//Re-render
-		bs.show();
-		graphics.dispose();
 	}
 	
 	

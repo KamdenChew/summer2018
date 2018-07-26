@@ -24,7 +24,6 @@ public class Display {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
 
 		canvas = new Canvas();
 		canvas.setPreferredSize(new Dimension(width, height));
@@ -34,6 +33,7 @@ public class Display {
 
 		frame.add(canvas);
 		frame.pack();
+		frame.setVisible(true);
 	}
 	
 	public Canvas getCanvas() {

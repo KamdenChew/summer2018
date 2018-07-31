@@ -1,13 +1,13 @@
 package game;
 
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.BoxLayout;
@@ -22,15 +22,12 @@ public class LoadWindow {
 	private JButton loadButton;
 	private JButton cancelButton;
 	private JLabel label;
-	private Game game;
 	private String[] fileNames;
 	private JComboBox box;
 	private String selected = "";
 	
-//	//TODO Make sure main program can't be accessed while load menu is open
 	
 	public LoadWindow(final Game game) {
-		this.game = game;
 		
 		//Initialize load button
 		this.loadButton = new JButton();
@@ -62,10 +59,18 @@ public class LoadWindow {
 		});
 		
 		//Initialize frame
-		this.frame = new JFrame();
+		frame = new JFrame();
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		this.frame.setTitle("Load Game");
-		this.frame.setPreferredSize(new Dimension(300, 200));
+		frame.setTitle("Load Game");
+		frame.setPreferredSize(new Dimension(300, 200));
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	    frame.addWindowListener(new WindowAdapter() {
+	        @Override
+	        public void windowClosing(WindowEvent event) {
+	            game.setPrimaryWindow(true);
+	            frame.dispose();
+	        }
+	    });
 		
 		//Get save files for drop down menu
 		File saveFolder = new File("./res/saves");
@@ -106,7 +111,6 @@ public class LoadWindow {
 		frame.add(justText);
 		frame.add(buttons);
 		
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.pack();

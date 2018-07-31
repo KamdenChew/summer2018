@@ -30,6 +30,7 @@ public class Game implements Runnable {
 	//Game Statistics
 	private int difficulty;
 	
+	private String saveName;
 	private int score;
 	private int numPeacefulCompleted;
 	private int numEasyCompleted;
@@ -46,11 +47,20 @@ public class Game implements Runnable {
 		this.numEasyCompleted = 0;
 		this.numMediumCompleted = 0;
 		this.numHardCompleted = 0;
+		this.saveName = "";
 		
 		keyManager = new KeyManager();
 		mouseManager = new MouseManager();
 	}
 	
+	public String getSaveName() {
+		return saveName;
+	}
+
+	public void setSaveName(String saveName) {
+		this.saveName = saveName;
+	}
+
 	public boolean isPrimaryWindow() {
 		return primaryWindow;
 	}

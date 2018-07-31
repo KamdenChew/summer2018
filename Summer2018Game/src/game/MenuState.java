@@ -14,9 +14,11 @@ public class MenuState extends State {
 		public void onClick() {
 			if(game.isPrimaryWindow()) {
 				System.out.println("Save Game Clicked!");
-				System.out.print("Please enter a name for your save file: ");
-				String fileName = game.getScanner().nextLine();
-				GameSaver.saveGame(game, fileName);
+				game.setPrimaryWindow(false);
+				SaveWindow saveWindow = new SaveWindow(game);
+//				System.out.print("Please enter a name for your save file: ");
+//				String fileName = game.getScanner().nextLine();
+//				GameSaver.saveGame(game, fileName);
 			}
 		}});
 	

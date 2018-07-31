@@ -89,6 +89,8 @@ public class GameLoader {
 		//Eleventh line is numHardCompleted
 		game.setNumHardCompleted(Integer.parseInt(scanner.nextLine()));
 		
+		game.setSaveName(fileName);
+		
 		if(loadedState != null) {
 			State.setState(loadedState);
 		} else {

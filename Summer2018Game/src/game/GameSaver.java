@@ -10,21 +10,7 @@ public class GameSaver {
 	public static void saveGame(Game game, String fileName) {
 		String filePath = "./res/saves/" + fileName;
 		File file = new File(filePath);
-		if(file.exists()) {
-			System.out.print("Are you sure you want to overwrite " + fileName+ "? (y/n) ");
-			String response = game.getScanner().nextLine();
-			while(!(response.equals("y") || response.equals("n"))) {
-				System.out.print("Are you sure you want to overwrite " + fileName+ "? (y/n) ");
-				response = game.getScanner().nextLine();
-			
-			}
-			//String response is now either "y" or "n"
-			if(response.equals("n")) {
-				return;
-			} 
-			
-			//Getting past the previous if implies they want to overwrite the file
-		}
+		
 		FileWriter output = null;
 		
 		try {
@@ -78,7 +64,6 @@ public class GameSaver {
 				
 				output.flush();
 				output.close();
-				System.out.println("Save complete.");
 				
 			} else {
 				System.out.println("getData or getSeen was null...");

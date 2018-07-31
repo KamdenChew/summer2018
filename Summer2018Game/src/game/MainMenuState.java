@@ -22,32 +22,6 @@ public class MainMenuState extends State {
 				System.out.println("Load Game Clicked!");
 				game.setPrimaryWindow(false);
 				LoadWindow loadWindow = new LoadWindow(game);
-				
-//				//TODO remove console input to program and replace with UI
-//				System.out.print("Enter a saved game name: ");
-//				String fileName = game.getScanner().nextLine();
-//				File file = new File("./res/saves/" + fileName);
-//				while(!file.exists()) {
-//					System.out.print("Sorry, file not found. Try again? (y/n) ");
-//					String tryAgain =game.getScanner().nextLine();
-//					while(!(tryAgain.equals("y") || tryAgain.equals("n"))) {
-//						System.out.print("Sorry, file not found. Try again? (y/n) ");
-//						tryAgain = game.getScanner().nextLine();
-//					}
-//					
-//					//String response is now either "y" or "n"
-//					if(tryAgain.equals("n")) {
-//						return;
-//					}
-//					
-//					//Getting past the previous if implies they want to try again
-//					System.out.print("Enter a saved game name: ");
-//					fileName = game.getScanner().nextLine();
-//					file = new File("./res/saves/" + fileName);
-//				}
-//				
-//				
-//				GameLoader.loadGame(game, fileName);
 			}
 		}});
 	
@@ -85,5 +59,10 @@ public class MainMenuState extends State {
 	@Override
 	public Array2D<Boolean> getSeen() {
 		return null;
+	}
+
+	@Override
+	public int getDifficulty() {
+		return -1;
 	}
 }

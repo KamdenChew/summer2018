@@ -13,7 +13,9 @@ public abstract class State {
 	}
 	
 	public static void setState(State state) {
+		
 		currentState = state;
+		
 		if(state instanceof DungeonState) {
 			game.setPlayer(((DungeonState) state).getPlayer());
 		} else if(state instanceof TownState) {
@@ -30,6 +32,13 @@ public abstract class State {
 	public static State getState() {
 		return currentState;
 	}
+	
+	/**
+	 * Returns an int representing the difficulty. Intended to be used for saving
+	 *  
+	 *  @return difficulty the difficulty of the state that is being saved.
+	 */
+	public abstract int getDifficulty();
 	
 	public abstract ArrayList<UIObject> getUIOBjects();	
 	

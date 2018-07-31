@@ -15,7 +15,6 @@ public class DungeonState extends State{
 	
 	public DungeonState(Game game, int difficulty) {
 		super(game);
-		this.game.setDifficulty(difficulty);
 		System.out.println("Set difficulty to: " + difficulty);
 		this.dungeon = new Dungeon(difficulty);
 		this.difficulty = difficulty;
@@ -54,7 +53,7 @@ public class DungeonState extends State{
 
 	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
 		super(game);
-		game.setDifficulty(difficulty);
+		this.difficulty = difficulty;
 		this.dungeon = new Dungeon(difficulty, data, seen, numDungeonRows, numDungeonColumns);
 		this.player = new Player(game, x, y);
 	}

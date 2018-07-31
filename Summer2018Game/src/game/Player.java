@@ -82,7 +82,7 @@ public class Player extends Creature{
 			//tileVal == -2 means we are on the dungeon exit
 			if(tileVal == -2) {
 				System.out.println("Stepped on exit");
-				State.setState(new ConfirmTownState(game, State.getState(), game.getDifficulty()));
+				State.setState(new ConfirmTownState(game, State.getState(), State.getState().getDifficulty()));
 				
 			//tileVal = -3 means we are on the peaceful warp
 			} else if(tileVal == -3) {

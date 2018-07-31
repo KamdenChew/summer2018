@@ -12,7 +12,6 @@ public class TownState extends State{
 	
 	public TownState(Game game, int x, int y) {
 		super(game);
-		game.setDifficulty(-1);
 		if(x < 1 || x >= data.getNumColumns() - 1 || y < 1 || y > data.getNumRows() - 1) {
 			throw new IllegalArgumentException("Player position must fall between x: 1-" + (data.getNumColumns() - 1) + " y: 1-" + (data.getNumRows() - 1));
 		}
@@ -92,6 +91,11 @@ public class TownState extends State{
 		}
 		
 		return seen;
+	}
+
+	@Override
+	public int getDifficulty() {
+		return -1;
 	}
 	
 //Code for rendering a map

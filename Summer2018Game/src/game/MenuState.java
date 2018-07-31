@@ -68,4 +68,9 @@ public class MenuState extends State {
 		uiObjects.add(closeMenuButton);
 		return uiObjects;
 	}
+
+	@Override
+	public int getDifficulty() {
+		return prevState.getDifficulty();
+	}
 }

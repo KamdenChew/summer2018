@@ -82,4 +82,9 @@ public class ConfirmTownState extends State {
 		closeMenuButton.render(graphics);
 	}
 
+	@Override
+	public int getDifficulty() {
+		return this.difficulty;
+	}
+
 }

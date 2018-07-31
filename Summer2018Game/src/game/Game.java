@@ -28,8 +28,6 @@ public class Game implements Runnable {
 	private Scanner scanner = new Scanner(System.in);
 	
 	//Game Statistics
-	private int difficulty;
-	
 	private String saveName;
 	private int score;
 	private int numPeacefulCompleted;
@@ -39,8 +37,7 @@ public class Game implements Runnable {
 	
 	
 	//TODO remove difficulty parameter from constructor
-	public Game(int difficulty) {
-		this.difficulty = difficulty;
+	public Game() {
 		this.primaryWindow = true;
 		this.score = 0;
 		this.numPeacefulCompleted = 0;
@@ -75,14 +72,6 @@ public class Game implements Runnable {
 
 	public int getHeight() {
 		return HEIGHT;
-	}
-	
-	public int getDifficulty() {
-		return difficulty;
-	}
-	
-	public void setDifficulty(int difficulty) {
-		this.difficulty = difficulty;
 	}
 	
 	public Player getPlayer() {
@@ -195,6 +184,7 @@ public class Game implements Runnable {
 //			graphics.setColor(Color.red);
 //			graphics.fillRect(10, 50, 50, 70);
 //			graphics.drawImage(Assets.empty, x, 20, null);
+			
 			if(State.getState() != null) {
 				State.getState().render(graphics);
 			}

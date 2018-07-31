@@ -39,7 +39,7 @@ public class GameSaver {
 				output.write("\n");
 				
 				//Fifth line is the difficulty (-1 if TownState)
-				output.write(game.getDifficulty() + "\n");
+				output.write(State.getState().getDifficulty() + "\n");
 				
 				//Sixth line is the player seen tile data
 				for(Boolean val: State.getState().getSeen()) {

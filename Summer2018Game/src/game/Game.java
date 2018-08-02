@@ -50,6 +50,10 @@ public class Game implements Runnable {
 		mouseManager = new MouseManager();
 	}
 	
+	public boolean isInDungeon() {
+		return State.getState().isDungeonState();
+	}
+
 	public String getSaveName() {
 		return saveName;
 	}

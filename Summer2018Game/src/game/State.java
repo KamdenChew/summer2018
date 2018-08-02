@@ -21,6 +21,7 @@ public abstract class State {
 		} else if(state instanceof TownState) {
 			game.setPlayer(((TownState) state).getPlayer());
 		}
+		
 		game.getMouseManager().removeUIObjects();
 		if(state.getUIOBjects() != null) {
 			for(UIObject object: state.getUIOBjects()) {
@@ -40,11 +41,32 @@ public abstract class State {
 	 */
 	public abstract int getDifficulty();
 	
+	public boolean isDungeonState() {
+		if(this instanceof DungeonState) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isTownState() {
+		if(this instanceof TownState) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isMenuState() {
+		if(this instanceof MenuState) {
+			return true;
+		}
+		return false;
+	}
+	
 	public abstract ArrayList<UIObject> getUIOBjects();	
 	
-	public abstract Array2D<Integer> getData();
-	
-	public abstract Array2D<Boolean> getSeen();
+//	public abstract Array2D<Integer> getData();
+//	
+//	public abstract Array2D<Boolean> getSeen();
 	
 	public abstract void tick();
 	

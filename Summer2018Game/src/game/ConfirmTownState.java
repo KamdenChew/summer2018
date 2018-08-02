@@ -61,16 +61,6 @@ public class ConfirmTownState extends State {
 	}
 
 	@Override
-	public Array2D<Integer> getData() {
-		return null;
-	}
-
-	@Override
-	public Array2D<Boolean> getSeen() {
-		return null;
-	}
-
-	@Override
 	public void tick() {
 		continueButton.tick();
 		closeMenuButton.tick();

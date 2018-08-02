@@ -43,6 +43,10 @@ public class DungeonState extends State{
 		game.setPlayer(this.player);
 	}
 	
+	public Dungeon getDungeon() {
+		return this.dungeon;
+	}
+	
 	public int getDifficulty() {
 		return difficulty;
 	}
@@ -56,11 +60,6 @@ public class DungeonState extends State{
 		this.difficulty = difficulty;
 		this.dungeon = new Dungeon(difficulty, data, seen, numDungeonRows, numDungeonColumns);
 		this.player = new Player(game, x, y);
-	}
-	
-	@Override
-	public Array2D<Integer> getData() {
-		return this.dungeon.getData();
 	}
 	
 	@Override
@@ -107,10 +106,5 @@ public class DungeonState extends State{
 	public ArrayList<UIObject> getUIOBjects() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Array2D<Boolean> getSeen() {
-		return this.dungeon.getSeen();
 	}
 }

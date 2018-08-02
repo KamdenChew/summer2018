@@ -15,11 +15,20 @@ public class Player extends Creature{
 
 	@Override
 	public void tick() {
-		if(tickDelay == 0 && State.getState().getData() != null) {
-			int upVal = State.getState().getData().get(coordinateX, coordinateY - 1);
-			int downVal = State.getState().getData().get(coordinateX, coordinateY + 1);
-			int leftVal = State.getState().getData().get(coordinateX - 1, coordinateY);
-			int rightVal = State.getState().getData().get(coordinateX + 1, coordinateY);
+		if(tickDelay == 0 && (State.getState().isDungeonState() || State.getState().isTownState())) {
+			Array2D<Integer> data;
+			if(State.getState().isDungeonState()) {
+				DungeonState dungeonState = (DungeonState) State.getState();
+				data = dungeonState.getDungeon().getData();
+			} else {
+				TownState townState = (TownState) State.getState();
+				data = townState.getData();
+			}
+			
+			int upVal = data.get(coordinateX, coordinateY - 1);
+			int downVal = data.get(coordinateX, coordinateY + 1);
+			int leftVal = data.get(coordinateX - 1, coordinateY);
+			int rightVal = data.get(coordinateX + 1, coordinateY);
 			
 			if(game.getKeyManager().up && (Math.abs(upVal) != 1)) {
 				y -= 50;
@@ -58,16 +67,34 @@ public class Player extends Creature{
 	}
 	
 	private void updateSeen() {
-		if(State.getState().getData() != null) {
+		if(State.getState().isDungeonState() || State.getState().isTownState()) {
 			for(int x = coordinateX - RENDER_DISTANCE; x <= coordinateX + RENDER_DISTANCE; x++) {
 				for(int y = coordinateY - RENDER_DISTANCE; y <= coordinateY + RENDER_DISTANCE; y++) {
 					
+					Array2D<Integer> data;
+					if(State.getState().isDungeonState()) {
+						DungeonState dungeonState = (DungeonState) State.getState();
+						data = dungeonState.getDungeon().getData();
+					} else {
+						TownState townState = (TownState) State.getState();
+						data = townState.getData();
+					}
+					
+					Array2D<Boolean> seen;
+					if(State.getState().isDungeonState()) {
+						DungeonState dungeonState = (DungeonState) State.getState();
+						seen = dungeonState.getDungeon().getSeen();
+					} else {
+						TownState townState = (TownState) State.getState();
+						seen = townState.getSeen();
+					}
+					
 					//Set seen if it's in bounds
 					if(x >= 0 &&
-					   x < State.getState().getData().getNumColumns() &&
+					   x < data.getNumColumns() &&
 					   y >= 0 &&
-					   y < State.getState().getData().getNumRows()) {
-						State.getState().getSeen().set(x, y, true);
+					   y < data.getNumRows()) {
+						seen.set(x, y, true);
 					}
 				}
 			}
@@ -76,8 +103,18 @@ public class Player extends Creature{
 	
 	private void handleNewTile() {
 		//If we are on the peaceful warp tile
-		if(State.getState().getData() != null) {
-			int tileVal = State.getState().getData().get(this.getCoordinateX(), this.getCoordinateY());
+		if(State.getState().isDungeonState() || State.getState().isTownState()) {
+			
+			Array2D<Integer> data;
+			if(State.getState().isDungeonState()) {
+				DungeonState dungeonState = (DungeonState) State.getState();
+				data = dungeonState.getDungeon().getData();
+			} else {
+				TownState townState = (TownState) State.getState();
+				data = townState.getData();
+			}
+			
+			int tileVal = data.get(this.getCoordinateX(), this.getCoordinateY());
 			
 			//tileVal == -2 means we are on the dungeon exit
 			if(tileVal == -2) {

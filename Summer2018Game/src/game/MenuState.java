@@ -40,16 +40,6 @@ public class MenuState extends State {
 	}
 
 	@Override
-	public Array2D<Integer> getData() {
-		return prevState.getData();
-	}
-	
-	@Override
-	public Array2D<Boolean> getSeen() {
-		return prevState.getSeen();
-	}
-
-	@Override
 	public void tick() {
 		saveGameButton.tick();
 		closeMenuButton.tick();
@@ -67,6 +57,26 @@ public class MenuState extends State {
 		uiObjects.add(saveGameButton);
 		uiObjects.add(closeMenuButton);
 		return uiObjects;
+	}
+	
+	public Array2D<Integer> getData() {
+		if(prevState.isDungeonState()) {
+			DungeonState dungeonState = (DungeonState) prevState;
+			return dungeonState.getDungeon().getData();
+		} else {
+			TownState townState = (TownState) prevState;
+			return townState.getData();
+		}
+	}
+	
+	public Array2D<Boolean> getSeen() {
+		if(prevState.isDungeonState()) {
+			DungeonState dungeonState = (DungeonState) prevState;
+			return dungeonState.getDungeon().getSeen();
+		} else {
+			TownState townState = (TownState) prevState;
+			return townState.getSeen();
+		}
 	}
 
 	@Override

@@ -61,7 +61,6 @@ public class Dungeon {
 			throw new IllegalArgumentException("Difficulty should be an integer value from 0-3.");
 		}
 
-		// System.out.println();
 		this.difficulty = difficulty;
 		this.data = new Array2D<Integer>(numDungeonRows + 2, numDungeonColumns + 2);
 		this.seen = new Array2D<Boolean>(numDungeonRows + 2, numDungeonColumns + 2);
@@ -123,7 +122,6 @@ public class Dungeon {
 		//Step 5: Add paths to our dungeon, disjoint from the rooms
 		generatePaths(data, null, 2);
 		
-//		System.out.println(data);
 		
 		connect(data);
 		
@@ -570,5 +568,9 @@ public class Dungeon {
 				}
 			}
 		}
+	}
+	
+	public boolean isWalkable(int x, int y) {
+		return (data != null && (data.get(x, y) == 0 || data.get(x, y) == 2));
 	}
 }

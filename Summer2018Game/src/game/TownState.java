@@ -23,7 +23,6 @@ public class TownState extends State{
 		return player;
 	}
 
-	@Override
 	public Array2D<Integer> getData() {
 		return this.data;
 	}
@@ -80,7 +79,6 @@ public class TownState extends State{
 		return null;
 	}
 
-	@Override
 	public Array2D<Boolean> getSeen() {
 		Array2D<Boolean> seen = new Array2D<Boolean>(this.data.getNumColumns(), this.data.getNumRows());
 		//Everything is considered visible in town

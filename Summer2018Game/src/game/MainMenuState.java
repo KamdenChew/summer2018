@@ -44,21 +44,11 @@ public class MainMenuState extends State {
 	}
 
 	@Override
-	public Array2D<Integer> getData() {
-		return null;
-	}
-
-	@Override
 	public ArrayList<UIObject> getUIOBjects() {
 		ArrayList<UIObject> uiObjects = new ArrayList<UIObject>();
 		uiObjects.add(newGameButton);
 		uiObjects.add(loadGameButton);
 		return uiObjects;
-	}
-
-	@Override
-	public Array2D<Boolean> getSeen() {
-		return null;
 	}
 
 	@Override

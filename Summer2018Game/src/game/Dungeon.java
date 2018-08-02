@@ -17,6 +17,8 @@ public class Dungeon {
 	private ArrayList<Room> rooms;
 	private int numDungeonRows;
 	private int numDungeonColumns;
+	private Player player;
+	private ArrayList<Enemy> enemies;
 	
 	//Room Count Coefficient controls how many attempts we give to generating rooms. See generateRooms()
 	private static final int ROOM_COUNT_COEFFICIENT = 8;
@@ -68,7 +70,7 @@ public class Dungeon {
 		
 		generateDungeon(data);
 	}
-	
+
 	//TODO add javadoc and also add rooms as paramater to this constructor?
 	public Dungeon(int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
 		this.difficulty = difficulty;

@@ -17,6 +17,7 @@ public class Dungeon {
 	private ArrayList<Room> rooms;
 	private int numDungeonRows;
 	private int numDungeonColumns;
+	private Game game;
 	private Player player;
 	private ArrayList<Enemy> enemies;
 	
@@ -37,7 +38,9 @@ public class Dungeon {
 	 *  @throws IllegalArgumentException if not passes a valid difficulty int
 	 * 
 	 */
-	public Dungeon(int difficulty)  {
+	public Dungeon(int difficulty, Game game)  {
+		this.game = game;
+		this.enemies = new ArrayList<Enemy>();
 		this.rooms = new ArrayList<Room>();
 		if (difficulty == 0) {
 
@@ -72,12 +75,16 @@ public class Dungeon {
 	}
 
 	//TODO add javadoc and also add rooms as paramater to this constructor?
-	public Dungeon(int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
+	public Dungeon(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
+		this.game = game;
 		this.difficulty = difficulty;
 		this.data = data;
 		this.seen = seen;
 		this.numDungeonColumns = numDungeonColumns;
 		this.numDungeonRows = numDungeonRows;
+		this.player = new Player(game, x, y);
+		this.enemies = new ArrayList<Enemy>();
+		setSeen();
 	}
 	
 	/**
@@ -124,10 +131,13 @@ public class Dungeon {
 		//Step 5: Add paths to our dungeon, disjoint from the rooms
 		generatePaths(data, null, 2);
 		
-		
 		connect(data);
 		
+		setPlayer();
 		
+		setSeen();
+		
+//		addEnemies(2);
 	}
 
 	/**
@@ -572,7 +582,83 @@ public class Dungeon {
 		}
 	}
 	
+	private void setPlayer() {
+		CoordinatePair startCoordinates = null;
+		while(startCoordinates == null || data.get(startCoordinates.getX(), startCoordinates.getY()) != 0) {
+			int randomColumn = rand.nextInt(data.getNumColumns() - 2)  + 1;
+			int randomRow = rand.nextInt(data.getNumRows() - 2) + 1;
+			startCoordinates = new CoordinatePair(randomColumn, randomRow);
+		}
+		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY());
+		game.setPlayer(this.player);
+	}
+	
+	private void setSeen() {
+	//Set the nearby tile values to seen
+		System.out.println(game);
+		for(int x = player.getCoordinateX() - game.getRenderDistance(); x <= player.getCoordinateX() + game.getRenderDistance(); x++) {
+			for(int y = player.getCoordinateY() - game.getRenderDistance(); y <= player.getCoordinateY() + game.getRenderDistance(); y++) {
+				
+				//If it's in bounds, mark nearby tiles as seen!
+				if(x >= 0 &&
+						   x < seen.getNumColumns() &&
+						   y >= 0 &&
+						   y < seen.getNumRows()) {
+					seen.set(x, y, true);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Returns the Player for this Dungeon
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+
+	//TODO implement addEnemies()
+	private void addEnemies(int numEnemies) {
+		
+		ArrayList<CoordinatePair> validLocations = new ArrayList<>();
+	
+		for(int x = 0; x < data.getNumColumns(); x++) {
+			for(int y = 0; y < data.getNumRows(); y++) {
+				int manhattanDistanceToPlayer = Math.abs(x - player.getCoordinateX()) + Math.abs(y - player.getCoordinateY());
+				if(isWalkable(x,y) && manhattanDistanceToPlayer > 8) {
+					validLocations.add(new CoordinatePair(x,y));
+				}
+			}
+		}
+		int randomIndex;
+		
+		while(numEnemies > 0) {
+			randomIndex = rand.nextInt(validLocations.size());
+			CoordinatePair location = validLocations.get(randomIndex);
+			Enemy newEnemy = new Enemy(game, location.getX() * 50, location.getY() * 50, location.getX(), location.getY());
+			enemies.add(newEnemy);
+			numEnemies--;
+			validLocations.remove(location);
+		}
+	}
+	
+	/**
+	 * Checks if we have a generated dungeon, makes sure the given coordinates are either a path or a room, and that the player isn't standing there.
+	 * 
+	 * @return a boolean representing if an entity can move to the given coordinates
+	 */
 	public boolean isWalkable(int x, int y) {
-		return (data != null && (data.get(x, y) == 0 || data.get(x, y) == 2));
+		
+		boolean occupied = false;
+		if(x == player.getCoordinateX() && y == player.getCoordinateY()) {
+			occupied = true;
+		}
+		for(Enemy enemy: enemies) {
+			if(x == enemy.getCoordinateX() && y == enemy.getCoordinateY()) {
+				occupied = true;
+			}
+		}
+		
+		return (data != null && (data.get(x, y) == 0 || data.get(x, y) == 2) && !occupied);
 	}
 }

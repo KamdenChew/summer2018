@@ -36,7 +36,6 @@ public class Game implements Runnable {
 	private int numHardCompleted;
 	
 	
-	//TODO remove difficulty parameter from constructor
 	public Game() {
 		this.primaryWindow = true;
 		this.score = 0;

@@ -47,6 +47,7 @@ public class SaveWindow {
 				if(textField.getText().length() > 0) {
 					warningLabel.setText("");
 					GameSaver.saveGame(game, textField.getText());
+					game.setSaveName(textField.getText());
 					frame.dispose();
 					game.setPrimaryWindow(true);
 				} else {

@@ -16,31 +16,9 @@ public class DungeonState extends State{
 	public DungeonState(Game game, int difficulty) {
 		super(game);
 		System.out.println("Set difficulty to: " + difficulty);
-		this.dungeon = new Dungeon(difficulty);
+		this.dungeon = new Dungeon(difficulty, game);
 		this.difficulty = difficulty;
-		CoordinatePair startCoordinates = null;
-		Array2D<Integer> data = dungeon.getData();
-		while(startCoordinates == null || data.get(startCoordinates.getX(), startCoordinates.getY()) != 0) {
-			int randomColumn = rand.nextInt(data.getNumColumns() - 2)  + 1;
-			int randomRow = rand.nextInt(data.getNumRows() - 2) + 1;
-			startCoordinates = new CoordinatePair(randomColumn, randomRow);
-		}
-		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY());
-		game.setPlayer(this.player);
-		
-		for(int x = player.getCoordinateX() - game.getRenderDistance(); x <= player.getCoordinateX() + game.getRenderDistance(); x++) {
-			for(int y = player.getCoordinateY() - game.getRenderDistance(); y <= player.getCoordinateY() + game.getRenderDistance(); y++) {
-				
-				//If it's in bounds, mark nearby tiles as seen!
-				if(x >= 0 &&
-						   x < dungeon.getSeen().getNumColumns() &&
-						   y >= 0 &&
-						   y < dungeon.getSeen().getNumRows()) {
-					dungeon.getSeen().set(x, y, true);
-				}
-			}
-		}
-		game.setPlayer(this.player);
+		this.player = dungeon.getPlayer();
 	}
 	
 	public Dungeon getDungeon() {
@@ -55,11 +33,13 @@ public class DungeonState extends State{
 		return player;
 	}
 
+	
 	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
 		super(game);
 		this.difficulty = difficulty;
-		this.dungeon = new Dungeon(difficulty, data, seen, numDungeonRows, numDungeonColumns);
-		this.player = new Player(game, x, y);
+		this.dungeon = new Dungeon(game, x, y, difficulty, data, seen, numDungeonRows, numDungeonColumns);
+		this.player = dungeon.getPlayer();
+		game.setPlayer(this.player);
 	}
 	
 	@Override
@@ -104,7 +84,6 @@ public class DungeonState extends State{
 
 	@Override
 	public ArrayList<UIObject> getUIOBjects() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

@@ -52,19 +52,22 @@ public class GameSaver {
 			}
 			output.write("\n");
 			
-			//Seventh line is score
+			//Seventh line is Enemies in the format X,Y,Health. If it's a TownState save, this line will say "NoEnemies"
+			//TODO Save enemies
+			
+			//Eighth line is score
 			output.write(game.getScore() + "\n");
 			
-			//Eighth line is numPeacefulCompleted
+			//Ninth line is numPeacefulCompleted
 			output.write(game.getNumPeacefulCompleted() + "\n");
 			
-			//Ninth line is numEasyCompleted
+			//Tenth line is numEasyCompleted
 			output.write(game.getNumEasyCompleted() + "\n");
 			
-			//Tenth line is numMediumCompleted
+			//Eleventh line is numMediumCompleted
 			output.write(game.getNumMediumCompleted() + "\n");
 			
-			//Eleventh line is numHardCompleted
+			//Twelfth line is numHardCompleted
 			output.write(game.getNumHardCompleted() + "\n");
 			
 			output.flush();

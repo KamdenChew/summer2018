@@ -73,7 +73,7 @@ public class SaveWindow {
 		frame = new JFrame();
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		frame.setTitle("Save Game");
-		frame.setPreferredSize(new Dimension(500, 200));
+		frame.setPreferredSize(new Dimension(700, 200));
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	    frame.addWindowListener(new WindowAdapter() {
 	        @Override
@@ -101,7 +101,7 @@ public class SaveWindow {
 	        public void keyTyped(KeyEvent e) {
 	        	
 	        	//Limit text to 20 characters
-	        	if (textField.getText().length() >= 20 ) {
+	        	if (textField.getText().length() >= 10 ) {
 	            	e.consume();
 	            }
 	            

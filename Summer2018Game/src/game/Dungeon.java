@@ -82,7 +82,7 @@ public class Dungeon {
 		this.seen = seen;
 		this.numDungeonColumns = numDungeonColumns;
 		this.numDungeonRows = numDungeonRows;
-		this.player = new Player(game, x, y);
+		this.player = new Player(game, x, y, true, this);
 		this.enemies = new ArrayList<Enemy>();
 		setSeen();
 	}
@@ -137,7 +137,7 @@ public class Dungeon {
 		
 		setSeen();
 		
-//		addEnemies(2);
+		addEnemies(2);
 	}
 
 	/**
@@ -589,7 +589,7 @@ public class Dungeon {
 			int randomRow = rand.nextInt(data.getNumRows() - 2) + 1;
 			startCoordinates = new CoordinatePair(randomColumn, randomRow);
 		}
-		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY());
+		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY(), true, this);
 		game.setPlayer(this.player);
 	}
 	
@@ -640,6 +640,10 @@ public class Dungeon {
 			numEnemies--;
 			validLocations.remove(location);
 		}
+	}
+	
+	public ArrayList<Enemy> getEnemies() {
+		return this.enemies;
 	}
 	
 	/**

@@ -1,16 +1,25 @@
 package game;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class Player extends Creature{
 	private static final int NUM_TICKS_MOVEMENT_DELAY = 10;
 	private static final int RENDER_DISTANCE = 3;
 	private int tickDelay = 0;
+	private boolean inDungeon = false;
+	private Dungeon dungeon;
+	private ArrayList<Enemy> enemies;
 	
-	public Player(Game game, int coordinateX, int coordinateY) {
+	public Player(Game game, int coordinateX, int coordinateY, boolean inDungeon, Dungeon dungeon) {
 		super(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
 		this.coordinateX = coordinateX;
 		this.coordinateY = coordinateY;
+		this.inDungeon = inDungeon;
+		this.dungeon = dungeon;
+		if(this.dungeon != null) {
+			this.enemies = dungeon.getEnemies();
+		}
 	}
 
 	@Override
@@ -25,39 +34,63 @@ public class Player extends Creature{
 				data = townState.getData();
 			}
 			
-			int upVal = data.get(coordinateX, coordinateY - 1);
-			int downVal = data.get(coordinateX, coordinateY + 1);
-			int leftVal = data.get(coordinateX - 1, coordinateY);
-			int rightVal = data.get(coordinateX + 1, coordinateY);
+			boolean upWalkable;
+			boolean downWalkable;
+			boolean leftWalkable;
+			boolean rightWalkable;
 			
-			if(game.getKeyManager().up && (Math.abs(upVal) != 1)) {
+			if(inDungeon) {
+				upWalkable = dungeon.isWalkable(coordinateX, coordinateY - 1);
+				downWalkable = dungeon.isWalkable(coordinateX, coordinateY + 1);
+				leftWalkable = dungeon.isWalkable(coordinateX - 1, coordinateY);
+				rightWalkable = dungeon.isWalkable(coordinateX + 1, coordinateY);
+			} else {
+				upWalkable = (Math.abs(data.get(coordinateX, coordinateY - 1)) != 1);
+				downWalkable = (Math.abs(data.get(coordinateX, coordinateY + 1)) != 1);
+				leftWalkable = (Math.abs(data.get(coordinateX - 1, coordinateY)) != 1);
+				rightWalkable = (Math.abs(data.get(coordinateX + 1, coordinateY)) != 1);
+			}
+			
+			if(game.getKeyManager().up && upWalkable) {
 				y -= 50;
 				this.coordinateY--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				handleNewTile();
-//				System.out.println("Player coordinates: " + new CoordinatePair(coordinateX, coordinateY));
-			} else if(game.getKeyManager().down && (Math.abs(downVal) != 1)) {
+				if(inDungeon) {
+					tickEnemies();
+				}
+
+			} else if(game.getKeyManager().down && downWalkable) {
 				y += 50;
 				this.coordinateY++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				handleNewTile();
-//				System.out.println("Player coordinates: " + new CoordinatePair(coordinateX, coordinateY));
-			} else if(game.getKeyManager().left && (Math.abs(leftVal) != 1)) {
+				if(inDungeon) {
+					tickEnemies();
+				}
+
+			} else if(game.getKeyManager().left && leftWalkable) {
 				x -= 50;
 				this.coordinateX--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				handleNewTile();
-//				System.out.println("Player coordinates: " + new CoordinatePair(coordinateX, coordinateY));
-			} else if(game.getKeyManager().right && (Math.abs(rightVal) != 1)) {
+				if(inDungeon) {
+					tickEnemies();
+				}
+				
+			} else if(game.getKeyManager().right && rightWalkable) {
 				x += 50;
 				this.coordinateX++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				handleNewTile();
-//				System.out.println("Player coordinates: " + new CoordinatePair(coordinateX, coordinateY));
+				if(inDungeon) {
+					tickEnemies();
+				}
+				
 			}
 		} else {
 			tickDelay--;
@@ -141,6 +174,12 @@ public class Player extends Creature{
 				System.out.println("Stepped on hard warp");
 				State.setState(new ConfirmDungeonState(game, State.getState(), 3));
 			}
+		}
+	}
+	
+	private void tickEnemies() {
+		for(Enemy enemy: enemies) {
+			enemy.tick();
 		}
 	}
 

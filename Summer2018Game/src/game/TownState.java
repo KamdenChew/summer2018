@@ -15,7 +15,7 @@ public class TownState extends State{
 		if(x < 1 || x >= data.getNumColumns() - 1 || y < 1 || y > data.getNumRows() - 1) {
 			throw new IllegalArgumentException("Player position must fall between x: 1-" + (data.getNumColumns() - 1) + " y: 1-" + (data.getNumRows() - 1));
 		}
-		this.player = new Player(game, x, y);
+		this.player = new Player(game, x, y, false, null);
 		game.setPlayer(this.player);
 	}
 	

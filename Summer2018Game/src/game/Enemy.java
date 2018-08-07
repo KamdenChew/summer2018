@@ -41,6 +41,8 @@ public class Enemy extends Creature {
 			   this.coordinateY >= player.getCoordinateY() - game.getRenderDistance() &&
 			   this.coordinateY <= player.getCoordinateY() + game.getRenderDistance()) {
 				
+				//TODO remove print
+//				System.out.println("Rendering Enemy who is at: " + new CoordinatePair(this.coordinateX, this.coordinateY));
 				//Player is always at renderDistance * 50, renderDistance * 50
 				graphics.drawImage(Assets.enemy, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
 			}
@@ -76,6 +78,11 @@ public class Enemy extends Creature {
 			// Add West Neighbor
 			if (coordinateX > 0 && dungeon.isWalkable(coordinateX - 1, coordinateY)) {
 				possibleMoves.add(new CoordinatePair(coordinateX - 1, coordinateY));
+			}
+			
+			//If there are no possible moves, stay here
+			if(possibleMoves.size() == 0) {
+				return new CoordinatePair(this.coordinateX, this.coordinateY);
 			}
 			
 			int randomIndex = rand.nextInt(possibleMoves.size());

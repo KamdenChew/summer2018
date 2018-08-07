@@ -10,7 +10,7 @@ public class DungeonState extends State{
 
 	private Dungeon dungeon;
 	private Player player;
-	private Random rand = new Random();
+	private ArrayList<Enemy> enemies;
 	private int difficulty;
 	
 	public DungeonState(Game game, int difficulty) {
@@ -19,6 +19,7 @@ public class DungeonState extends State{
 		this.dungeon = new Dungeon(difficulty, game);
 		this.difficulty = difficulty;
 		this.player = dungeon.getPlayer();
+		this.enemies = dungeon.getEnemies();
 	}
 	
 	public Dungeon getDungeon() {
@@ -32,7 +33,6 @@ public class DungeonState extends State{
 	public Player getPlayer() {
 		return player;
 	}
-
 	
 	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
 		super(game);
@@ -80,6 +80,9 @@ public class DungeonState extends State{
 			}
 		}
 		player.render(graphics);
+		for(Enemy enemy: enemies) {
+			enemy.render(graphics);
+		}
 	}
 
 	@Override

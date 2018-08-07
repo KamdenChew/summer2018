@@ -74,19 +74,22 @@ public class GameLoader {
 			loadedState = new DungeonState(game, x, y, difficulty, data, seen, height, width);
 		}
 		
-		//Seventh line is score
+		//Seventh line is Enemies in the format X,Y,Health. If it's a TownState save, this line will say "NoEnemies"
+		//TODO Save enemies
+		
+		//Eighth line is score
 		game.setScore(Integer.parseInt(scanner.nextLine()));
 		
-		//Eighth line is numPeacefulCompleted
+		//Ninth line is numPeacefulCompleted
 		game.setNumPeacefulCompleted(Integer.parseInt(scanner.nextLine()));
 		
-		//Ninth line is numEasyCompleted
+		//Tenth line is numEasyCompleted
 		game.setNumEasyCompleted(Integer.parseInt(scanner.nextLine()));
 		
-		//Tenth line is numMediumCompleted
+		//Eleventh line is numMediumCompleted
 		game.setNumMediumCompleted(Integer.parseInt(scanner.nextLine()));
 		
-		//Eleventh line is numHardCompleted
+		//Twelfth line is numHardCompleted
 		game.setNumHardCompleted(Integer.parseInt(scanner.nextLine()));
 		
 		game.setSaveName(fileName);

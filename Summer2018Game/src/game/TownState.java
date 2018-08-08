@@ -10,12 +10,12 @@ public class TownState extends State{
 	private Player player;
 	
 	
-	public TownState(Game game, int x, int y) {
+	public TownState(Game game, int x, int y, String direction) {
 		super(game);
 		if(x < 1 || x >= data.getNumColumns() - 1 || y < 1 || y > data.getNumRows() - 1) {
 			throw new IllegalArgumentException("Player position must fall between x: 1-" + (data.getNumColumns() - 1) + " y: 1-" + (data.getNumRows() - 1));
 		}
-		this.player = new Player(game, x, y, false, null);
+		this.player = new Player(game, x, y, false, null, direction);
 		game.setPlayer(this.player);
 	}
 	

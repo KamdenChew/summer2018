@@ -26,6 +26,7 @@ public abstract class State {
 		if(state.getUIOBjects() != null) {
 			for(UIObject object: state.getUIOBjects()) {
 				game.getMouseManager().addUIObject(object);
+				object.updateHovering(game.getMouseManager().mouseX, game.getMouseManager().mouseY);
 			}
 		}
 	}
@@ -63,10 +64,6 @@ public abstract class State {
 	}
 	
 	public abstract ArrayList<UIObject> getUIOBjects();	
-	
-//	public abstract Array2D<Integer> getData();
-//	
-//	public abstract Array2D<Boolean> getSeen();
 	
 	public abstract void tick();
 	

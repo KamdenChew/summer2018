@@ -34,11 +34,12 @@ public class DungeonState extends State{
 		return player;
 	}
 	
-	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
+	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, ArrayList<Enemy> enemies, String direction) {
 		super(game);
 		this.difficulty = difficulty;
-		this.dungeon = new Dungeon(game, x, y, difficulty, data, seen, numDungeonRows, numDungeonColumns);
+		this.dungeon = new Dungeon(game, x, y, difficulty, data, seen, numDungeonRows, numDungeonColumns, enemies, direction);
 		this.player = dungeon.getPlayer();
+		this.enemies = dungeon.getEnemies();
 		game.setPlayer(this.player);
 	}
 	

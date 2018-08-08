@@ -25,7 +25,11 @@ public abstract class UIObject {
 	public abstract void onClick();
 	
 	public void onMouseMove(MouseEvent e) {
-		if(e.getX() >= x && e.getX() < x + width && e.getY() >= y && e.getY() < y + height) {
+		updateHovering(e.getX(), e.getY());
+	}
+	
+	public void updateHovering(int eX, int eY) {
+		if(eX >= x && eX < x + width && eY >= y && eY < y + height) {
 			hovering = true;
 		} else {
 			hovering = false;

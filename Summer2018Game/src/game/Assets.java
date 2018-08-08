@@ -9,9 +9,9 @@ public class Assets {
 //	private static final int WIDTH = 50;
 //	private static final int HEIGHT = 50;
 	
-	public static BufferedImage dirt, stone, wall, empty, exit, player, newGame, newGameHover, loadGame, loadGameHover, saveGame, saveGameHover, 
+	public static BufferedImage dirt, stone, wall, empty, exit,  newGame, newGameHover, loadGame, loadGameHover, saveGame, saveGameHover, 
 								closeMenu, closeMenuHover, peacefulWarp, easyWarp, mediumWarp, hardWarp, continueToDungeon, continueToDungeonHover,
-								exitToTown, exitToTownHover, enemy;
+								exitToTown, exitToTownHover, enemy, player, playerUp, playerDown, playerLeft, playerRight;
 	
 	public static void init() {
 		dirt = ImageLoader.loadImage("/textures/Dirt.png");
@@ -19,7 +19,6 @@ public class Assets {
 		wall = ImageLoader.loadImage("/textures/Wall.png");
 		empty = ImageLoader.loadImage("/textures/Empty.png");
 		exit = ImageLoader.loadImage("/textures/Exit.png");
-		player = ImageLoader.loadImage("/textures/Player.png");
 		newGame = ImageLoader.loadImage("/textures/NewGame.png");
 		newGameHover = ImageLoader.loadImage("/textures/NewGameHover.png");
 		loadGame = ImageLoader.loadImage("/textures/LoadGame.png");
@@ -37,6 +36,11 @@ public class Assets {
 		exitToTown = ImageLoader.loadImage("/textures/ExitToTown.png");
 		exitToTownHover = ImageLoader.loadImage("/textures/ExitToTownHover.png");
 		enemy = ImageLoader.loadImage("/textures/Enemy.png");
+		player = ImageLoader.loadImage("/textures/Player.png");
+		playerUp = ImageLoader.loadImage("/textures/PlayerUp.png");
+		playerDown = ImageLoader.loadImage("/textures/PlayerDown.png");
+		playerLeft = ImageLoader.loadImage("/textures/PlayerLeft.png");
+		playerRight = ImageLoader.loadImage("/textures/PlayerRight.png");
 	}
 	
 }

@@ -2,6 +2,7 @@ package game;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameLoader {
@@ -22,6 +23,7 @@ public class GameLoader {
 		Scanner lineScanner = new Scanner(positionString);
 		int x = Integer.parseInt(lineScanner.next());
 		int y = Integer.parseInt(lineScanner.next());
+		String direction = lineScanner.next();
 		lineScanner.close();
 		
 		//Second line is the Array2D's width
@@ -61,21 +63,36 @@ public class GameLoader {
 		}
 		Array2D<Boolean> seen = new Array2D<Boolean>(height, width, seenData);
 		lineScanner.close();
+		
+		//Seventh line is Enemies in the format X,Y,Health. If it's a TownState save, this line will say "NoEnemies"
+		String enemyString = scanner.nextLine();
 
 		//TownState if difficulty is -1
 			
 		State loadedState = null;
 		
 		if(difficulty == -1) {
-			loadedState = new TownState(game, x, y);
+			loadedState = new TownState(game, x, y, direction);
 			
 		//If difficulty falls in our defined dungeon difficulty bounds, then it's a dungeon state
 		} else if(difficulty >= 0 && difficulty <= 3) {
-			loadedState = new DungeonState(game, x, y, difficulty, data, seen, height, width);
+			
+			String[] enemyData;
+			enemyData = enemyString.split(" ");
+			ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+			String[] params;
+			for(String enemy: enemyData) {
+				params = enemy.split(",");
+				int coordinateX = Integer.parseInt(params[0]);
+				int coordinateY = Integer.parseInt(params[1]);
+				int health = Integer.parseInt(params[2]);
+				enemies.add(new Enemy(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY, health));
+			}
+			
+			loadedState = new DungeonState(game, x, y, difficulty, data, seen, height, width, enemies, direction);
 		}
 		
-		//Seventh line is Enemies in the format X,Y,Health. If it's a TownState save, this line will say "NoEnemies"
-		//TODO Save enemies
+		
 		
 		//Eighth line is score
 		game.setScore(Integer.parseInt(scanner.nextLine()));

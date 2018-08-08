@@ -4,14 +4,15 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class Player extends Creature{
-	private static final int NUM_TICKS_MOVEMENT_DELAY = 10;
+	private static final int NUM_TICKS_MOVEMENT_DELAY = 8;
 	private static final int RENDER_DISTANCE = 3;
+	private boolean facingUp = false, facingDown = true, facingLeft = false, facingRight = false;
 	private int tickDelay = 0;
 	private boolean inDungeon = false;
 	private Dungeon dungeon;
 	private ArrayList<Enemy> enemies;
 	
-	public Player(Game game, int coordinateX, int coordinateY, boolean inDungeon, Dungeon dungeon) {
+	public Player(Game game, int coordinateX, int coordinateY, boolean inDungeon, Dungeon dungeon, String direction) {
 		super(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
 		this.coordinateX = coordinateX;
 		this.coordinateY = coordinateY;
@@ -20,11 +21,21 @@ public class Player extends Creature{
 		if(this.dungeon != null) {
 			this.enemies = dungeon.getEnemies();
 		}
+		if(direction.equals("Up")) {
+			setFacingUp();
+		} else if(direction.equals("Down")) {
+			setFacingDown();
+		} else if(direction.equals("Left")) {
+			setFacingLeft();
+		} else if(direction.equals("Right")) {
+			setFacingRight();
+		}
 	}
 
 	@Override
 	public void tick() {
 		if(tickDelay == 0 && (State.getState().isDungeonState() || State.getState().isTownState())) {
+			updateDirectionFacing();
 			Array2D<Integer> data;
 			if(State.getState().isDungeonState()) {
 				DungeonState dungeonState = (DungeonState) State.getState();
@@ -52,44 +63,48 @@ public class Player extends Creature{
 			}
 			
 			if(game.getKeyManager().up && upWalkable) {
+				setFacingUp();
 				y -= 50;
 				this.coordinateY--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
-				handleNewTile();
 				if(inDungeon) {
 					tickEnemies();
 				}
+				handleNewTile();
 
 			} else if(game.getKeyManager().down && downWalkable) {
+				setFacingDown();
 				y += 50;
 				this.coordinateY++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
-				handleNewTile();
 				if(inDungeon) {
 					tickEnemies();
 				}
+				handleNewTile();
 
 			} else if(game.getKeyManager().left && leftWalkable) {
+				setFacingLeft();
 				x -= 50;
 				this.coordinateX--;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
-				handleNewTile();
 				if(inDungeon) {
 					tickEnemies();
 				}
+				handleNewTile();
 				
 			} else if(game.getKeyManager().right && rightWalkable) {
+				setFacingRight();
 				x += 50;
 				this.coordinateX++;
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
-				handleNewTile();
 				if(inDungeon) {
 					tickEnemies();
 				}
+				handleNewTile();
 				
 			}
 		} else {
@@ -182,10 +197,70 @@ public class Player extends Creature{
 			enemy.tick();
 		}
 	}
+	
+	private void setFacingUp() {
+		facingUp = true;
+		facingDown = false;
+		facingLeft = false;
+		facingRight = false;
+	}
+	
+	private void setFacingDown() {
+		facingUp = false;
+		facingDown = true;
+		facingLeft = false;
+		facingRight = false;
+	}
+	
+	private void setFacingLeft() {
+		facingUp = false;
+		facingDown = false;
+		facingLeft = true;
+		facingRight = false;
+	}
+	
+	private void setFacingRight() {
+		facingUp = false;
+		facingDown = false;
+		facingLeft = false;
+		facingRight = true;
+	}
+	
+	private void updateDirectionFacing() {
+		if(game.getKeyManager().up) {
+			setFacingUp();
+		} else if(game.getKeyManager().down) {
+			setFacingDown();
+		} else if(game.getKeyManager().left) {
+			setFacingLeft();
+		} else if(game.getKeyManager().right) {
+			setFacingRight();
+		}
+	}
+	
+	public String getDirectionFacing() {
+		if(facingUp) {
+			return "Up";
+		} else if(facingDown) {
+			return "Down";
+		} else if(facingLeft) {
+			return "Left";
+		} else {
+			return "Right";
+		}
+	}
 
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(Assets.player, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
+		if(facingUp) {
+			graphics.drawImage(Assets.playerUp, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
+		} else if(facingDown) {
+			graphics.drawImage(Assets.playerDown, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
+		} else if(facingLeft) {
+			graphics.drawImage(Assets.playerLeft, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
+		} else if(facingRight) {
+			graphics.drawImage(Assets.playerRight, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
+		}
 	}
 	
 }

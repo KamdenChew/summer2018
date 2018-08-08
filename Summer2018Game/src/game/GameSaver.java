@@ -3,6 +3,7 @@ package game;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameSaver {
@@ -23,7 +24,7 @@ public class GameSaver {
 			//We are in a menu state
 			
 			//First line is the positions of the player
-			output.write(game.getPlayer().getCoordinateX() + " " + game.getPlayer().getCoordinateY() + "\n");
+			output.write(game.getPlayer().getCoordinateX() + " " + game.getPlayer().getCoordinateY() + " " + game.getPlayer().getDirectionFacing() + "\n");
 			
 			MenuState menuState = (MenuState) State.getState();
 			
@@ -42,7 +43,8 @@ public class GameSaver {
 			output.write("\n");
 			
 			//Fifth line is the difficulty (-1 if TownState)
-			output.write(State.getState().getDifficulty() + "\n");
+			int difficulty = State.getState().getDifficulty();
+			output.write(difficulty + "\n");
 			
 			//Sixth line is the player seen tile data
 			Array2D<Boolean> seen = menuState.getSeen();
@@ -52,8 +54,22 @@ public class GameSaver {
 			}
 			output.write("\n");
 			
-			//Seventh line is Enemies in the format X,Y,Health. If it's a TownState save, this line will say "NoEnemies"
-			//TODO Save enemies
+			//Seventh line is Enemies in the format coordinateX,coordinateY,Health. If it's a TownState save, this line will say "NoEnemies"
+			
+			//Town State if difficulty is -1
+			if(difficulty == -1) {
+				output.write("NoEnemies");
+			
+			//Otherwise saving a Dungeon State
+			} else {
+				DungeonState dungeonState = (DungeonState) menuState.getPrevState();
+				Dungeon dungeon = dungeonState.getDungeon();
+				ArrayList<Enemy> enemies = dungeon.getEnemies();
+				for(Enemy enemy: enemies) {
+					output.write(enemy.getCoordinateX() + "," + enemy.getCoordinateY() + "," + enemy.getHealth() + " ");
+				}
+			}
+			output.write("\n");
 			
 			//Eighth line is score
 			output.write(game.getScore() + "\n");

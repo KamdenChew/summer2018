@@ -10,7 +10,11 @@ public class Enemy extends Creature {
 	
 	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY) {
 		super(game, x, y, coordinateX, coordinateY);
-		// TODO Auto-generated constructor stub
+	}
+	
+	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY, int health) {
+		super(game, x, y, coordinateX, coordinateY);
+		this.health = health;
 	}
 
 	@Override
@@ -41,8 +45,6 @@ public class Enemy extends Creature {
 			   this.coordinateY >= player.getCoordinateY() - game.getRenderDistance() &&
 			   this.coordinateY <= player.getCoordinateY() + game.getRenderDistance()) {
 				
-				//TODO remove print
-//				System.out.println("Rendering Enemy who is at: " + new CoordinatePair(this.coordinateX, this.coordinateY));
 				//Player is always at renderDistance * 50, renderDistance * 50
 				graphics.drawImage(Assets.enemy, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
 			}

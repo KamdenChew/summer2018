@@ -10,7 +10,7 @@ public class MainMenuState extends State {
 		@Override
 		public void onClick() {
 			if(game.isPrimaryWindow()) {
-				State.setState(new TownState(game, 7, 7));
+				State.setState(new TownState(game, 7, 7, "Down"));
 			}
 		}});
 	

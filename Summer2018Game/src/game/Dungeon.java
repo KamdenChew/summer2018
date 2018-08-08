@@ -75,15 +75,15 @@ public class Dungeon {
 	}
 
 	//TODO add javadoc and also add rooms as paramater to this constructor?
-	public Dungeon(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns) {
+	public Dungeon(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, ArrayList<Enemy> enemies, String direction) {
 		this.game = game;
 		this.difficulty = difficulty;
 		this.data = data;
 		this.seen = seen;
 		this.numDungeonColumns = numDungeonColumns;
 		this.numDungeonRows = numDungeonRows;
-		this.player = new Player(game, x, y, true, this);
-		this.enemies = new ArrayList<Enemy>();
+		this.enemies = enemies;
+		this.player = new Player(game, x, y, true, this, direction);
 		setSeen();
 	}
 	
@@ -589,13 +589,12 @@ public class Dungeon {
 			int randomRow = rand.nextInt(data.getNumRows() - 2) + 1;
 			startCoordinates = new CoordinatePair(randomColumn, randomRow);
 		}
-		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY(), true, this);
+		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY(), true, this, "Down");
 		game.setPlayer(this.player);
 	}
 	
 	private void setSeen() {
 	//Set the nearby tile values to seen
-		System.out.println(game);
 		for(int x = player.getCoordinateX() - game.getRenderDistance(); x <= player.getCoordinateX() + game.getRenderDistance(); x++) {
 			for(int y = player.getCoordinateY() - game.getRenderDistance(); y <= player.getCoordinateY() + game.getRenderDistance(); y++) {
 				
@@ -646,6 +645,10 @@ public class Dungeon {
 		return this.enemies;
 	}
 	
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+	
 	/**
 	 * Checks if we have a generated dungeon, makes sure the given coordinates are either a path or a room, and that the player isn't standing there.
 	 * 
@@ -663,6 +666,6 @@ public class Dungeon {
 			}
 		}
 		
-		return (data != null && (data.get(x, y) == 0 || data.get(x, y) == 2) && !occupied);
+		return (data != null && (data.get(x, y) == 0 || data.get(x, y) == 2 || data.get(x, y) == -2) && !occupied);
 	}
 }

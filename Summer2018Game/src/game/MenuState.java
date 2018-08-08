@@ -69,6 +69,10 @@ public class MenuState extends State {
 		}
 	}
 	
+	public State getPrevState() {
+		return prevState;
+	}
+
 	public Array2D<Boolean> getSeen() {
 		if(prevState.isDungeonState()) {
 			DungeonState dungeonState = (DungeonState) prevState;

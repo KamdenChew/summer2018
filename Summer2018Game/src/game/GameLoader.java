@@ -66,6 +66,9 @@ public class GameLoader {
 		
 		//Seventh line is Enemies in the format X,Y,Health. If it's a TownState save, this line will say "NoEnemies"
 		String enemyString = scanner.nextLine();
+		
+		//Eighth line is the number of floors left. This will be -1 if it's a town state.
+		int floors = Integer.parseInt(scanner.nextLine());
 
 		//TownState if difficulty is -1
 			
@@ -89,7 +92,7 @@ public class GameLoader {
 				enemies.add(new Enemy(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY, health));
 			}
 			
-			loadedState = new DungeonState(game, x, y, difficulty, data, seen, height, width, enemies, direction);
+			loadedState = new DungeonState(game, x, y, difficulty, data, seen, height, width, enemies, direction, floors);
 		}
 		
 		

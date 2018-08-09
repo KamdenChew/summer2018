@@ -13,10 +13,10 @@ public class DungeonState extends State{
 	private ArrayList<Enemy> enemies;
 	private int difficulty;
 	
-	public DungeonState(Game game, int difficulty) {
+	public DungeonState(Game game, int difficulty, int floors) {
 		super(game);
 		System.out.println("Set difficulty to: " + difficulty);
-		this.dungeon = new Dungeon(difficulty, game);
+		this.dungeon = new Dungeon(game, difficulty, floors);
 		this.difficulty = difficulty;
 		this.player = dungeon.getPlayer();
 		this.enemies = dungeon.getEnemies();
@@ -34,10 +34,10 @@ public class DungeonState extends State{
 		return player;
 	}
 	
-	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, ArrayList<Enemy> enemies, String direction) {
+	public DungeonState(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, ArrayList<Enemy> enemies, String direction, int floors) {
 		super(game);
 		this.difficulty = difficulty;
-		this.dungeon = new Dungeon(game, x, y, difficulty, data, seen, numDungeonRows, numDungeonColumns, enemies, direction);
+		this.dungeon = new Dungeon(game, x, y, difficulty, data, seen, numDungeonRows, numDungeonColumns, enemies, direction, floors);
 		this.player = dungeon.getPlayer();
 		this.enemies = dungeon.getEnemies();
 		game.setPlayer(this.player);

@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -43,6 +44,10 @@ public class MenuState extends State {
 	public void tick() {
 		saveGameButton.tick();
 		closeMenuButton.tick();
+		if(this.game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
+			System.out.println("M clicked!");
+			State.setState(prevState);
+		}
 	}
 
 	@Override

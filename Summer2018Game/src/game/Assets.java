@@ -11,7 +11,8 @@ public class Assets {
 	
 	public static BufferedImage dirt, stone, wall, empty, exit,  newGame, newGameHover, loadGame, loadGameHover, saveGame, saveGameHover, 
 								closeMenu, closeMenuHover, peacefulWarp, easyWarp, mediumWarp, hardWarp, continueToDungeon, continueToDungeonHover,
-								exitToTown, exitToTownHover, enemy, player, playerUp, playerDown, playerLeft, playerRight;
+								exitToTown, exitToTownHover, enemy, player, playerUp, playerDown, playerLeft, playerRight, continueToNextFloor,
+								continueToNextFloorHover;
 	
 	public static void init() {
 		dirt = ImageLoader.loadImage("/textures/Dirt.png");
@@ -41,6 +42,8 @@ public class Assets {
 		playerDown = ImageLoader.loadImage("/textures/PlayerDown.png");
 		playerLeft = ImageLoader.loadImage("/textures/PlayerLeft.png");
 		playerRight = ImageLoader.loadImage("/textures/PlayerRight.png");
+		continueToNextFloor = ImageLoader.loadImage("/textures/ContinueToNextFloor.png");
+		continueToNextFloorHover = ImageLoader.loadImage("/textures/ContinueToNextFloorHover.png");
 	}
 	
 }

@@ -17,6 +17,7 @@ public class Dungeon {
 	private ArrayList<Room> rooms;
 	private int numDungeonRows;
 	private int numDungeonColumns;
+	private int floorsRemaining;
 	private Game game;
 	private Player player;
 	private ArrayList<Enemy> enemies;
@@ -38,30 +39,48 @@ public class Dungeon {
 	 *  @throws IllegalArgumentException if not passes a valid difficulty int
 	 * 
 	 */
-	public Dungeon(int difficulty, Game game)  {
+	public Dungeon(Game game, int difficulty, int floors)  {
 		this.game = game;
 		this.enemies = new ArrayList<Enemy>();
 		this.rooms = new ArrayList<Room>();
+		this.floorsRemaining = floors;
+		
 		if (difficulty == 0) {
 
 			// Set Fixed size for non-hostile dungeons
 			this.numDungeonRows = 10;
 			this.numDungeonColumns = 10;
+			if(floors == -1) {
+				this.floorsRemaining = 5;
+			}
+			
 		} else if (difficulty == 1) {
 
 			// Set size to between 10x10 and 15x15 for easy dungeons
 			this.numDungeonRows = rand.nextInt(6) + 10;
 			this.numDungeonColumns = rand.nextInt(6) + 10;
+			if(floors == -1) {
+				this.floorsRemaining = 8;
+			}
+			
 		} else if (difficulty == 2) {
 
 			// Set size to between 15x15 and 20x20 for medium dungeons
 			this.numDungeonRows = rand.nextInt(6) + 15;
 			this.numDungeonColumns = rand.nextInt(6) + 15;
+			if(floors == -1) {
+				this.floorsRemaining = 12;
+			}
+			
 		} else if (difficulty == 3) {
 
 			// Set size to between 20x20 and 25x25 for hard dungeons
 			this.numDungeonRows = rand.nextInt(6) + 20;
 			this.numDungeonColumns = rand.nextInt(6) + 20;
+			if(floors == -1) {
+				this.floorsRemaining = 20;
+			}
+			
 		} else {
 			throw new IllegalArgumentException("Difficulty should be an integer value from 0-3.");
 		}
@@ -75,7 +94,7 @@ public class Dungeon {
 	}
 
 	//TODO add javadoc and also add rooms as paramater to this constructor?
-	public Dungeon(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, ArrayList<Enemy> enemies, String direction) {
+	public Dungeon(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, ArrayList<Enemy> enemies, String direction, int floors) {
 		this.game = game;
 		this.difficulty = difficulty;
 		this.data = data;
@@ -83,6 +102,7 @@ public class Dungeon {
 		this.numDungeonColumns = numDungeonColumns;
 		this.numDungeonRows = numDungeonRows;
 		this.enemies = enemies;
+		this.floorsRemaining = floors;
 		this.player = new Player(game, x, y, true, this, direction);
 		setSeen();
 	}
@@ -96,6 +116,14 @@ public class Dungeon {
 				this.seen.set(x, y, false);
 			}
 		}
+	}
+	
+	public int getFloorsRemaining() {
+		return floorsRemaining;
+	}
+
+	public void setFloorsRemaining(int floorsRemaining) {
+		this.floorsRemaining = floorsRemaining;
 	}
 	
 	public Array2D<Integer> getData() { 
@@ -667,5 +695,13 @@ public class Dungeon {
 		}
 		
 		return (data != null && (data.get(x, y) == 0 || data.get(x, y) == 2 || data.get(x, y) == -2) && !occupied);
+	}
+	
+	public int getDifficulty() {
+		return difficulty;
+	}
+
+	public boolean onLastFloor() {
+		return (floorsRemaining == 1);
 	}
 }

@@ -48,6 +48,14 @@ public class KeyManager implements KeyListener{
 		}
 	}
 	
+	public boolean beingPressed(int keyCode) {
+		if(keyCode < 0 || keyCode >= keys.length) {
+			return false;
+		} else {
+			return keys[keyCode];
+		}
+	}
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub

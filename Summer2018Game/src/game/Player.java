@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Player extends Creature{
@@ -34,7 +35,7 @@ public class Player extends Creature{
 
 	@Override
 	public void tick() {
-		if(tickDelay == 0 && (State.getState().isDungeonState() || State.getState().isTownState())) {
+		if(tickDelay == 0) {
 			updateDirectionFacing();
 			Array2D<Integer> data;
 			if(State.getState().isDungeonState()) {
@@ -62,7 +63,7 @@ public class Player extends Creature{
 				rightWalkable = (Math.abs(data.get(coordinateX + 1, coordinateY)) != 1);
 			}
 			
-			if(game.getKeyManager().up && upWalkable) {
+			if(game.getKeyManager().up && upWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingUp();
 				y -= 50;
 				this.coordinateY--;
@@ -73,7 +74,7 @@ public class Player extends Creature{
 				}
 				handleNewTile();
 
-			} else if(game.getKeyManager().down && downWalkable) {
+			} else if(game.getKeyManager().down && downWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingDown();
 				y += 50;
 				this.coordinateY++;
@@ -84,7 +85,7 @@ public class Player extends Creature{
 				}
 				handleNewTile();
 
-			} else if(game.getKeyManager().left && leftWalkable) {
+			} else if(game.getKeyManager().left && leftWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingLeft();
 				x -= 50;
 				this.coordinateX--;
@@ -95,7 +96,7 @@ public class Player extends Creature{
 				}
 				handleNewTile();
 				
-			} else if(game.getKeyManager().right && rightWalkable) {
+			} else if(game.getKeyManager().right && rightWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingRight();
 				x += 50;
 				this.coordinateX++;
@@ -164,10 +165,14 @@ public class Player extends Creature{
 			
 			int tileVal = data.get(this.getCoordinateX(), this.getCoordinateY());
 			
-			//tileVal == -2 means we are on the dungeon exit
+			//tileVal == -2 means we are on the dungeon floor exit
 			if(tileVal == -2) {
 				System.out.println("Stepped on exit");
-				State.setState(new ConfirmTownState(game, State.getState(), State.getState().getDifficulty()));
+				if(dungeon.onLastFloor()) {
+					State.setState(new ConfirmTownState(game, State.getState(), State.getState().getDifficulty()));
+				} else {
+					State.setState(new ConfirmNextFloorState(game, State.getState(), State.getState().getDifficulty()));
+				}
 				
 			//tileVal = -3 means we are on the peaceful warp
 			} else if(tileVal == -3) {

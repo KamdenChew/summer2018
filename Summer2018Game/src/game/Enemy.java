@@ -1,25 +1,44 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Enemy extends Creature {
 
-	Random rand = new Random();
+	private Random rand = new Random();
+	private Dungeon dungeon;
 	
-	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY) {
-		super(game, x, y, coordinateX, coordinateY);
-	}
-	
-	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY, int health) {
+	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY, int health, Dungeon dungeon, String direction) {
 		super(game, x, y, coordinateX, coordinateY);
 		this.health = health;
+		if(direction.equals("Up")) {
+			setFacingUp();
+		} else if(direction.equals("Down")) {
+			setFacingDown();
+		} else if(direction.equals("Left")) {
+			setFacingLeft();
+		} else if(direction.equals("Right")) {
+			setFacingRight();
+		}
+		this.dungeon = dungeon;
 	}
 
 	@Override
 	public void tick() {
 		CoordinatePair nextPosition = getMove();
+		
+		//If we are moving right, face right
+		if(nextPosition.getY() < this.coordinateY) {
+			setFacingUp();
+		} else if(nextPosition.getY() > this.coordinateY) {
+			setFacingDown();
+		} else if(nextPosition.getX() < this.coordinateX) {
+			setFacingLeft();
+		} else {
+			setFacingRight();
+		}
 		this.coordinateX = nextPosition.getX();
 		this.coordinateY = nextPosition.getY();
 	}
@@ -46,9 +65,38 @@ public class Enemy extends Creature {
 			   this.coordinateY <= player.getCoordinateY() + game.getRenderDistance()) {
 				
 				//Player is always at renderDistance * 50, renderDistance * 50
-				graphics.drawImage(Assets.enemy, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
+				if(this.facingUp) {
+					graphics.drawImage(Assets.enemyUp, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
+				} else if(this.facingDown) {
+					graphics.drawImage(Assets.enemyDown, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
+				} else if(this.facingLeft) {
+					graphics.drawImage(Assets.enemyLeft, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
+				} else if(this.facingRight) {
+					graphics.drawImage(Assets.enemyRight, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
+				}
+				renderHealthBar(graphics);
 			}
 		}
+	}
+	
+	public void renderHealthBar(Graphics graphics) {
+		
+		//Find scaling value
+		int pixelsPerHealth = 50 / maxHealth;
+		
+		//Represents amount of health the player has lost
+		int numRedPixels = pixelsPerHealth * (maxHealth - health);
+		
+		//Represents amount of health the player has
+		int numGreenPixels = 50 - numRedPixels;
+		
+		Player player = dungeon.getPlayer();
+		
+		//Draw the Health Bar
+		graphics.setColor(Color.green);
+		graphics.fillRect(game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, numGreenPixels, 2);
+		graphics.setColor(Color.red);
+		graphics.fillRect(game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50 + numGreenPixels, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, numRedPixels, 2);
 	}
 	
 	//TODO Replace random move with some actually intelligent move

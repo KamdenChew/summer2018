@@ -55,12 +55,14 @@ public class GameSaver {
 			output.write("\n");
 			
 			//Seventh line is Enemies in the format coordinateX,coordinateY,Health. If it's a TownState save, this line will say "NoEnemies"
+			//Eighth line is the number of floors left. This will be -1 if it's a town state.
 			
 			//Town State if difficulty is -1
 			if(difficulty == -1) {
 				output.write("NoEnemies");
 				output.write("\n");
-				output.write(-1);
+				
+				output.write(-1 + "\n");
 			
 			//Otherwise saving a Dungeon State
 			} else {
@@ -68,15 +70,13 @@ public class GameSaver {
 				Dungeon dungeon = dungeonState.getDungeon();
 				ArrayList<Enemy> enemies = dungeon.getEnemies();
 				for(Enemy enemy: enemies) {
-					output.write(enemy.getCoordinateX() + "," + enemy.getCoordinateY() + "," + enemy.getHealth() + " ");
+					output.write(enemy.getCoordinateX() + "," + enemy.getCoordinateY() + "," + enemy.getHealth() + "," + enemy.getDirectionFacing() + " ");
 				}
 				
 				output.write("\n");
 				
-				//Eighth line is the number of floors left. This will be -1 if it's a town state.
-				output.write(dungeon.getFloorsRemaining());
+				output.write(dungeon.getFloorsRemaining() + "\n");
 			}
-			output.write("\n");
 			
 			//Ninth line is score
 			output.write(game.getScore() + "\n");

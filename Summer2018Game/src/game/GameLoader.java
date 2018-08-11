@@ -79,6 +79,7 @@ public class GameLoader {
 			
 		//If difficulty falls in our defined dungeon difficulty bounds, then it's a dungeon state
 		} else if(difficulty >= 0 && difficulty <= 3) {
+			Dungeon dungeon = new Dungeon(game, x, y, difficulty, data, seen, height, width, direction, floors);
 			
 			String[] enemyData;
 			enemyData = enemyString.split(" ");
@@ -89,10 +90,14 @@ public class GameLoader {
 				int coordinateX = Integer.parseInt(params[0]);
 				int coordinateY = Integer.parseInt(params[1]);
 				int health = Integer.parseInt(params[2]);
-				enemies.add(new Enemy(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY, health));
+				String enemyDirection = params[3];
+				enemies.add(new Enemy(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY, health, dungeon, enemyDirection));
 			}
 			
-			loadedState = new DungeonState(game, x, y, difficulty, data, seen, height, width, enemies, direction, floors);
+			dungeon.setEnemies(enemies);
+			dungeon.getPlayer().setEnemies(enemies);
+			
+			loadedState = new DungeonState(game, dungeon);
 		}
 		
 		

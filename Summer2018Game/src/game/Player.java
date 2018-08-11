@@ -1,13 +1,13 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-public class Player extends Creature{
+public class Player extends Creature {
 	private static final int NUM_TICKS_MOVEMENT_DELAY = 8;
 	private static final int RENDER_DISTANCE = 3;
-	private boolean facingUp = false, facingDown = true, facingLeft = false, facingRight = false;
 	private int tickDelay = 0;
 	private boolean inDungeon = false;
 	private Dungeon dungeon;
@@ -31,6 +31,10 @@ public class Player extends Creature{
 		} else if(direction.equals("Right")) {
 			setFacingRight();
 		}
+	}
+
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
 	}
 
 	@Override
@@ -202,70 +206,40 @@ public class Player extends Creature{
 			enemy.tick();
 		}
 	}
-	
-	private void setFacingUp() {
-		facingUp = true;
-		facingDown = false;
-		facingLeft = false;
-		facingRight = false;
-	}
-	
-	private void setFacingDown() {
-		facingUp = false;
-		facingDown = true;
-		facingLeft = false;
-		facingRight = false;
-	}
-	
-	private void setFacingLeft() {
-		facingUp = false;
-		facingDown = false;
-		facingLeft = true;
-		facingRight = false;
-	}
-	
-	private void setFacingRight() {
-		facingUp = false;
-		facingDown = false;
-		facingLeft = false;
-		facingRight = true;
-	}
-	
-	private void updateDirectionFacing() {
-		if(game.getKeyManager().up) {
-			setFacingUp();
-		} else if(game.getKeyManager().down) {
-			setFacingDown();
-		} else if(game.getKeyManager().left) {
-			setFacingLeft();
-		} else if(game.getKeyManager().right) {
-			setFacingRight();
-		}
-	}
-	
-	public String getDirectionFacing() {
-		if(facingUp) {
-			return "Up";
-		} else if(facingDown) {
-			return "Down";
-		} else if(facingLeft) {
-			return "Left";
-		} else {
-			return "Right";
-		}
-	}
 
 	@Override
 	public void render(Graphics graphics) {
-		if(facingUp) {
+		
+		//Draw the player
+		if(this.facingUp) {
 			graphics.drawImage(Assets.playerUp, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
-		} else if(facingDown) {
+		} else if(this.facingDown) {
 			graphics.drawImage(Assets.playerDown, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
-		} else if(facingLeft) {
+		} else if(this.facingLeft) {
 			graphics.drawImage(Assets.playerLeft, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
-		} else if(facingRight) {
+		} else if(this.facingRight) {
 			graphics.drawImage(Assets.playerRight, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
 		}
+		
+		renderHealthBar(graphics);
+	}
+	
+public void renderHealthBar(Graphics graphics) {
+		
+		//Find scaling value
+		int pixelsPerHealth = 50 / maxHealth;
+		
+		//Represents amount of health the player has lost
+		int numRedPixels = pixelsPerHealth * (maxHealth - health);
+		
+		//Represents amount of health the player has
+		int numGreenPixels = 50 - numRedPixels;
+		
+		//Draw the Health Bar
+		graphics.setColor(Color.green);
+		graphics.fillRect(game.getRenderDistance() * 50, game.getRenderDistance() * 50, numGreenPixels, 2);
+		graphics.setColor(Color.red);
+		graphics.fillRect(game.getRenderDistance() * 50 + numGreenPixels, game.getRenderDistance() * 50, numRedPixels, 2);
 	}
 	
 }

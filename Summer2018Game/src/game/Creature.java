@@ -34,8 +34,12 @@ public abstract class Creature extends Entity{
 		this.coordinateY = coordinateY;
 	}
 
-	public void setHealth(int health) {
-		this.health = health;
+	public void decreaseHealth(int damage) {
+		if(this.health - damage < 0) {
+			this.health = 0;
+		} else {
+			this.health = this.health - damage;
+		}
 	}
 
 	public int getHealth() {

@@ -14,6 +14,7 @@ public class KeyManager implements KeyListener{
 	public boolean down;
 	public boolean left;
 	public boolean right;
+	public boolean space;
 	
 	public KeyManager() {
 		keys = new boolean [MAX_KEY_CODE];
@@ -38,6 +39,7 @@ public class KeyManager implements KeyListener{
 		this.down = keys[KeyEvent.VK_S];
 		this.left = keys[KeyEvent.VK_A];
 		this.right = keys[KeyEvent.VK_D];
+		this.space = keys[KeyEvent.VK_SPACE];
 	}
 	
 	public boolean keyJustPressed(int keyCode){

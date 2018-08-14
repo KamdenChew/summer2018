@@ -67,6 +67,8 @@ public class Player extends Creature {
 				rightWalkable = (Math.abs(data.get(coordinateX + 1, coordinateY)) != 1);
 			}
 			
+			//TODO animate walking
+			//Check if each of the four direction keys are being pressed, the player can move that direction, and the user isn't also holding shift
 			if(game.getKeyManager().up && upWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingUp();
 				y -= 50;
@@ -111,6 +113,12 @@ public class Player extends Creature {
 				}
 				handleNewTile();
 				
+			//Space being pressed means an attempt at attacking
+			} else if(game.getKeyManager().keyJustPressed(KeyEvent.VK_SPACE)) {
+				handleAttack();
+				if(inDungeon) {
+					tickEnemies();
+				}
 			}
 		} else {
 			tickDelay--;
@@ -201,6 +209,55 @@ public class Player extends Creature {
 		}
 	}
 	
+	private void handleAttack() {
+		boolean facingEnemy = false;
+		Enemy target = null;
+		
+		//Check if we are facing an enemy and save the enemy if we are
+		if(facingUp) {
+			for(Enemy enemy: enemies) {
+				if(enemy.getCoordinateX() == this.coordinateX && enemy.getCoordinateY() == this.coordinateY - 1) {
+					facingEnemy = true;
+					target = enemy;
+				}
+			}
+		} else if(facingDown) {
+			for(Enemy enemy: enemies) {
+				if(enemy.getCoordinateX() == this.coordinateX && enemy.getCoordinateY() == this.coordinateY + 1) {
+					facingEnemy = true;
+					target = enemy;
+				}
+			}
+		} else if(facingLeft) {
+			for(Enemy enemy: enemies) {
+				if(enemy.getCoordinateX() == this.coordinateX - 1 && enemy.getCoordinateY() == this.coordinateY) {
+					facingEnemy = true;
+					target = enemy;
+				}
+			}
+		} else if(facingRight) {
+			for(Enemy enemy: enemies) {
+				if(enemy.getCoordinateX() == this.coordinateX + 1 && enemy.getCoordinateY() == this.coordinateY) {
+					facingEnemy = true;
+					target = enemy;
+				}
+			}
+		}
+		
+		if(facingEnemy) {
+			//TODO animate attack
+			
+			//Deal damage to target
+			target.decreaseHealth(2);
+			
+			//If target lost all health, remove it.
+			if(target.getHealth() == 0) {
+				enemies.remove(target);
+				this.dungeon.getEnemies().remove(target);
+			}
+		}
+	}
+	
 	private void tickEnemies() {
 		for(Enemy enemy: enemies) {
 			enemy.tick();
@@ -224,22 +281,24 @@ public class Player extends Creature {
 		renderHealthBar(graphics);
 	}
 	
-public void renderHealthBar(Graphics graphics) {
+	public void renderHealthBar(Graphics graphics) {
+		if(inDungeon) {
+			//Find scaling value
+			int pixelsPerHealth = 50 / maxHealth;
+			
+			//Represents amount of health the player has lost
+			int numRedPixels = pixelsPerHealth * (maxHealth - health);
+			
+			//Represents amount of health the player has
+			int numGreenPixels = 50 - numRedPixels;
+			
+			//Draw the Health Bar
+			graphics.setColor(Color.green);
+			graphics.fillRect(game.getRenderDistance() * 50, game.getRenderDistance() * 50, numGreenPixels, 2);
+			graphics.setColor(Color.red);
+			graphics.fillRect(game.getRenderDistance() * 50 + numGreenPixels, game.getRenderDistance() * 50, numRedPixels, 2);
 		
-		//Find scaling value
-		int pixelsPerHealth = 50 / maxHealth;
-		
-		//Represents amount of health the player has lost
-		int numRedPixels = pixelsPerHealth * (maxHealth - health);
-		
-		//Represents amount of health the player has
-		int numGreenPixels = 50 - numRedPixels;
-		
-		//Draw the Health Bar
-		graphics.setColor(Color.green);
-		graphics.fillRect(game.getRenderDistance() * 50, game.getRenderDistance() * 50, numGreenPixels, 2);
-		graphics.setColor(Color.red);
-		graphics.fillRect(game.getRenderDistance() * 50 + numGreenPixels, game.getRenderDistance() * 50, numRedPixels, 2);
+		}
 	}
 	
 }

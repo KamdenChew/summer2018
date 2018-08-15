@@ -1,12 +1,13 @@
 package game;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 public abstract class Creature extends Entity{
 	
 	protected int coordinateX;
 	protected int coordinateY;
+	protected float nextX;
+	protected float nextY;
+	protected int nextCoordinateX;
+	protected int nextCoordinateY;
 	protected int maxHealth = 10;
 	protected int health;
 	protected boolean facingUp = false, facingDown = true, facingLeft = false, facingRight = false;
@@ -15,23 +16,9 @@ public abstract class Creature extends Entity{
 		super(game, x, y);
 		this.coordinateX = coordinateX;
 		this.coordinateY = coordinateY;
-		health = 10;
-	}
-	
-	public int getCoordinateX() {
-		return coordinateX;
-	}
-
-	public void setCoordinateX(int coordinateX) {
-		this.coordinateX = coordinateX;
-	}
-
-	public int getCoordinateY() {
-		return coordinateY;
-	}
-
-	public void setCoordinateY(int coordinateY) {
-		this.coordinateY = coordinateY;
+		this.health = 10;
+		this.width = 50;
+		this.height = 50;
 	}
 
 	public void decreaseHealth(int damage) {
@@ -40,10 +27,6 @@ public abstract class Creature extends Entity{
 		} else {
 			this.health = this.health - damage;
 		}
-	}
-
-	public int getHealth() {
-		return health;
 	}
 	
 	public void setFacingUp() {
@@ -96,5 +79,57 @@ public abstract class Creature extends Entity{
 		} else {
 			return "Right";
 		}
+	}
+	
+	public int getCoordinateX() {
+		return coordinateX;
+	}
+
+	public void setCoordinateX(int coordinateX) {
+		this.coordinateX = coordinateX;
+	}
+
+	public int getCoordinateY() {
+		return coordinateY;
+	}
+
+	public void setCoordinateY(int coordinateY) {
+		this.coordinateY = coordinateY;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public float getNextX() {
+		return nextX;
+	}
+
+	public void setNextX(float nextX) {
+		this.nextX = nextX;
+	}
+
+	public float getNextY() {
+		return nextY;
+	}
+
+	public void setNextY(float nextY) {
+		this.nextY = nextY;
+	}
+
+	public int getNextCoordinateX() {
+		return nextCoordinateX;
+	}
+
+	public void setNextCoordinateX(int nextCoordinateX) {
+		this.nextCoordinateX = nextCoordinateX;
+	}
+
+	public int getNextCoordinateY() {
+		return nextCoordinateY;
+	}
+
+	public void setNextCoordinateY(int nextCoordinateY) {
+		this.nextCoordinateY = nextCoordinateY;
 	}
 }

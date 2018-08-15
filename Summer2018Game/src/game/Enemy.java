@@ -49,33 +49,20 @@ public class Enemy extends Creature {
 			
 			DungeonState dungeonState = (DungeonState) State.getState();
 			Array2D<Integer> data = dungeonState.getDungeon().getData();
-			
-			int columns = data.getNumColumns();
-			int rows = data.getNumRows();
-			
 			Player player = game.getPlayer();
 			
-			int xOffSet = player.getCoordinateX() - game.getRenderDistance();
-			int yOffSet = player.getCoordinateY() - game.getRenderDistance();
-			
-			//If we are in the rendered region, render relative to player.
-			if(this.coordinateX >= player.getCoordinateX() - game.getRenderDistance() &&
-			   this.coordinateX <= player.getCoordinateX() + game.getRenderDistance() &&
-			   this.coordinateY >= player.getCoordinateY() - game.getRenderDistance() &&
-			   this.coordinateY <= player.getCoordinateY() + game.getRenderDistance()) {
-				
-				//Player is always at renderDistance * 50, renderDistance * 50
-				if(this.facingUp) {
-					graphics.drawImage(Assets.enemyUp, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
-				} else if(this.facingDown) {
-					graphics.drawImage(Assets.enemyDown, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
-				} else if(this.facingLeft) {
-					graphics.drawImage(Assets.enemyLeft, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
-				} else if(this.facingRight) {
-					graphics.drawImage(Assets.enemyRight, game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, null);
-				}
-				renderHealthBar(graphics);
+			//Player is always at renderDistance * 50, renderDistance * 50
+			if(this.facingUp) {
+				graphics.drawImage(Assets.enemyUp, (int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), null);
+			} else if(this.facingDown) {
+				graphics.drawImage(Assets.enemyDown, (int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), null);
+			} else if(this.facingLeft) {
+				graphics.drawImage(Assets.enemyLeft, (int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), null);
+			} else if(this.facingRight) {
+				graphics.drawImage(Assets.enemyRight, (int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), null);
 			}
+			renderHealthBar(graphics);
+			
 		}
 	}
 	

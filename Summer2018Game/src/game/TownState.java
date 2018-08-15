@@ -8,7 +8,7 @@ public class TownState extends State{
 	
 	private Array2D<Integer> data = new Array2D<Integer>(15, 15, new Integer[]{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,-3,0,0,0,-4,0,0,0,-5,0,0,0,-6,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1});
 	private Player player;
-	
+	private GameCamera camera;
 	
 	public TownState(Game game, int x, int y, String direction) {
 		super(game);
@@ -17,8 +17,13 @@ public class TownState extends State{
 		}
 		this.player = new Player(game, x, y, false, null, direction);
 		game.setPlayer(this.player);
+		this.camera = player.getCamera();
 	}
 	
+	public GameCamera getCamera() {
+		return camera;
+	}
+
 	public Player getPlayer() {
 		return player;
 	}
@@ -38,34 +43,28 @@ public class TownState extends State{
 
 	@Override
 	public void render(Graphics graphics) {
-		int columns = data.getNumColumns();
-		int rows = data.getNumRows();
-		int xOffSet = player.getCoordinateX() - game.getRenderDistance();
-		int yOffSet = player.getCoordinateY() - game.getRenderDistance();
-		for(int x = player.getCoordinateX() - game.getRenderDistance(); x <= player.getCoordinateX() + game.getRenderDistance(); x++) {
-			for(int y = player.getCoordinateY() - game.getRenderDistance(); y <= player.getCoordinateY() + game.getRenderDistance(); y++) {
-
+		for(int x = -game.getRenderDistance(); x < data.getNumColumns() + game.getRenderDistance(); x++) {
+			for(int y = -game.getRenderDistance(); y < data.getNumRows() + game.getRenderDistance(); y++) {
+				
 				//If it's off the board just visualize it as a wall
-				if(x < 0 || x >= columns || y < 0 || y >= rows) {
-					graphics.drawImage(Assets.wall, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
-					
-				//Otherwise display the information of the dungeon
+				if(x < 0 || x >= data.getNumColumns() || y < 0 || y >= data.getNumRows()) {
+					graphics.drawImage(Assets.wall, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 				} else {
 					int val = data.get(x, y);
 					if(Math.abs(val) == 1) {
-						graphics.drawImage(Assets.wall, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+						graphics.drawImage(Assets.wall, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 					} else if(val == 0) {
-						graphics.drawImage(Assets.stone, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+						graphics.drawImage(Assets.stone, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 					} else if(val == 2){
-						graphics.drawImage(Assets.dirt, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+						graphics.drawImage(Assets.dirt, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 					} else if(val == -3) {
-						graphics.drawImage(Assets.peacefulWarp, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+						graphics.drawImage(Assets.peacefulWarp, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 					} else if(val == -4) {
-						graphics.drawImage(Assets.easyWarp, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+						graphics.drawImage(Assets.easyWarp, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 					} else if(val == -5) {
-						graphics.drawImage(Assets.mediumWarp, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+						graphics.drawImage(Assets.mediumWarp, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 					} else if(val == -6) {
-						graphics.drawImage(Assets.hardWarp, (x - xOffSet) * 50, (y - yOffSet) * 50, null);
+						graphics.drawImage(Assets.hardWarp, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 					}
 				}
 			}

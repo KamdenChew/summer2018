@@ -183,11 +183,6 @@ public class Game implements Runnable {
 			//Clear previous render
 			graphics.clearRect(0, 0, WIDTH, HEIGHT);
 			
-			//Drawing
-//			graphics.setColor(Color.red);
-//			graphics.fillRect(10, 50, 50, 70);
-//			graphics.drawImage(Assets.empty, x, 20, null);
-			
 			if(State.getState() != null) {
 				State.getState().render(graphics);
 			}

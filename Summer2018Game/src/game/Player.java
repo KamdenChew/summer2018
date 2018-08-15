@@ -12,6 +12,7 @@ public class Player extends Creature {
 	private boolean inDungeon = false;
 	private Dungeon dungeon;
 	private ArrayList<Enemy> enemies;
+	private GameCamera camera;
 	
 	public Player(Game game, int coordinateX, int coordinateY, boolean inDungeon, Dungeon dungeon, String direction) {
 		super(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
@@ -19,7 +20,7 @@ public class Player extends Creature {
 		this.coordinateY = coordinateY;
 		this.inDungeon = inDungeon;
 		this.dungeon = dungeon;
-		if(this.dungeon != null) {
+		if(inDungeon) {
 			this.enemies = dungeon.getEnemies();
 		}
 		if(direction.equals("Up")) {
@@ -31,6 +32,12 @@ public class Player extends Creature {
 		} else if(direction.equals("Right")) {
 			setFacingRight();
 		}
+		this.camera = new GameCamera(game, 0, 0);
+		this.camera.centerOnEntity(this);
+	}
+
+	public GameCamera getCamera() {
+		return camera;
 	}
 
 	public void setEnemies(ArrayList<Enemy> enemies) {
@@ -71,8 +78,13 @@ public class Player extends Creature {
 			//Check if each of the four direction keys are being pressed, the player can move that direction, and the user isn't also holding shift
 			if(game.getKeyManager().up && upWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingUp();
-				y -= 50;
-				this.coordinateY--;
+				this.nextY = this.y - 50;
+				this.nextCoordinateY = this.coordinateY - 1;
+				
+				//TODO remove temp code
+				this.y = this.nextY;
+				this.coordinateY = this.nextCoordinateY;
+				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				if(inDungeon) {
@@ -82,8 +94,13 @@ public class Player extends Creature {
 
 			} else if(game.getKeyManager().down && downWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingDown();
-				y += 50;
-				this.coordinateY++;
+				this.nextY = this.y + 50;
+				this.nextCoordinateY = this.coordinateY + 1;
+				
+				//TODO remove temp code
+				this.y = this.nextY;
+				this.coordinateY = this.nextCoordinateY;
+				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				if(inDungeon) {
@@ -93,8 +110,13 @@ public class Player extends Creature {
 
 			} else if(game.getKeyManager().left && leftWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingLeft();
-				x -= 50;
-				this.coordinateX--;
+				this.nextX = this.x - 50;
+				this.nextCoordinateX = this.coordinateX - 1;
+				
+				//TODO remove temp code
+				this.x = this.nextX;
+				this.coordinateX = this.nextCoordinateX;
+				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				if(inDungeon) {
@@ -104,8 +126,13 @@ public class Player extends Creature {
 				
 			} else if(game.getKeyManager().right && rightWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingRight();
-				x += 50;
-				this.coordinateX++;
+				this.nextX = this.x + 50;
+				this.nextCoordinateX = this.coordinateX + 1;
+
+				//TODO remove temp code
+				this.x = this.nextX;
+				this.coordinateX = this.nextCoordinateX;
+				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				if(inDungeon) {
@@ -124,7 +151,14 @@ public class Player extends Creature {
 			tickDelay--;
 		}
 		
-		
+		//Center the camera
+		if(State.getState().isDungeonState()) {
+			DungeonState dungeonState = (DungeonState) State.getState();
+			dungeonState.getCamera().centerOnEntity(this);
+		} else if(State.getState().isTownState()) {
+			TownState townState = (TownState) State.getState();
+			townState.getCamera().centerOnEntity(this);
+		}
 	}
 	
 	private void updateSeen() {
@@ -266,7 +300,6 @@ public class Player extends Creature {
 
 	@Override
 	public void render(Graphics graphics) {
-		
 		//Draw the player
 		if(this.facingUp) {
 			graphics.drawImage(Assets.playerUp, game.getRenderDistance() * 50, game.getRenderDistance() * 50, null);
@@ -283,6 +316,7 @@ public class Player extends Creature {
 	
 	public void renderHealthBar(Graphics graphics) {
 		if(inDungeon) {
+			
 			//Find scaling value
 			int pixelsPerHealth = 50 / maxHealth;
 			

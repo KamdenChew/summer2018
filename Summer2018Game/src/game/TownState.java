@@ -2,13 +2,16 @@ package game;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class TownState extends State{
 	
 	private Array2D<Integer> data = new Array2D<Integer>(15, 15, new Integer[]{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,-3,0,0,0,-4,0,0,0,-5,0,0,0,-6,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1});
 	private Player player;
 	private GameCamera camera;
+	private Random rand = new Random();
 	
 	public TownState(Game game, int x, int y, String direction) {
 		super(game);
@@ -43,9 +46,67 @@ public class TownState extends State{
 
 	@Override
 	public void render(Graphics graphics) {
+		if(player.getCoordinateX() == player.getNextCoordinateX() && player.getCoordinateY() == player.getNextCoordinateY()) {
+			drawTownAndPlayer(graphics);
+		} else {
+
+			//Moving up
+			if(player.getNextCoordinateY() < player.getCoordinateY()) {
+				System.out.println("Moving up");
+				for(float y = player.getY(); y >= player.getNextY(); y = y - Player.STEP_SIZE) {
+					player.setY(y);
+					System.out.println("rendering");
+					player.getCamera().centerOnEntity(player);
+					drawTownAndPlayer(graphics);
+					Timer.waitFor(0);
+				}
+				player.setCoordinateY(player.getNextCoordinateY());
+				
+			//Moving down
+			} else if(player.getNextCoordinateY() > player.getCoordinateY()) {
+				System.out.println("Moving down");
+				for(float y = player.getY(); y <= player.getNextY(); y = y + Player.STEP_SIZE) {
+					player.setY(y);
+					System.out.println("rendering");
+					player.getCamera().centerOnEntity(player);
+					drawTownAndPlayer(graphics);
+					Timer.waitFor(0);
+				}
+				player.setCoordinateY(player.getNextCoordinateY());
+				
+			//Moving left
+			} else if(player.getNextCoordinateX() < player.getCoordinateX()) {
+				System.out.println("Moving left");
+				for(float x = player.getX(); x >= player.getNextX(); x = x - Player.STEP_SIZE) {
+					player.setX(x);
+					System.out.println("rendering");
+					player.getCamera().centerOnEntity(player);
+					drawTownAndPlayer(graphics);
+					Timer.waitFor(0);
+				}
+				player.setCoordinateX(player.getNextCoordinateX());
+				
+			//Moving right
+			} else if(player.getNextCoordinateX() > player.getCoordinateX()) {
+				System.out.println("Moving right");
+				for(float x = player.getX(); x <= player.getNextX(); x = x + Player.STEP_SIZE) {
+					player.setX(x);
+					System.out.println("rendering");
+					player.getCamera().centerOnEntity(player);
+					drawTownAndPlayer(graphics);
+					Timer.waitFor(0);
+				}
+				player.setCoordinateX(player.getNextCoordinateX());
+			}
+			System.out.println();
+			System.out.println();
+			System.out.println();
+		}
+	}
+	
+	private void drawTownAndPlayer(Graphics graphics) {
 		for(int x = -game.getRenderDistance(); x < data.getNumColumns() + game.getRenderDistance(); x++) {
 			for(int y = -game.getRenderDistance(); y < data.getNumRows() + game.getRenderDistance(); y++) {
-				
 				//If it's off the board just visualize it as a wall
 				if(x < 0 || x >= data.getNumColumns() || y < 0 || y >= data.getNumRows()) {
 					graphics.drawImage(Assets.wall, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);

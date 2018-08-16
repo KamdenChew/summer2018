@@ -6,7 +6,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Player extends Creature {
-	private static final int NUM_TICKS_MOVEMENT_DELAY = 8;
+	public static final int NUM_TICKS_MOVEMENT_DELAY = 8;
+	public static final int STEP_SIZE = 5;
 	private static final int RENDER_DISTANCE = 3;
 	private int tickDelay = 0;
 	private boolean inDungeon = false;
@@ -18,6 +19,8 @@ public class Player extends Creature {
 		super(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
 		this.coordinateX = coordinateX;
 		this.coordinateY = coordinateY;
+		this.nextCoordinateX = coordinateX;
+		this.nextCoordinateY = coordinateY;
 		this.inDungeon = inDungeon;
 		this.dungeon = dungeon;
 		if(inDungeon) {
@@ -81,9 +84,9 @@ public class Player extends Creature {
 				this.nextY = this.y - 50;
 				this.nextCoordinateY = this.coordinateY - 1;
 				
-				//TODO remove temp code
-				this.y = this.nextY;
-				this.coordinateY = this.nextCoordinateY;
+//				//TODO remove temp code
+//				this.y = this.nextY;
+//				this.coordinateY = this.nextCoordinateY;
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
@@ -97,9 +100,9 @@ public class Player extends Creature {
 				this.nextY = this.y + 50;
 				this.nextCoordinateY = this.coordinateY + 1;
 				
-				//TODO remove temp code
-				this.y = this.nextY;
-				this.coordinateY = this.nextCoordinateY;
+//				//TODO remove temp code
+//				this.y = this.nextY;
+//				this.coordinateY = this.nextCoordinateY;
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
@@ -113,9 +116,9 @@ public class Player extends Creature {
 				this.nextX = this.x - 50;
 				this.nextCoordinateX = this.coordinateX - 1;
 				
-				//TODO remove temp code
-				this.x = this.nextX;
-				this.coordinateX = this.nextCoordinateX;
+//				//TODO remove temp code
+//				this.x = this.nextX;
+//				this.coordinateX = this.nextCoordinateX;
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
@@ -129,9 +132,9 @@ public class Player extends Creature {
 				this.nextX = this.x + 50;
 				this.nextCoordinateX = this.coordinateX + 1;
 
-				//TODO remove temp code
-				this.x = this.nextX;
-				this.coordinateX = this.nextCoordinateX;
+//				//TODO remove temp code
+//				this.x = this.nextX;
+//				this.coordinateX = this.nextCoordinateX;
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
@@ -196,7 +199,7 @@ public class Player extends Creature {
 		}
 	}
 	
-	private void handleNewTile() {
+	public void handleNewTile() {
 		//If we are on the peaceful warp tile
 		if(State.getState().isDungeonState() || State.getState().isTownState()) {
 			

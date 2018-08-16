@@ -55,6 +55,53 @@ public class DungeonState extends State{
 
 	@Override
 	public void render(Graphics graphics) {
+		
+		//If we aren't moving this tick, just draw
+		if(player.getCoordinateX() == player.getNextCoordinateX() && player.getCoordinateY() == player.getNextCoordinateY()) {
+			System.out.println("if");
+			drawDungeonAndPlayer(graphics);
+		
+		//We have somewhere to move, so let's animate it
+		} else {
+			System.out.println("else");
+
+			//Moving up
+			if(player.getNextCoordinateY() < player.getCoordinateY()) {
+				for(float y = player.getY(); y < player.getNextY(); y = y - Player.STEP_SIZE) {
+					player.setY(y);
+					drawDungeonAndPlayer(graphics);
+					Timer.waitFor(0);
+				}
+				player.setCoordinateY(player.getNextCoordinateY());
+			//Moving down
+			} else if(player.getNextCoordinateY() > player.getCoordinateY()) {
+				for(float y = player.getY(); y < player.getNextY(); y = y + Player.STEP_SIZE) {
+					player.setY(y);
+					drawDungeonAndPlayer(graphics);
+					Timer.waitFor(0);
+				}
+				player.setCoordinateY(player.getNextCoordinateY());
+			//Moving left
+			} else if(player.getNextCoordinateX() < player.getCoordinateX()) {
+				for(float x = player.getX(); x < player.getNextX(); x = x - Player.STEP_SIZE) {
+					player.setX(x);
+					drawDungeonAndPlayer(graphics);
+					Timer.waitFor(0);
+				}
+				player.setCoordinateX(player.getNextCoordinateX());
+			//Moving right
+			} else if(player.getNextCoordinateX() > player.getCoordinateX()) {
+				for(float x = player.getX(); x < player.getNextX(); x = x + Player.STEP_SIZE) {
+					player.setX(x);
+					drawDungeonAndPlayer(graphics);
+					Timer.waitFor(0);
+				}
+				player.setCoordinateX(player.getNextCoordinateX());
+			}
+		}
+	}
+	
+	private void drawDungeonAndPlayer(Graphics graphics) {
 		for(int x = -game.getRenderDistance(); x < dungeon.getData().getNumColumns() + game.getRenderDistance(); x++) {
 			for(int y = -game.getRenderDistance(); y < dungeon.getData().getNumRows() + game.getRenderDistance(); y++) {
 				

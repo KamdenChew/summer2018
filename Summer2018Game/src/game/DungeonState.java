@@ -56,47 +56,57 @@ public class DungeonState extends State{
 	@Override
 	public void render(Graphics graphics) {
 		
-		//If we aren't moving this tick, just draw
 		if(player.getCoordinateX() == player.getNextCoordinateX() && player.getCoordinateY() == player.getNextCoordinateY()) {
-			System.out.println("if");
 			drawDungeonAndPlayer(graphics);
-		
-		//We have somewhere to move, so let's animate it
 		} else {
-			System.out.println("else");
-
+			
 			//Moving up
 			if(player.getNextCoordinateY() < player.getCoordinateY()) {
-				for(float y = player.getY(); y < player.getNextY(); y = y - Player.STEP_SIZE) {
-					player.setY(y);
+				for(float yStep = player.getY() - Player.STEP_SIZE; yStep >= player.getNextY(); yStep = yStep - Player.STEP_SIZE) {
+					player.setY(yStep);
+					player.getCamera().centerOnEntity(player);
 					drawDungeonAndPlayer(graphics);
-					Timer.waitFor(0);
+					game.forceBs();
+					Timer.waitFor(10);
 				}
 				player.setCoordinateY(player.getNextCoordinateY());
+				player.handleNewTile();
+				
 			//Moving down
 			} else if(player.getNextCoordinateY() > player.getCoordinateY()) {
-				for(float y = player.getY(); y < player.getNextY(); y = y + Player.STEP_SIZE) {
-					player.setY(y);
+				for(float yStep = player.getY() + Player.STEP_SIZE; yStep <= player.getNextY(); yStep = yStep + Player.STEP_SIZE) {
+					player.setY(yStep);
+					player.getCamera().centerOnEntity(player);
 					drawDungeonAndPlayer(graphics);
-					Timer.waitFor(0);
+					game.forceBs();
+					Timer.waitFor(10);
 				}
 				player.setCoordinateY(player.getNextCoordinateY());
+				player.handleNewTile();
+				
 			//Moving left
 			} else if(player.getNextCoordinateX() < player.getCoordinateX()) {
-				for(float x = player.getX(); x < player.getNextX(); x = x - Player.STEP_SIZE) {
-					player.setX(x);
+				for(float xStep = player.getX() - Player.STEP_SIZE; xStep >= player.getNextX(); xStep = xStep - Player.STEP_SIZE) {
+					player.setX(xStep);
+					player.getCamera().centerOnEntity(player);
 					drawDungeonAndPlayer(graphics);
-					Timer.waitFor(0);
+					game.forceBs();
+					Timer.waitFor(10);
 				}
 				player.setCoordinateX(player.getNextCoordinateX());
+				player.handleNewTile();
+				
 			//Moving right
 			} else if(player.getNextCoordinateX() > player.getCoordinateX()) {
-				for(float x = player.getX(); x < player.getNextX(); x = x + Player.STEP_SIZE) {
-					player.setX(x);
+				for(float xStep = player.getX() + Player.STEP_SIZE; xStep <= player.getNextX(); xStep = xStep + Player.STEP_SIZE) {
+					player.setX(xStep);
+					player.getCamera().centerOnEntity(player);
 					drawDungeonAndPlayer(graphics);
-					Timer.waitFor(0);
+					game.forceBs();
+					Timer.waitFor(10);
 				}
 				player.setCoordinateX(player.getNextCoordinateX());
+				player.handleNewTile();
 			}
 		}
 	}

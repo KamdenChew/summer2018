@@ -49,58 +49,55 @@ public class TownState extends State{
 		if(player.getCoordinateX() == player.getNextCoordinateX() && player.getCoordinateY() == player.getNextCoordinateY()) {
 			drawTownAndPlayer(graphics);
 		} else {
-
+			
 			//Moving up
 			if(player.getNextCoordinateY() < player.getCoordinateY()) {
-				System.out.println("Moving up");
-				for(float y = player.getY(); y >= player.getNextY(); y = y - Player.STEP_SIZE) {
-					player.setY(y);
-					System.out.println("rendering");
+				for(float yStep = player.getY() - Player.STEP_SIZE; yStep >= player.getNextY(); yStep = yStep - Player.STEP_SIZE) {
+					player.setY(yStep);
 					player.getCamera().centerOnEntity(player);
 					drawTownAndPlayer(graphics);
-					Timer.waitFor(0);
+					game.forceBs();
+					Timer.waitFor(10);
 				}
 				player.setCoordinateY(player.getNextCoordinateY());
+				player.handleNewTile();
 				
 			//Moving down
 			} else if(player.getNextCoordinateY() > player.getCoordinateY()) {
-				System.out.println("Moving down");
-				for(float y = player.getY(); y <= player.getNextY(); y = y + Player.STEP_SIZE) {
-					player.setY(y);
-					System.out.println("rendering");
+				for(float yStep = player.getY() + Player.STEP_SIZE; yStep <= player.getNextY(); yStep = yStep + Player.STEP_SIZE) {
+					player.setY(yStep);
 					player.getCamera().centerOnEntity(player);
 					drawTownAndPlayer(graphics);
-					Timer.waitFor(0);
+					game.forceBs();
+					Timer.waitFor(10);
 				}
 				player.setCoordinateY(player.getNextCoordinateY());
+				player.handleNewTile();
 				
 			//Moving left
 			} else if(player.getNextCoordinateX() < player.getCoordinateX()) {
-				System.out.println("Moving left");
-				for(float x = player.getX(); x >= player.getNextX(); x = x - Player.STEP_SIZE) {
-					player.setX(x);
-					System.out.println("rendering");
+				for(float xStep = player.getX() - Player.STEP_SIZE; xStep >= player.getNextX(); xStep = xStep - Player.STEP_SIZE) {
+					player.setX(xStep);
 					player.getCamera().centerOnEntity(player);
 					drawTownAndPlayer(graphics);
-					Timer.waitFor(0);
+					game.forceBs();
+					Timer.waitFor(10);
 				}
 				player.setCoordinateX(player.getNextCoordinateX());
+				player.handleNewTile();
 				
 			//Moving right
 			} else if(player.getNextCoordinateX() > player.getCoordinateX()) {
-				System.out.println("Moving right");
-				for(float x = player.getX(); x <= player.getNextX(); x = x + Player.STEP_SIZE) {
-					player.setX(x);
-					System.out.println("rendering");
+				for(float xStep = player.getX() + Player.STEP_SIZE; xStep <= player.getNextX(); xStep = xStep + Player.STEP_SIZE) {
+					player.setX(xStep);
 					player.getCamera().centerOnEntity(player);
 					drawTownAndPlayer(graphics);
-					Timer.waitFor(0);
+					game.forceBs();
+					Timer.waitFor(10);
 				}
 				player.setCoordinateX(player.getNextCoordinateX());
+				player.handleNewTile();
 			}
-			System.out.println();
-			System.out.println();
-			System.out.println();
 		}
 	}
 	
@@ -135,7 +132,6 @@ public class TownState extends State{
 
 	@Override
 	public ArrayList<UIObject> getUIOBjects() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

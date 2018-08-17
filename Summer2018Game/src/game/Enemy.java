@@ -81,9 +81,9 @@ public class Enemy extends Creature {
 		
 		//Draw the Health Bar
 		graphics.setColor(Color.green);
-		graphics.fillRect(game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, numGreenPixels, 2);
+		graphics.fillRect((int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), numGreenPixels, 2);
 		graphics.setColor(Color.red);
-		graphics.fillRect(game.getRenderDistance() * 50 - (player.getCoordinateX() - this.coordinateX) * 50 + numGreenPixels, game.getRenderDistance() * 50 - (player.getCoordinateY() - this.coordinateY) * 50, numRedPixels, 2);
+		graphics.fillRect((int) (this.coordinateX * 50 - player.getCamera().getXOffset()) + numGreenPixels, (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), numRedPixels, 2);
 	}
 	
 	//TODO Replace random move with some actually intelligent move

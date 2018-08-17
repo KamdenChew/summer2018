@@ -684,7 +684,9 @@ public class Dungeon {
 	public boolean isWalkable(int x, int y) {
 		
 		boolean occupied = false;
-		if(x == player.getCoordinateX() && y == player.getCoordinateY()) {
+		
+		//Check if the player will be moved into that same location on this turn
+		if(x == player.getNextCoordinateX() && y == player.getNextCoordinateY()) {
 			occupied = true;
 		}
 		for(Enemy enemy: enemies) {

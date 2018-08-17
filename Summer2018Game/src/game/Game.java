@@ -16,6 +16,7 @@ public class Game implements Runnable {
 	private boolean running;
 	private boolean primaryWindow;
 	private Display display;
+	
 	private BufferStrategy bs;
 	private Graphics graphics;
 	
@@ -123,6 +124,10 @@ public class Game implements Runnable {
 
 	public void setNumHardCompleted(int numHardCompleted) {
 		this.numHardCompleted = numHardCompleted;
+	}
+	
+	public void forceBs() {
+		bs.show();
 	}
 
 	private void init() {

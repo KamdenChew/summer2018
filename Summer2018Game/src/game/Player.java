@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Player extends Creature {
 	public static final int NUM_TICKS_MOVEMENT_DELAY = 8;
-	public static final int STEP_SIZE = 5;
+	public static final float STEP_SIZE = 5;
 	private static final int RENDER_DISTANCE = 3;
 	private int tickDelay = 0;
 	private boolean inDungeon = false;
@@ -93,7 +93,6 @@ public class Player extends Creature {
 				if(inDungeon) {
 					tickEnemies();
 				}
-				handleNewTile();
 
 			} else if(game.getKeyManager().down && downWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingDown();
@@ -109,7 +108,6 @@ public class Player extends Creature {
 				if(inDungeon) {
 					tickEnemies();
 				}
-				handleNewTile();
 
 			} else if(game.getKeyManager().left && leftWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingLeft();
@@ -125,7 +123,6 @@ public class Player extends Creature {
 				if(inDungeon) {
 					tickEnemies();
 				}
-				handleNewTile();
 				
 			} else if(game.getKeyManager().right && rightWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingRight();
@@ -141,7 +138,6 @@ public class Player extends Creature {
 				if(inDungeon) {
 					tickEnemies();
 				}
-				handleNewTile();
 				
 			//Space being pressed means an attempt at attacking
 			} else if(game.getKeyManager().keyJustPressed(KeyEvent.VK_SPACE)) {
@@ -217,6 +213,7 @@ public class Player extends Creature {
 			//tileVal == -2 means we are on the dungeon floor exit
 			if(tileVal == -2) {
 				System.out.println("Stepped on exit");
+//				Timer.waitFor(3000);
 				if(dungeon.onLastFloor()) {
 					State.setState(new ConfirmTownState(game, State.getState(), State.getState().getDifficulty()));
 				} else {
@@ -226,21 +223,25 @@ public class Player extends Creature {
 			//tileVal = -3 means we are on the peaceful warp
 			} else if(tileVal == -3) {
 				System.out.println("Stepped on peaceful warp");
+//				Timer.waitFor(3000);
 				State.setState(new ConfirmDungeonState(game, State.getState(), 0));
 				
 			//tileVal = -4 means we are on the easy warp
 			} else if(tileVal == -4) {
 				System.out.println("Stepped on easy warp");
+//				Timer.waitFor(3000);
 				State.setState(new ConfirmDungeonState(game, State.getState(), 1));
 				
 			//tileVal = -5 means we are on the medium warp
 			} else if(tileVal == -5) {
 				System.out.println("Stepped on medium warp");
+//				Timer.waitFor(3000);
 				State.setState(new ConfirmDungeonState(game, State.getState(), 2));
 				
 			//tileVal = -6 means we are on the hard warp
 			} else if(tileVal == -6) {
 				System.out.println("Stepped on hard warp");
+//				Timer.waitFor(3000);
 				State.setState(new ConfirmDungeonState(game, State.getState(), 3));
 			}
 		}

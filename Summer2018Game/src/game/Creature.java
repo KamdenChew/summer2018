@@ -2,6 +2,7 @@ package game;
 
 public abstract class Creature extends Entity{
 	
+	public static final float STEP_SIZE = 5;
 	protected int coordinateX;
 	protected int coordinateY;
 	protected float nextX;
@@ -10,8 +11,8 @@ public abstract class Creature extends Entity{
 	protected int nextCoordinateY;
 	protected int maxHealth = 10;
 	protected int health;
-	protected boolean facingUp = false, facingDown = true, facingLeft = false, facingRight = false;
-	
+	protected boolean facingUp = false, facingDown = true, facingLeft = false, facingRight = false, isAttacking = false;
+
 	public Creature(Game game, float x, float y, int coordinateX, int coordinateY) {
 		super(game, x, y);
 		this.coordinateX = coordinateX;
@@ -131,5 +132,13 @@ public abstract class Creature extends Entity{
 
 	public void setNextCoordinateY(int nextCoordinateY) {
 		this.nextCoordinateY = nextCoordinateY;
+	}
+	
+	public boolean isAttacking() {
+		return isAttacking;
+	}
+
+	public void setAttacking(boolean isAttacking) {
+		this.isAttacking = isAttacking;
 	}
 }

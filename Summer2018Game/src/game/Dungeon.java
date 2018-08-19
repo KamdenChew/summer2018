@@ -690,7 +690,7 @@ public class Dungeon {
 			occupied = true;
 		}
 		for(Enemy enemy: enemies) {
-			if(x == enemy.getCoordinateX() && y == enemy.getCoordinateY()) {
+			if(x == enemy.getNextCoordinateX() && y == enemy.getNextCoordinateY()) {
 				occupied = true;
 			}
 		}

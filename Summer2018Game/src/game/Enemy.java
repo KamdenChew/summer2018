@@ -23,24 +23,33 @@ public class Enemy extends Creature {
 			setFacingRight();
 		}
 		this.dungeon = dungeon;
+		this.nextCoordinateX = this.coordinateX;
+		this.nextCoordinateY = this.coordinateY;
 	}
 
 	@Override
 	public void tick() {
 		CoordinatePair nextPosition = getMove();
 		
-		//If we are moving right, face right
 		if(nextPosition.getY() < this.coordinateY) {
 			setFacingUp();
+			this.nextCoordinateY = this.coordinateY - 1;
+			this.nextY = this.y - 50;
 		} else if(nextPosition.getY() > this.coordinateY) {
 			setFacingDown();
+			this.nextCoordinateY = this.coordinateY + 1;
+			this.nextY = this.y + 50;
 		} else if(nextPosition.getX() < this.coordinateX) {
 			setFacingLeft();
+			this.nextCoordinateX = this.coordinateX - 1;
+			this.nextX = this.x - 50;
 		} else {
 			setFacingRight();
+			this.nextCoordinateX = this.coordinateX + 1;
+			this.nextX = this.x + 50;
 		}
-		this.coordinateX = nextPosition.getX();
-		this.coordinateY = nextPosition.getY();
+//		this.coordinateX = nextPosition.getX();
+//		this.coordinateY = nextPosition.getY();
 	}
 
 	@Override
@@ -53,13 +62,13 @@ public class Enemy extends Creature {
 			
 			//Player is always at renderDistance * 50, renderDistance * 50
 			if(this.facingUp) {
-				graphics.drawImage(Assets.enemyUp, (int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), null);
+				graphics.drawImage(Assets.enemyUp, (int) (this.x - player.getCamera().getXOffset()), (int) (this.y - player.getCamera().getYOffset()), null);
 			} else if(this.facingDown) {
-				graphics.drawImage(Assets.enemyDown, (int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), null);
+				graphics.drawImage(Assets.enemyDown, (int) (this.x - player.getCamera().getXOffset()), (int) (this.y - player.getCamera().getYOffset()), null);
 			} else if(this.facingLeft) {
-				graphics.drawImage(Assets.enemyLeft, (int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), null);
+				graphics.drawImage(Assets.enemyLeft, (int) (this.x - player.getCamera().getXOffset()), (int) (this.y - player.getCamera().getYOffset()), null);
 			} else if(this.facingRight) {
-				graphics.drawImage(Assets.enemyRight, (int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), null);
+				graphics.drawImage(Assets.enemyRight, (int) (this.x - player.getCamera().getXOffset()), (int) (this.y - player.getCamera().getYOffset()), null);
 			}
 			renderHealthBar(graphics);
 			
@@ -81,9 +90,9 @@ public class Enemy extends Creature {
 		
 		//Draw the Health Bar
 		graphics.setColor(Color.green);
-		graphics.fillRect((int) (this.coordinateX * 50 - player.getCamera().getXOffset()), (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), numGreenPixels, 2);
+		graphics.fillRect((int) (this.x - player.getCamera().getXOffset()), (int) (this.y - player.getCamera().getYOffset()), numGreenPixels, 2);
 		graphics.setColor(Color.red);
-		graphics.fillRect((int) (this.coordinateX * 50 - player.getCamera().getXOffset()) + numGreenPixels, (int) (this.coordinateY * 50 - player.getCamera().getYOffset()), numRedPixels, 2);
+		graphics.fillRect((int) (this.x - player.getCamera().getXOffset()) + numGreenPixels, (int) (this.y - player.getCamera().getYOffset()), numRedPixels, 2);
 	}
 	
 	//TODO Replace random move with some actually intelligent move

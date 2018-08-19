@@ -7,10 +7,9 @@ import java.util.ArrayList;
 
 public class Player extends Creature {
 	public static final int NUM_TICKS_MOVEMENT_DELAY = 8;
-	public static final float STEP_SIZE = 5;
 	private static final int RENDER_DISTANCE = 3;
 	private int tickDelay = 0;
-	private boolean inDungeon = false;
+	private boolean inDungeon = false, tookTurn = false;
 	private Dungeon dungeon;
 	private ArrayList<Enemy> enemies;
 	private GameCamera camera;
@@ -90,6 +89,7 @@ public class Player extends Creature {
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
+				tookTurn = true;
 				if(inDungeon) {
 					tickEnemies();
 				}
@@ -105,6 +105,7 @@ public class Player extends Creature {
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
+				tookTurn = true;
 				if(inDungeon) {
 					tickEnemies();
 				}
@@ -120,6 +121,7 @@ public class Player extends Creature {
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
+				tookTurn = true;
 				if(inDungeon) {
 					tickEnemies();
 				}
@@ -135,12 +137,15 @@ public class Player extends Creature {
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
+				tookTurn = true;
 				if(inDungeon) {
 					tickEnemies();
 				}
 				
 			//Space being pressed means an attempt at attacking
 			} else if(game.getKeyManager().keyJustPressed(KeyEvent.VK_SPACE)) {
+				tookTurn = true;
+				isAttacking = true;
 				handleAttack();
 				if(inDungeon) {
 					tickEnemies();
@@ -160,6 +165,14 @@ public class Player extends Creature {
 		}
 	}
 	
+	public boolean hasTakenTurn() {
+		return tookTurn;
+	}
+
+	public void setTookTurn(boolean tookTurn) {
+		this.tookTurn = tookTurn;
+	}
+
 	private void updateSeen() {
 		if(State.getState().isDungeonState() || State.getState().isTownState()) {
 			for(int x = coordinateX - RENDER_DISTANCE; x <= coordinateX + RENDER_DISTANCE; x++) {

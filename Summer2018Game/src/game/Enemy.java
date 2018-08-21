@@ -31,25 +31,25 @@ public class Enemy extends Creature {
 	public void tick() {
 		CoordinatePair nextPosition = getMove();
 		
-		if(nextPosition.getY() < this.coordinateY) {
-			setFacingUp();
-			this.nextCoordinateY = this.coordinateY - 1;
-			this.nextY = this.y - 50;
-		} else if(nextPosition.getY() > this.coordinateY) {
-			setFacingDown();
-			this.nextCoordinateY = this.coordinateY + 1;
-			this.nextY = this.y + 50;
-		} else if(nextPosition.getX() < this.coordinateX) {
-			setFacingLeft();
-			this.nextCoordinateX = this.coordinateX - 1;
-			this.nextX = this.x - 50;
-		} else {
-			setFacingRight();
-			this.nextCoordinateX = this.coordinateX + 1;
-			this.nextX = this.x + 50;
+		if(nextPosition != null) {
+			if(nextPosition.getY() < this.coordinateY) {
+				setFacingUp();
+				this.nextCoordinateY = this.coordinateY - 1;
+				this.nextY = this.y - 50;
+			} else if(nextPosition.getY() > this.coordinateY) {
+				setFacingDown();
+				this.nextCoordinateY = this.coordinateY + 1;
+				this.nextY = this.y + 50;
+			} else if(nextPosition.getX() < this.coordinateX) {
+				setFacingLeft();
+				this.nextCoordinateX = this.coordinateX - 1;
+				this.nextX = this.x - 50;
+			} else {
+				setFacingRight();
+				this.nextCoordinateX = this.coordinateX + 1;
+				this.nextX = this.x + 50;
+			}
 		}
-//		this.coordinateX = nextPosition.getX();
-//		this.coordinateY = nextPosition.getY();
 	}
 
 	@Override
@@ -109,27 +109,34 @@ public class Enemy extends Creature {
 			// Add North Neighbor
 			if (coordinateY > 0 && dungeon.isWalkable(coordinateX, coordinateY - 1)) {
 				possibleMoves.add(new CoordinatePair(coordinateX, coordinateY - 1));
+//				System.out.println("Added north path to enemy moves");
 			} 
 
 			// Add East Neighbor
 			if (coordinateX < data.getNumColumns() - 1 && dungeon.isWalkable(coordinateX + 1, coordinateY)) {
 				possibleMoves.add(new CoordinatePair(coordinateX + 1, coordinateY));
+//				System.out.println("Added east path to enemy moves");
 			} 
 
 			// Add South Neighbor
 			if (coordinateY < data.getNumRows() - 1 && dungeon.isWalkable(coordinateX, coordinateY + 1)) {
 				possibleMoves.add(new CoordinatePair(coordinateX, coordinateY + 1));
+//				System.out.println("Added south path to enemy moves");
 			}
 
 			// Add West Neighbor
 			if (coordinateX > 0 && dungeon.isWalkable(coordinateX - 1, coordinateY)) {
 				possibleMoves.add(new CoordinatePair(coordinateX - 1, coordinateY));
+//				System.out.println("Added west path to enemy moves");
 			}
 			
 			//If there are no possible moves, stay here
 			if(possibleMoves.size() == 0) {
-				return new CoordinatePair(this.coordinateX, this.coordinateY);
+//				System.out.println("No moves found!");
+				return null;
 			}
+			
+//			System.out.println("----------------------------------------------");
 			
 			int randomIndex = rand.nextInt(possibleMoves.size());
 			

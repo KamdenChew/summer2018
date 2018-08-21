@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class MouseManager implements MouseListener, MouseMotionListener{
 
-	private ArrayList<UIObject> uiObjects = new ArrayList<UIObject>();
 	private boolean leftPressed;
 	private boolean rightPressed;
 	public int mouseX;
@@ -40,9 +39,12 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 		mouseX = e.getX();
 		mouseY = e.getY();
 		
-		if(uiObjects != null) {
-			for(UIObject object: uiObjects) {
-				object.onMouseMove(e);
+		if(State.getState() != null) {
+			ArrayList<UIObject> uiObjects = State.getState().getUIOBjects();
+			if(uiObjects != null) {
+				for(UIObject object: uiObjects) {
+					object.onMouseMove(e);
+				}	
 			}
 		}
 	}
@@ -70,10 +72,13 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 		} else if(e.getButton() == MouseEvent.BUTTON3) {
 			rightPressed = false;
 		}
-		if(uiObjects != null) {
-			UIObject[] uiObjectArray =  uiObjects.toArray(new UIObject[uiObjects.size()]);
-			for(UIObject object: uiObjectArray) {
-				object.onMouseRelease(e);
+		if(State.getState() != null) {
+			ArrayList<UIObject> uiObjects = State.getState().getUIOBjects();
+			if(uiObjects != null) {
+				UIObject[] uiObjectArray =  uiObjects.toArray(new UIObject[uiObjects.size()]);
+				for(UIObject object: uiObjectArray) {
+					object.onMouseRelease(e);
+				}
 			}
 		}
 	}
@@ -89,13 +94,4 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	public void addUIObject(UIObject object) {
-		uiObjects.add(object);
-	}
-	
-	public void removeUIObjects() {
-		uiObjects.clear();
-	}
-
 }

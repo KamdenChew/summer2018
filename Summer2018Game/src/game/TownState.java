@@ -57,7 +57,7 @@ public class TownState extends State{
 					player.getCamera().centerOnEntity(player);
 					drawTownAndPlayer(graphics);
 					game.forceBs();
-					Timer.waitFor(8);
+					Timer.waitFor(2);
 				}
 				player.setCoordinateY(player.getNextCoordinateY());
 				player.handleNewTile();
@@ -69,7 +69,7 @@ public class TownState extends State{
 					player.getCamera().centerOnEntity(player);
 					drawTownAndPlayer(graphics);
 					game.forceBs();
-					Timer.waitFor(8);
+					Timer.waitFor(2);
 				}
 				player.setCoordinateY(player.getNextCoordinateY());
 				player.handleNewTile();
@@ -81,7 +81,7 @@ public class TownState extends State{
 					player.getCamera().centerOnEntity(player);
 					drawTownAndPlayer(graphics);
 					game.forceBs();
-					Timer.waitFor(8);
+					Timer.waitFor(2);
 				}
 				player.setCoordinateX(player.getNextCoordinateX());
 				player.handleNewTile();
@@ -93,7 +93,7 @@ public class TownState extends State{
 					player.getCamera().centerOnEntity(player);
 					drawTownAndPlayer(graphics);
 					game.forceBs();
-					Timer.waitFor(8);
+					Timer.waitFor(2);
 				}
 				player.setCoordinateX(player.getNextCoordinateX());
 				player.handleNewTile();

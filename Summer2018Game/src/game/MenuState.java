@@ -35,8 +35,6 @@ public class MenuState extends State {
 	
 	public MenuState(Game game, State prevState) {
 		super(game);
-		game.getMouseManager().addUIObject(saveGameButton);
-		game.getMouseManager().addUIObject(closeMenuButton);
 		this.prevState = prevState;
 	}
 

@@ -27,8 +27,6 @@ public class MainMenuState extends State {
 	
 	public MainMenuState(Game game) {
 		super(game);
-		this.game.getMouseManager().addUIObject(newGameButton);
-		this.game.getMouseManager().addUIObject(loadGameButton);
 	}
 	
 	@Override

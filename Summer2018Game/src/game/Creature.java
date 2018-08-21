@@ -2,7 +2,7 @@ package game;
 
 public abstract class Creature extends Entity{
 	
-	public static final float STEP_SIZE = 5;
+	public static final float STEP_SIZE = 1;
 	protected int coordinateX;
 	protected int coordinateY;
 	protected float nextX;

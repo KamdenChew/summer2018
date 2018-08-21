@@ -22,10 +22,8 @@ public abstract class State {
 			game.setPlayer(((TownState) state).getPlayer());
 		}
 		
-		game.getMouseManager().removeUIObjects();
 		if(state.getUIOBjects() != null) {
 			for(UIObject object: state.getUIOBjects()) {
-				game.getMouseManager().addUIObject(object);
 				object.updateHovering(game.getMouseManager().mouseX, game.getMouseManager().mouseY);
 			}
 		}

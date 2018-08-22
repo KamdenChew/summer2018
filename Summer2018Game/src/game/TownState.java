@@ -12,6 +12,7 @@ public class TownState extends State{
 	private Player player;
 	private GameCamera camera;
 	private Random rand = new Random();
+	private long lastAnimationTime;
 	
 	public TownState(Game game, int x, int y, String direction) {
 		super(game);
@@ -21,6 +22,7 @@ public class TownState extends State{
 		this.player = new Player(game, x, y, false, null, direction);
 		game.setPlayer(this.player);
 		this.camera = player.getCamera();
+		this.lastAnimationTime = System.nanoTime();
 	}
 	
 	public GameCamera getCamera() {
@@ -50,58 +52,50 @@ public class TownState extends State{
 			drawTownAndPlayer(graphics);
 		} else {
 			
-			//Moving up
-			if(player.getNextCoordinateY() < player.getCoordinateY()) {
-				for(float yStep = player.getY() - Player.STEP_SIZE; yStep >= player.getNextY(); yStep = yStep - Player.STEP_SIZE) {
-					player.setY(yStep);
-					player.getCamera().centerOnEntity(player);
-					drawTownAndPlayer(graphics);
-					game.forceBs();
-					Timer.waitFor(2);
-				}
-				player.setCoordinateY(player.getNextCoordinateY());
-				player.handleNewTile();
+			
+			for(int i = 0; i < 50; i = i + (int) Player.STEP_SIZE) {
 				
-			//Moving down
-			} else if(player.getNextCoordinateY() > player.getCoordinateY()) {
-				for(float yStep = player.getY() + Player.STEP_SIZE; yStep <= player.getNextY(); yStep = yStep + Player.STEP_SIZE) {
-					player.setY(yStep);
-					player.getCamera().centerOnEntity(player);
-					drawTownAndPlayer(graphics);
-					game.forceBs();
-					Timer.waitFor(2);
+				//Set cap on animation rendering speed
+				while(System.nanoTime() - this.lastAnimationTime < 6000000) { 
+					
 				}
-				player.setCoordinateY(player.getNextCoordinateY());
-				player.handleNewTile();
 				
-			//Moving left
-			} else if(player.getNextCoordinateX() < player.getCoordinateX()) {
-				for(float xStep = player.getX() - Player.STEP_SIZE; xStep >= player.getNextX(); xStep = xStep - Player.STEP_SIZE) {
-					player.setX(xStep);
-					player.getCamera().centerOnEntity(player);
-					drawTownAndPlayer(graphics);
-					game.forceBs();
-					Timer.waitFor(2);
-				}
-				player.setCoordinateX(player.getNextCoordinateX());
-				player.handleNewTile();
+				this.lastAnimationTime = System.nanoTime();
 				
-			//Moving right
-			} else if(player.getNextCoordinateX() > player.getCoordinateX()) {
-				for(float xStep = player.getX() + Player.STEP_SIZE; xStep <= player.getNextX(); xStep = xStep + Player.STEP_SIZE) {
-					player.setX(xStep);
-					player.getCamera().centerOnEntity(player);
-					drawTownAndPlayer(graphics);
-					game.forceBs();
-					Timer.waitFor(2);
+				//Moving up
+				if(player.getNextCoordinateY() < player.getCoordinateY()) {
+					player.setY(player.getY() - Player.STEP_SIZE);
+					
+				//Moving down
+				} else if(player.getNextCoordinateY() > player.getCoordinateY()) {
+					player.setY(player.getY() + Player.STEP_SIZE);
+					
+				//Moving left
+				} else if(player.getNextCoordinateX() < player.getCoordinateX()) {
+					player.setX(player.getX() - Player.STEP_SIZE);
+					
+				//Moving right
+				} else if(player.getNextCoordinateX() > player.getCoordinateX()) {
+					player.setX(player.getX() + Player.STEP_SIZE);
+					
 				}
-				player.setCoordinateX(player.getNextCoordinateX());
-				player.handleNewTile();
+				
+				//Draw the updated movement
+				player.getCamera().centerOnEntity(player);
+				drawTownAndPlayer(graphics);
+				game.forceBs();
+//				Timer.waitFor(2);
 			}
+			
+			//Set the new coordinates and handle the new tile after animation is complete
+			player.setCoordinateX(player.getNextCoordinateX());
+			player.setCoordinateY(player.getNextCoordinateY());
+			player.handleNewTile();
+			
 		}
 	}
 	
-	private void drawTownAndPlayer(Graphics graphics) {
+	public void drawTownAndPlayer(Graphics graphics) {
 		for(int x = -game.getRenderDistance(); x < data.getNumColumns() + game.getRenderDistance(); x++) {
 			for(int y = -game.getRenderDistance(); y < data.getNumRows() + game.getRenderDistance(); y++) {
 				//If it's off the board just visualize it as a wall

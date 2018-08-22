@@ -141,4 +141,8 @@ public abstract class Creature extends Entity{
 	public void setAttacking(boolean isAttacking) {
 		this.isAttacking = isAttacking;
 	}
+	
+	public void handleNewTile() {
+		
+	}
 }

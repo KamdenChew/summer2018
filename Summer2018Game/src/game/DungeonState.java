@@ -13,6 +13,7 @@ public class DungeonState extends State{
 	private ArrayList<Enemy> enemies;
 	private int difficulty;
 	private GameCamera camera;
+	private ArrayList<Creature> creatures = new ArrayList<Creature>();
 	private long lastAnimationTime;
 	
 	public DungeonState(Game game, int difficulty, int floors) {
@@ -22,6 +23,10 @@ public class DungeonState extends State{
 		this.player = dungeon.getPlayer();
 		this.enemies = dungeon.getEnemies();
 		this.camera = player.getCamera();
+		this.creatures.add(player);
+		for(Enemy enemy: enemies) {
+			creatures.add(enemy);
+		}
 		this.lastAnimationTime = System.nanoTime();
 	}
 	
@@ -46,7 +51,7 @@ public class DungeonState extends State{
 		this.enemies = dungeon.getEnemies();
 		this.camera = player.getCamera();
 	}
-	
+
 	@Override
 	public void tick() {
 		this.player.tick();
@@ -64,23 +69,15 @@ public class DungeonState extends State{
 			//Otherwise we know all creatures in the dungeon will be taking a turn
 			} else {
 				
-				//Get all the creatures who will be taking turns
-				ArrayList<Creature> creatures = new ArrayList<Creature>();
-				creatures.add(player);
-				for(Enemy enemy: enemies) {
-					creatures.add(enemy);
-				}
-				
 				for(int i = 0; i < 50; i = i + (int) Creature.STEP_SIZE) {
 					
-//					//Set cap on animation rendering speed
-//					while(System.nanoTime() - this.lastAnimationTime < 3000000) { //22000000
-//						System.out.println("Need to wait longer...: " + (System.nanoTime() - this.lastAnimationTime));
-//					}
-//					
-//					
-//					this.lastAnimationTime = System.nanoTime();
-//					System.out.println("Set new last Time: " + this.lastAnimationTime);
+					//Set cap on animation rendering speed
+					while(System.nanoTime() - this.lastAnimationTime < 6000000) { 
+						
+					}
+					
+					
+					this.lastAnimationTime = System.nanoTime();
 					
 					
 					for(Creature creature: creatures) {
@@ -108,7 +105,6 @@ public class DungeonState extends State{
 						player.getCamera().centerOnEntity(player);
 						game.forceBs();
 					}
-					Timer.waitFor(1);
 				}
 				
 				//Reset turn taken
@@ -123,12 +119,13 @@ public class DungeonState extends State{
 			}
 	}
 	
-	private void drawDungeonAndPlayer(Graphics graphics) {
+	public void drawDungeonAndPlayer(Graphics graphics) {
 		for(int x = -game.getRenderDistance(); x < dungeon.getData().getNumColumns() + game.getRenderDistance(); x++) {
 			for(int y = -game.getRenderDistance(); y < dungeon.getData().getNumRows() + game.getRenderDistance(); y++) {
 				
 				//If it's off the board just visualize it as a wall
 				if(x < 0 || x >= dungeon.getData().getNumColumns() || y < 0 || y >= dungeon.getData().getNumRows()) {
+//					System.out.println("graphics?: " + graphics);
 					graphics.drawImage(Assets.wall, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 				} else {
 					int val = dungeon.getData().get(x, y);
@@ -150,6 +147,10 @@ public class DungeonState extends State{
 		}
 		
 		player.render(graphics);
+	}
+	
+	public ArrayList<Creature> getCreatures() {
+		return creatures;
 	}
 
 	public GameCamera getCamera() {

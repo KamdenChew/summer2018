@@ -208,6 +208,7 @@ public class Player extends Creature {
 		}
 	}
 	
+	@Override
 	public void handleNewTile() {
 		//If we are on the peaceful warp tile
 		if(State.getState().isDungeonState() || State.getState().isTownState()) {
@@ -305,6 +306,8 @@ public class Player extends Creature {
 			if(target.getHealth() == 0) {
 				enemies.remove(target);
 				this.dungeon.getEnemies().remove(target);
+				DungeonState dungeonState = (DungeonState) State.getState();
+				dungeonState.getCreatures().remove(target);
 			}
 		}
 	}

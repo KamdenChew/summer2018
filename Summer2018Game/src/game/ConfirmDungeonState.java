@@ -13,7 +13,7 @@ public class ConfirmDungeonState extends State {
 		@Override
 		public void onClick() {
 			System.out.println("Continue to Dungeon Clicked!");
-			State.setState(new DungeonState(game, difficulty, -1));
+			State.setState(new DungeonState(game, difficulty, 1));
 		}});
 	
 	

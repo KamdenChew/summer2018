@@ -17,15 +17,19 @@ public class ConfirmTownState extends State {
 			
 			if(difficulty == 0) {
 				game.setNumPeacefulCompleted(game.getNumPeacefulCompleted() + 1);
+				game.setScore(game.getScore() + 5);
 				newState = new TownState(game, 1, 13, "Up");
 			} else if(difficulty == 1) {
 				game.setNumEasyCompleted(game.getNumEasyCompleted() + 1);
+				game.setScore(game.getScore() + 20);
 				newState = new TownState(game, 5, 13, "Up");
 			} else if(difficulty == 2) {
 				game.setNumMediumCompleted(game.getNumMediumCompleted() + 1);
+				game.setScore(game.getScore() + 50);
 				newState = new TownState(game, 9, 13, "Up");
 			} else if(difficulty == 3) {
 				game.setNumHardCompleted(game.getNumHardCompleted() + 1);
+				game.setScore(game.getScore() + 200);
 				newState = new TownState(game, 13, 13, "Up");
 			}
 			if(newState != null) {

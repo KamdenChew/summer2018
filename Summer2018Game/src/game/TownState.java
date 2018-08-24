@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,6 +57,7 @@ public class TownState extends State{
 		if(!player.hasTakenTurn()) {
 			drawTown(graphics);
 			drawPlayer(graphics);
+			Text.drawString(graphics, "Score: " + game.getScore(), game.getRenderDistance() * 50 + 25, 50, true, Color.cyan, Fonts.font32);
 			
 		//Otherwise we know all creatures in the dungeon will be taking a turn
 		} else {
@@ -113,6 +115,7 @@ public class TownState extends State{
 			        	
 			        	drawTown(graphics);
 			        	drawPlayer(graphics);
+			        	Text.drawString(graphics, "Score: " + game.getScore(), game.getRenderDistance() * 50 + 25, 50, true, Color.cyan, Fonts.font32);
 			        	game.forceBs();
 			        }
 			    	stepsTaken++;

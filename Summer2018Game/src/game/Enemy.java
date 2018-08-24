@@ -56,8 +56,6 @@ public class Enemy extends Creature {
 	public void render(Graphics graphics) {
 		if(State.getState().isDungeonState()) {
 			
-			DungeonState dungeonState = (DungeonState) State.getState();
-			Array2D<Integer> data = dungeonState.getDungeon().getData();
 			Player player = game.getPlayer();
 			
 			//Player is always at renderDistance * 50, renderDistance * 50

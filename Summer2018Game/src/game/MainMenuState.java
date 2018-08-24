@@ -1,6 +1,5 @@
 package game;
 import java.awt.Graphics;
-import java.io.File;
 import java.util.ArrayList;
 
 public class MainMenuState extends State {

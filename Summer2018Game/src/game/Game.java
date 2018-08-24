@@ -142,6 +142,9 @@ public class Game implements Runnable {
 		//Initialize Assets
 		Assets.init();
 		
+		//Initialize Fonts
+		Fonts.init();
+		
 		State.setState(new MainMenuState(this));
 	}
 	

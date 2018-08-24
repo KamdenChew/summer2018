@@ -51,6 +51,7 @@ public class Array2D<D> implements Iterable<D> {
 	 *
 	 * @param data the Array2D to copy
 	 */
+	@SuppressWarnings("unchecked")
 	public Array2D(Array2D<D> data) {
 		if (data == null) {
 			throw new IllegalArgumentException("Cannot copy from null Array2D");

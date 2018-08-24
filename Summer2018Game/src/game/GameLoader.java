@@ -67,8 +67,8 @@ public class GameLoader {
 		//Seventh line is Enemies in the format X,Y,Health. If it's a TownState save, this line will say "NoEnemies"
 		String enemyString = scanner.nextLine();
 		
-		//Eighth line is the number of floors left. This will be -1 if it's a town state.
-		int floors = Integer.parseInt(scanner.nextLine());
+		//Eighth line is the current floor number. This will be -1 if it's a town state.
+		int currFloor = Integer.parseInt(scanner.nextLine());
 
 		//TownState if difficulty is -1
 			
@@ -79,7 +79,7 @@ public class GameLoader {
 			
 		//If difficulty falls in our defined dungeon difficulty bounds, then it's a dungeon state
 		} else if(difficulty >= 0 && difficulty <= 3) {
-			Dungeon dungeon = new Dungeon(game, x, y, difficulty, data, seen, height, width, direction, floors);
+			Dungeon dungeon = new Dungeon(game, x, y, difficulty, data, seen, height, width, direction, currFloor);
 			ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 			
 			//If we have enemy data to read

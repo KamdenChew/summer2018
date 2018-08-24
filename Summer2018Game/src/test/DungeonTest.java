@@ -20,7 +20,7 @@ public class DungeonTest {
 		boolean passed = true;
 		Game game = new Game();
 		for(int i = 0; i < 25000; i++) {
-			Dungeon nonHostileDungeon = new Dungeon(game, 0, -1);
+			Dungeon nonHostileDungeon = new Dungeon(game, 0);
 			if(!isValidDungeon(nonHostileDungeon)) {
 				System.out.println("Failed on nonHostile iteration: " + i);
 				System.out.println(nonHostileDungeon.getData());
@@ -28,7 +28,7 @@ public class DungeonTest {
 				break;
 			}
 			
-			Dungeon easyDungeon = new Dungeon(game, 1, -1);
+			Dungeon easyDungeon = new Dungeon(game, 1);
 			if(!isValidDungeon(easyDungeon)) {
 				System.out.println("Failed on easy iteration: " + i);
 				System.out.println(easyDungeon.getData());
@@ -36,7 +36,7 @@ public class DungeonTest {
 				break;
 			}
 			
-			Dungeon normalDungeon = new Dungeon(game, 2, -1);
+			Dungeon normalDungeon = new Dungeon(game, 2);
 			if(!isValidDungeon(normalDungeon)) {
 				System.out.println("Failed on normal iteration: " + i);
 				System.out.println(normalDungeon.getData());
@@ -44,7 +44,7 @@ public class DungeonTest {
 				break;
 			}
 			
-			Dungeon hardDungeon = new Dungeon(game, 3, -1);
+			Dungeon hardDungeon = new Dungeon(game, 3);
 			if(!isValidDungeon(hardDungeon)) {
 				System.out.println("Failed on hard iteration: " + i);
 				System.out.println(hardDungeon.getData());

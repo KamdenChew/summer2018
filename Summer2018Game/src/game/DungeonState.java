@@ -1,6 +1,7 @@
 package game;
 
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,10 +18,11 @@ public class DungeonState extends State{
 	private GameCamera camera;
 	private ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
-	public DungeonState(Game game, int difficulty, int floors) {
+	public DungeonState(Game game, int difficulty, int currFloor) {
 		super(game);
-		this.dungeon = new Dungeon(game, difficulty, floors);
 		this.difficulty = difficulty;
+		this.dungeon = new Dungeon(game, difficulty);
+		this.dungeon.setCurrFloor(currFloor);
 		this.player = dungeon.getPlayer();
 		this.enemies = dungeon.getEnemies();
 		this.camera = player.getCamera();
@@ -28,18 +30,6 @@ public class DungeonState extends State{
 		for(Enemy enemy: enemies) {
 			creatures.add(enemy);
 		}
-	}
-	
-	public Dungeon getDungeon() {
-		return this.dungeon;
-	}
-	
-	public int getDifficulty() {
-		return difficulty;
-	}
-
-	public Player getPlayer() {
-		return player;
 	}
 	
 	public DungeonState(Game game, Dungeon dungeon) {
@@ -55,7 +45,18 @@ public class DungeonState extends State{
 			this.creatures.add(enemy);
 		}
 	}
+	
+	public Dungeon getDungeon() {
+		return this.dungeon;
+	}
+	
+	public int getDifficulty() {
+		return difficulty;
+	}
 
+	public Player getPlayer() {
+		return player;
+	}
 	@Override
 	public void tick() {
 		this.player.tick();
@@ -71,7 +72,7 @@ public class DungeonState extends State{
 			drawDungeon(graphics);
 			drawPlayer(graphics);
 			drawEnemies(graphics);
-			
+			Text.drawString(graphics, "Floor " + dungeon.getCurrFloor() + "/" + dungeon.getNumFloors(), game.getRenderDistance() * 50 + 25, 50, true, Color.cyan, Fonts.font32);
 		//Otherwise we know all creatures in the dungeon will be taking a turn
 		} else {
 			
@@ -129,6 +130,7 @@ public class DungeonState extends State{
 			        	drawDungeon(graphics);
 			        	drawPlayer(graphics);
 			        	drawEnemies(graphics);
+			        	Text.drawString(graphics, "Floor " + dungeon.getCurrFloor() + "/" + dungeon.getNumFloors(), game.getRenderDistance() * 50 + 25, 50, true, Color.cyan, Fonts.font32);
 			        	game.forceBs();
 			        }
 			    	stepsTaken++;

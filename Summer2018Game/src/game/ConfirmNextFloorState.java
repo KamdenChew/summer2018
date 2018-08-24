@@ -22,7 +22,7 @@ public class ConfirmNextFloorState extends State {
 				System.exit(1);
 			}
 			
-			State.setState(new DungeonState(game, dungeonState.getDifficulty(), dungeonState.getDungeon().getFloorsRemaining() - 1));
+			State.setState(new DungeonState(game, dungeonState.getDifficulty(), dungeonState.getDungeon().getCurrFloor() + 1));
 			
 		}});
 	

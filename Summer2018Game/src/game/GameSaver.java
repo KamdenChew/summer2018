@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class GameSaver {
 
@@ -55,7 +54,7 @@ public class GameSaver {
 			output.write("\n");
 			
 			//Seventh line is Enemies in the format coordinateX,coordinateY,Health. If it's a TownState save, this line will say "NoEnemies"
-			//Eighth line is the number of floors left. This will be -1 if it's a town state.
+			//Eighth line is the current floor number. This will be -1 if it's a town state.
 			
 			//Town State if difficulty is -1
 			if(difficulty == -1) {
@@ -75,7 +74,7 @@ public class GameSaver {
 				
 				output.write("\n");
 				
-				output.write(dungeon.getFloorsRemaining() + "\n");
+				output.write(dungeon.getCurrFloor() + "\n");
 			}
 			
 			//Ninth line is score

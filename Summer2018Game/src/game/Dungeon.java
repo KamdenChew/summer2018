@@ -158,13 +158,17 @@ public class Dungeon {
 		//Step 5: Add paths to our dungeon, disjoint from the rooms
 		generatePaths(data, null, 2);
 		
+		//Step 6: Connect all of our paths and rooms
 		connect(data);
 		
+		//Step 7: Create a Player and put them in the Dungeon
 		setPlayer();
 		
+		//Step 8: Mark the nearby regions of the Player starting position as seen
 		setSeen();
 		
-		addEnemies(2);
+		//Step 9: Add Enemies to the Dungeon
+		addEnemies(20);
 	}
 
 	/**
@@ -659,6 +663,10 @@ public class Dungeon {
 		int randomIndex;
 		
 		while(numEnemies > 0) {
+			if(validLocations.size() < 1) {
+//				System.out.println("Not enough spaces");
+				break;
+			}
 			randomIndex = rand.nextInt(validLocations.size());
 			CoordinatePair location = validLocations.get(randomIndex);
 			Enemy newEnemy = new Enemy(game, location.getX() * 50, location.getY() * 50, location.getX(), location.getY(), 10, this, "Down");

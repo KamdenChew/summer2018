@@ -185,6 +185,7 @@ public class Game implements Runnable {
 			}
 			
 			graphics = bs.getDrawGraphics();
+			
 			//Clear previous render
 			graphics.clearRect(0, 0, WIDTH, HEIGHT);
 			

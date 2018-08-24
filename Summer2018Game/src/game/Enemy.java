@@ -90,9 +90,9 @@ public class Enemy extends Creature {
 		
 		//Draw the Health Bar
 		graphics.setColor(Color.green);
-		graphics.fillRect((int) (this.x - player.getCamera().getXOffset()), (int) (this.y - player.getCamera().getYOffset()), numGreenPixels, 2);
+		graphics.fillRect((int) (this.x - player.getCamera().getXOffset()), (int) (this.y - player.getCamera().getYOffset()), numGreenPixels, 4);
 		graphics.setColor(Color.red);
-		graphics.fillRect((int) (this.x - player.getCamera().getXOffset()) + numGreenPixels, (int) (this.y - player.getCamera().getYOffset()), numRedPixels, 2);
+		graphics.fillRect((int) (this.x - player.getCamera().getXOffset()) + numGreenPixels, (int) (this.y - player.getCamera().getYOffset()), numRedPixels, 4);
 	}
 	
 	//TODO Replace random move with some actually intelligent move

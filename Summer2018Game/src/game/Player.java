@@ -348,9 +348,9 @@ public class Player extends Creature {
 			
 			//Draw the Health Bar
 			graphics.setColor(Color.green);
-			graphics.fillRect(game.getRenderDistance() * 50, game.getRenderDistance() * 50, numGreenPixels, 2);
+			graphics.fillRect(game.getRenderDistance() * 50, game.getRenderDistance() * 50, numGreenPixels, 4);
 			graphics.setColor(Color.red);
-			graphics.fillRect(game.getRenderDistance() * 50 + numGreenPixels, game.getRenderDistance() * 50, numRedPixels, 2);
+			graphics.fillRect(game.getRenderDistance() * 50 + numGreenPixels, game.getRenderDistance() * 50, numRedPixels, 4);
 		
 		}
 	}

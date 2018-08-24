@@ -167,8 +167,15 @@ public class Dungeon {
 		//Step 8: Mark the nearby regions of the Player starting position as seen
 		setSeen();
 		
-		//Step 9: Add Enemies to the Dungeon
-		addEnemies(20);
+		//Step 9: Add Enemies to the Dungeon proportional to difficulty
+		
+		//Peaceful, add no enemies
+		if(difficulty == 0) {
+			
+		//Easy, medium, hard all scale by a factor of 3.
+		} else {
+			addEnemies(difficulty * 3);
+		}
 	}
 
 	/**

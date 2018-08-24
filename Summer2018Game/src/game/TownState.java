@@ -1,18 +1,21 @@
 package game;
 
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.swing.Timer;
 
 public class TownState extends State{
 	
 	private Array2D<Integer> data = new Array2D<Integer>(15, 15, new Integer[]{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,1, 1,-3,0,0,0,-4,0,0,0,-5,0,0,0,-6,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1});
 	private Player player;
 	private GameCamera camera;
-	private Random rand = new Random();
-	private long lastAnimationTime;
+	private ArrayList<Creature> creatures;
 	
 	public TownState(Game game, int x, int y, String direction) {
 		super(game);
@@ -22,7 +25,8 @@ public class TownState extends State{
 		this.player = new Player(game, x, y, false, null, direction);
 		game.setPlayer(this.player);
 		this.camera = player.getCamera();
-		this.lastAnimationTime = System.nanoTime();
+		this.creatures = new ArrayList<Creature>();
+		this.creatures.add(player);
 	}
 	
 	public GameCamera getCamera() {
@@ -47,57 +51,84 @@ public class TownState extends State{
 	}
 
 	@Override
-	public void render(Graphics graphics) {
-		if(player.getCoordinateX() == player.getNextCoordinateX() && player.getCoordinateY() == player.getNextCoordinateY()) {
-			drawTownAndPlayer(graphics);
+	public void render(final Graphics graphics) {
+		//If the player is not taking a turn, just render as usual.
+		if(!player.hasTakenTurn()) {
+			drawTown(graphics);
+			drawPlayer(graphics);
+			
+		//Otherwise we know all creatures in the dungeon will be taking a turn
 		} else {
 			
-			
-			for(int i = 0; i < 50; i = i + (int) Player.STEP_SIZE) {
+			Timer timer = new Timer(5, new ActionListener() {
+			    private int stepsTaken;
+
+			    @Override
+			    public void actionPerformed(ActionEvent e) {
+			    	if (stepsTaken == 50) {
+			            for(Creature creature: creatures) {
+			            	
+			            	if(creature instanceof Player) {
+			        			//Reset turn taken
+			        			game.getPlayer().setTookTurn(false);
+			        		}
+			        		
+			        		//Update coordinates that we've moved too
+			        		creature.setCoordinateX(creature.getNextCoordinateX());
+			        		creature.setCoordinateY(creature.getNextCoordinateY());
+			        		
+			        		if(creature instanceof Player) {
+			        			game.getPlayer().handleNewTile();
+			        		}
+			            }
+			    		((Timer)e.getSource()).stop();
+			        } else {
+			        	//Step each of the creatures
+			        	for(Creature creature: creatures) {
+			        		
+			        		if(creature.isAttacking()) {
+//				    				drawDungeonAndPlayer(graphics);
+			    				creature.setAttacking(false);
+			    			//This creature is moving up
+			    			} else if(creature.getNextCoordinateY() < creature.getCoordinateY()) {
+			    				creature.setY(creature.getY() - Creature.STEP_SIZE);
+			    				
+			    			//This creature is moving down
+			    			} else if(creature.getNextCoordinateY() > creature.getCoordinateY()) {
+			    				creature.setY(creature.getY() + Creature.STEP_SIZE);
+			    				
+			    			//This creature is moving left
+			    			} else if(creature.getNextCoordinateX() < creature.getCoordinateX()) {
+			    				creature.setX(creature.getX() - Creature.STEP_SIZE);
+			    				
+			    			//This creature is moving right
+			    			} else if(creature.getNextCoordinateX() > creature.getCoordinateX()) {
+			    				creature.setX(creature.getX() + Creature.STEP_SIZE);
+			    				
+			    			}
+			    			if(creature instanceof Player) {
+			    				camera.centerOnEntity(creature);
+			    			}
+			        	}
+			        	
+			        	drawTown(graphics);
+			        	drawPlayer(graphics);
+			        	game.forceBs();
+			        }
+			    	stepsTaken++;
+			    }
+			});
+			timer.start();
+			while(timer.isRunning()) {
 				
-				//Set cap on animation rendering speed
-				while(System.nanoTime() - this.lastAnimationTime < 6000000) { 
-					
-				}
-				
-				this.lastAnimationTime = System.nanoTime();
-				
-				//Moving up
-				if(player.getNextCoordinateY() < player.getCoordinateY()) {
-					player.setY(player.getY() - Player.STEP_SIZE);
-					
-				//Moving down
-				} else if(player.getNextCoordinateY() > player.getCoordinateY()) {
-					player.setY(player.getY() + Player.STEP_SIZE);
-					
-				//Moving left
-				} else if(player.getNextCoordinateX() < player.getCoordinateX()) {
-					player.setX(player.getX() - Player.STEP_SIZE);
-					
-				//Moving right
-				} else if(player.getNextCoordinateX() > player.getCoordinateX()) {
-					player.setX(player.getX() + Player.STEP_SIZE);
-					
-				}
-				
-				//Draw the updated movement
-				player.getCamera().centerOnEntity(player);
-				drawTownAndPlayer(graphics);
-				game.forceBs();
-//				Timer.waitFor(2);
 			}
-			
-			//Set the new coordinates and handle the new tile after animation is complete
-			player.setCoordinateX(player.getNextCoordinateX());
-			player.setCoordinateY(player.getNextCoordinateY());
-			player.handleNewTile();
-			
 		}
 	}
 	
-	public void drawTownAndPlayer(Graphics graphics) {
-		for(int x = -game.getRenderDistance(); x < data.getNumColumns() + game.getRenderDistance(); x++) {
-			for(int y = -game.getRenderDistance(); y < data.getNumRows() + game.getRenderDistance(); y++) {
+	private void drawTown(Graphics graphics) {
+		for(int x = player.getNextCoordinateX() - game.getRenderDistance() - 1; x < player.getNextCoordinateX() + game.getRenderDistance() + 2; x++) {
+			for(int y = player.getNextCoordinateY() - game.getRenderDistance() - 1; y < player.getNextCoordinateY() + game.getRenderDistance() + 2; y++) { 
+				
 				//If it's off the board just visualize it as a wall
 				if(x < 0 || x >= data.getNumColumns() || y < 0 || y >= data.getNumRows()) {
 					graphics.drawImage(Assets.wall, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
@@ -121,6 +152,9 @@ public class TownState extends State{
 				}
 			}
 		}
+	}
+	
+	private void drawPlayer(Graphics graphics) {
 		player.render(graphics);
 	}
 

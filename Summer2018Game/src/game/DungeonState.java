@@ -59,8 +59,8 @@ public class DungeonState extends State{
 	@Override
 	public void tick() {
 		this.player.tick();
-		if(this.game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
-			State.setState(new MenuState(this.game, this));
+		if(game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
+			State.setState(new MenuState(game, this));
 		}
 	}
 
@@ -141,7 +141,7 @@ public class DungeonState extends State{
 		}
 	}
 	
-	public void drawDungeon(Graphics graphics) {
+	private void drawDungeon(Graphics graphics) {
 		for(int x = player.getNextCoordinateX() - game.getRenderDistance() - 1; x < player.getNextCoordinateX() + game.getRenderDistance() + 2; x++) {
 			for(int y = player.getNextCoordinateY() - game.getRenderDistance() - 1; y < player.getNextCoordinateY() + game.getRenderDistance() + 2; y++) { 
 				
@@ -165,15 +165,21 @@ public class DungeonState extends State{
 		}
 	}
 	
-	public void drawPlayer(Graphics graphics) {
+	private void drawPlayer(Graphics graphics) {
 		player.render(graphics);
 	}
 	
-	public void drawEnemies(Graphics graphics) {
+	private void drawEnemies(Graphics graphics) {
 		for(Enemy enemy: enemies) {
-			enemy.render(graphics);
+			
+			//Optimize by only rendering if it will be visible to the user
+			if(enemy.getNextCoordinateX() >= player.getNextCoordinateX() - game.getRenderDistance() - 2 &&
+			   enemy.getNextCoordinateX() <= player.getNextCoordinateX() + game.getRenderDistance() + 2 &&
+			   enemy.getNextCoordinateY() >= player.getNextCoordinateY() - game.getRenderDistance() - 2 &&
+			   enemy.getNextCoordinateY() <= player.getNextCoordinateY() + game.getRenderDistance() + 2) {
+				enemy.render(graphics);
+			}
 		}
-		
 	}
 	
 	public ArrayList<Creature> getCreatures() {

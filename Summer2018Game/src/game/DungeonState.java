@@ -82,8 +82,17 @@ public class DungeonState extends State{
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
 			    	if (stepsTaken == 50) {
-			            for(Creature creature: creatures) {
-			            	
+			    		for(int i = 0; i < creatures.size(); i++) {
+			        		Creature creature = creatures.get(i);
+			        		
+			        		if(creature.isAttacking() && creature instanceof Enemy) {
+			        			player.decreaseHealth(2);
+			        		} else if(creature.isAttacking() && creature instanceof Player) {
+			        			player.handleAttack();
+			        		}
+			        		creature.setAttacking(false);
+			        		
+			        		
 			            	if(creature instanceof Player) {
 			        			//Reset turn taken
 			        			game.getPlayer().setTookTurn(false);
@@ -99,12 +108,37 @@ public class DungeonState extends State{
 			            }
 			    		((Timer)e.getSource()).stop();
 			        } else {
+			        	
 			        	//Step each of the creatures
-			        	for(Creature creature: creatures) {
+			        	for(int i = 0; i < creatures.size(); i++) {
+			        		Creature creature = creatures.get(i);
 			        		
+			        		//This creature is attacking 
 			        		if(creature.isAttacking()) {
-//				    				drawDungeonAndPlayer(graphics);
-			    				creature.setAttacking(false);
+			        			//For the first half of the animation move it in the direction it's facing
+			        			if(stepsTaken < 25) {
+			        				if(creature.facingUp) {
+			        					creature.setY(creature.getY() - Creature.STEP_SIZE);
+			        				} else if(creature.facingDown) {
+			        					creature.setY(creature.getY() + Creature.STEP_SIZE);
+			        				} else if(creature.facingLeft) {
+			        					creature.setX(creature.getX() - Creature.STEP_SIZE);
+			        				} else if(creature.facingRight) {
+			        					creature.setX(creature.getX() + Creature.STEP_SIZE);
+			        				}
+			        			
+			        			//For the second half of the animation move it back
+			        			} else {
+			        				if(creature.facingUp) {
+			        					creature.setY(creature.getY() + Creature.STEP_SIZE);
+			        				} else if(creature.facingDown) {
+			        					creature.setY(creature.getY() - Creature.STEP_SIZE);
+			        				} else if(creature.facingLeft) {
+			        					creature.setX(creature.getX() + Creature.STEP_SIZE);
+			        				} else if(creature.facingRight) {
+			        					creature.setX(creature.getX() - Creature.STEP_SIZE);
+			        				}
+			        			}
 			    			//This creature is moving up
 			    			} else if(creature.getNextCoordinateY() < creature.getCoordinateY()) {
 			    				creature.setY(creature.getY() - Creature.STEP_SIZE);

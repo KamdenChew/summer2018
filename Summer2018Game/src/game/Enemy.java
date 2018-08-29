@@ -9,6 +9,7 @@ public class Enemy extends Creature {
 
 	private Random rand = new Random();
 	private Dungeon dungeon;
+	private boolean isAggressive = true;
 	
 	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY, int health, Dungeon dungeon, String direction) {
 		super(game, x, y, coordinateX, coordinateY);
@@ -29,25 +30,31 @@ public class Enemy extends Creature {
 
 	@Override
 	public void tick() {
-		CoordinatePair nextPosition = getMove();
 		
-		if(nextPosition != null) {
-			if(nextPosition.getY() < this.coordinateY) {
-				setFacingUp();
-				this.nextCoordinateY = this.coordinateY - 1;
-				this.nextY = this.y - 50;
-			} else if(nextPosition.getY() > this.coordinateY) {
-				setFacingDown();
-				this.nextCoordinateY = this.coordinateY + 1;
-				this.nextY = this.y + 50;
-			} else if(nextPosition.getX() < this.coordinateX) {
-				setFacingLeft();
-				this.nextCoordinateX = this.coordinateX - 1;
-				this.nextX = this.x - 50;
-			} else {
-				setFacingRight();
-				this.nextCoordinateX = this.coordinateX + 1;
-				this.nextX = this.x + 50;
+		if(this.isAggressive && this.adjacentToPlayer()) {
+			this.facePlayer();
+			this.setAttacking(true);
+		} else {
+			CoordinatePair nextPosition = getRandomMove();
+			
+			if(nextPosition != null) {
+				if(nextPosition.getY() < this.coordinateY) {
+					setFacingUp();
+					this.nextCoordinateY = this.coordinateY - 1;
+					this.nextY = this.y - 50;
+				} else if(nextPosition.getY() > this.coordinateY) {
+					setFacingDown();
+					this.nextCoordinateY = this.coordinateY + 1;
+					this.nextY = this.y + 50;
+				} else if(nextPosition.getX() < this.coordinateX) {
+					setFacingLeft();
+					this.nextCoordinateX = this.coordinateX - 1;
+					this.nextX = this.x - 50;
+				} else {
+					setFacingRight();
+					this.nextCoordinateX = this.coordinateX + 1;
+					this.nextX = this.x + 50;
+				}
 			}
 		}
 	}
@@ -94,7 +101,7 @@ public class Enemy extends Creature {
 	}
 	
 	//TODO Replace random move with some actually intelligent move
-	public CoordinatePair getMove() {
+	public CoordinatePair getRandomMove() {
 		if(State.getState().isDungeonState()) {
 			
 			DungeonState dungeonState = (DungeonState) State.getState();
@@ -143,6 +150,53 @@ public class Enemy extends Creature {
 		} else  {
 			throw new IllegalStateException("Trying to move enemies while in an illegal state.");
 		}
+	}
+	
+	private boolean adjacentToPlayer() {
+		Player player = dungeon.getPlayer();
+		
+		//If we are above the Player
+		if(this.coordinateX == player.getNextCoordinateX() && this.coordinateY == player.getNextCoordinateY() - 1) {
+			return true;
+			
+		//If we are below the Player
+		} else if(this.coordinateX == player.getNextCoordinateX() && this.coordinateY == player.getNextCoordinateY() + 1) {
+			return true;
+			
+		//If we are the the left of the Player
+		} else if(this.coordinateX == player.getNextCoordinateX() - 1 && this.coordinateY == player.getNextCoordinateY()) {
+			return true;
+			
+		//If we are to the right of the Player
+		} else if(this.coordinateX == player.getNextCoordinateX() + 1 && this.coordinateY == player.getNextCoordinateY()) {
+			return true;
+			
+		} 
+		
+		
+		return false;
+	}
+	
+	private void facePlayer() {
+		Player player = dungeon.getPlayer();
+		
+		//If we are above the Player
+		if(this.coordinateX == player.getNextCoordinateX() && this.coordinateY == player.getNextCoordinateY() - 1) {
+			this.setFacingDown();
+			
+		//If we are below the Player
+		} else if(this.coordinateX == player.getNextCoordinateX() && this.coordinateY == player.getNextCoordinateY() + 1) {
+			this.setFacingUp();
+			
+		//If we are the the left of the Player
+		} else if(this.coordinateX == player.getNextCoordinateX() - 1 && this.coordinateY == player.getNextCoordinateY()) {
+			this.setFacingRight();
+			
+		//If we are to the right of the Player
+		} else if(this.coordinateX == player.getNextCoordinateX() + 1 && this.coordinateY == player.getNextCoordinateY()) {
+			this.setFacingLeft();
+			
+		} 
 	}
 
 }

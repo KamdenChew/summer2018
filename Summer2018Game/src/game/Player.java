@@ -16,6 +16,8 @@ public class Player extends Creature {
 	
 	public Player(Game game, int coordinateX, int coordinateY, boolean inDungeon, Dungeon dungeon, String direction) {
 		super(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
+		this.maxHealth = 50;
+		this.health = 50;
 		this.coordinateX = coordinateX;
 		this.coordinateY = coordinateY;
 		this.nextCoordinateX = coordinateX;
@@ -146,7 +148,7 @@ public class Player extends Creature {
 			} else if(game.getKeyManager().keyJustPressed(KeyEvent.VK_SPACE)) {
 				tookTurn = true;
 				isAttacking = true;
-				handleAttack();
+//				handleAttack();
 				if(inDungeon) {
 					tickEnemies();
 				}
@@ -227,7 +229,6 @@ public class Player extends Creature {
 			//tileVal == -2 means we are on the dungeon floor exit
 			if(tileVal == -2) {
 				System.out.println("Stepped on exit");
-//				Timer.waitFor(3000);
 				if(dungeon.onLastFloor()) {
 					State.setState(new ConfirmTownState(game, State.getState(), State.getState().getDifficulty()));
 				} else {
@@ -237,31 +238,27 @@ public class Player extends Creature {
 			//tileVal = -3 means we are on the peaceful warp
 			} else if(tileVal == -3) {
 				System.out.println("Stepped on peaceful warp");
-//				Timer.waitFor(3000);
 				State.setState(new ConfirmDungeonState(game, State.getState(), 0));
 				
 			//tileVal = -4 means we are on the easy warp
 			} else if(tileVal == -4) {
 				System.out.println("Stepped on easy warp");
-//				Timer.waitFor(3000);
 				State.setState(new ConfirmDungeonState(game, State.getState(), 1));
 				
 			//tileVal = -5 means we are on the medium warp
 			} else if(tileVal == -5) {
 				System.out.println("Stepped on medium warp");
-//				Timer.waitFor(3000);
 				State.setState(new ConfirmDungeonState(game, State.getState(), 2));
 				
 			//tileVal = -6 means we are on the hard warp
 			} else if(tileVal == -6) {
 				System.out.println("Stepped on hard warp");
-//				Timer.waitFor(3000);
 				State.setState(new ConfirmDungeonState(game, State.getState(), 3));
 			}
 		}
 	}
 	
-	private void handleAttack() {
+	public void handleAttack() {
 		boolean facingEnemy = false;
 		Enemy target = null;
 		

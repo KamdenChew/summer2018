@@ -68,8 +68,9 @@ public class TownState extends State{
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
 			    	if (stepsTaken == 50) {
-			            for(Creature creature: creatures) {
-			            	
+			    		for(int i = 0; i < creatures.size(); i++) {
+			        		Creature creature = creatures.get(i);
+			        		
 			            	if(creature instanceof Player) {
 			        			//Reset turn taken
 			        			game.getPlayer().setTookTurn(false);
@@ -86,7 +87,8 @@ public class TownState extends State{
 			    		((Timer)e.getSource()).stop();
 			        } else {
 			        	//Step each of the creatures
-			        	for(Creature creature: creatures) {
+			        	for(int i = 0; i < creatures.size(); i++) {
+			        		Creature creature = creatures.get(i);
 			        		
 			        		if(creature.isAttacking()) {
 //				    				drawDungeonAndPlayer(graphics);

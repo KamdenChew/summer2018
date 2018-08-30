@@ -177,11 +177,11 @@ public class Dungeon {
 		
 		//Peaceful, add no enemies
 		if(difficulty == 0) {
-			
-		//Easy, medium, hard all scale by a factor of 3.
-		} else {
-			addEnemies(difficulty * 3);
+			addEnemies(1);
 		}
+		
+		System.out.println(this.numDungeonRows + " rows");
+		System.out.println(this.numDungeonColumns + " columns");
 	}
 
 	/**
@@ -660,7 +660,6 @@ public class Dungeon {
 		return player;
 	}
 
-	//TODO implement addEnemies()
 	private void addEnemies(int numEnemies) {
 		
 		ArrayList<CoordinatePair> validLocations = new ArrayList<>();
@@ -677,7 +676,6 @@ public class Dungeon {
 		
 		while(numEnemies > 0) {
 			if(validLocations.size() < 1) {
-//				System.out.println("Not enough spaces");
 				break;
 			}
 			randomIndex = rand.nextInt(validLocations.size());

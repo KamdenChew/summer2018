@@ -3,6 +3,8 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 public class Enemy extends Creature {
@@ -31,11 +33,22 @@ public class Enemy extends Creature {
 	@Override
 	public void tick() {
 		
-		if(this.isAggressive && this.adjacentToPlayer()) {
+		if(this.isAggressive && this.adjacentToPlayer(new CoordinatePair(this.coordinateX, this.coordinateY))) {
 			this.facePlayer();
 			this.setAttacking(true);
 		} else {
-			CoordinatePair nextPosition = getRandomMove();
+			
+			CoordinatePair nextPosition;
+			
+			//If the player can see us, then make a smart move
+			if(this.isVisibleToPlayer()) {
+				System.out.println("Making a smart move!");
+				nextPosition = getBFSMove();
+		
+			//Otherwise make a random move
+			} else {
+				nextPosition = getRandomMove();
+			}
 			
 			if(nextPosition != null) {
 				if(nextPosition.getY() < this.coordinateY) {
@@ -100,7 +113,6 @@ public class Enemy extends Creature {
 		graphics.fillRect((int) (this.x - player.getCamera().getXOffset()) + numGreenPixels, (int) (this.y - player.getCamera().getYOffset()), numRedPixels, 4);
 	}
 	
-	//TODO Replace random move with some actually intelligent move
 	public CoordinatePair getRandomMove() {
 		if(State.getState().isDungeonState()) {
 			
@@ -114,34 +126,27 @@ public class Enemy extends Creature {
 			// Add North Neighbor
 			if (coordinateY > 0 && dungeon.isWalkable(coordinateX, coordinateY - 1)) {
 				possibleMoves.add(new CoordinatePair(coordinateX, coordinateY - 1));
-//				System.out.println("Added north path to enemy moves");
 			} 
 
 			// Add East Neighbor
 			if (coordinateX < data.getNumColumns() - 1 && dungeon.isWalkable(coordinateX + 1, coordinateY)) {
 				possibleMoves.add(new CoordinatePair(coordinateX + 1, coordinateY));
-//				System.out.println("Added east path to enemy moves");
 			} 
 
 			// Add South Neighbor
 			if (coordinateY < data.getNumRows() - 1 && dungeon.isWalkable(coordinateX, coordinateY + 1)) {
 				possibleMoves.add(new CoordinatePair(coordinateX, coordinateY + 1));
-//				System.out.println("Added south path to enemy moves");
 			}
 
 			// Add West Neighbor
 			if (coordinateX > 0 && dungeon.isWalkable(coordinateX - 1, coordinateY)) {
 				possibleMoves.add(new CoordinatePair(coordinateX - 1, coordinateY));
-//				System.out.println("Added west path to enemy moves");
 			}
 			
 			//If there are no possible moves, stay here
 			if(possibleMoves.size() == 0) {
-//				System.out.println("No moves found!");
 				return null;
 			}
-			
-//			System.out.println("----------------------------------------------");
 			
 			int randomIndex = rand.nextInt(possibleMoves.size());
 			
@@ -152,23 +157,90 @@ public class Enemy extends Creature {
 		}
 	}
 	
-	private boolean adjacentToPlayer() {
+	public CoordinatePair getBFSMove() {
+		if(State.getState().isDungeonState()) {
+			
+			DungeonState dungeonState = (DungeonState) State.getState();
+			Dungeon dungeon = dungeonState.getDungeon();
+			
+			Array2D<Integer> data = dungeon.getData();
+			
+			Queue<Pair<CoordinatePair, ArrayList<CoordinatePair>>> queue = new LinkedList<Pair<CoordinatePair, ArrayList<CoordinatePair>>>();
+			
+			//Start by adding our current position with an empty list, representing the path to this point
+			queue.add(new Pair<CoordinatePair, ArrayList<CoordinatePair>>(new CoordinatePair(this.coordinateX, this.coordinateY), new ArrayList<CoordinatePair>()));
+			
+			//Keep track of where we have already explored to avoid running into infinite loops, since dungeons are like cyclical graphs.
+			ArrayList<CoordinatePair> known = new ArrayList<CoordinatePair>();
+			
+			//While we still have tiles to explore
+			while(!queue.isEmpty()) {
+				Pair<CoordinatePair, ArrayList<CoordinatePair>> curr = queue.remove();
+				
+				CoordinatePair currPosition = curr.getFirstElement();
+				ArrayList<CoordinatePair> currPath = curr.getSecondElement();
+				
+				//This is the goal, get adjacent to the player so we can attack
+				if(this.adjacentToPlayer(currPosition)) {
+					currPath.add(currPosition);
+					System.out.println("Here is my path!: " + currPath);
+					System.out.println("currpos: " + currPosition);
+					return currPath.get(0);
+				}
+				
+				//We just visited this position, so let's mark it as known if it isn't and add all it's adjacent paths
+				if(!known.contains(currPosition)) {
+					ArrayList<CoordinatePair> neighbors = currPosition.getNeighbors();
+					
+					while(!neighbors.isEmpty()) {
+						int randomIndex = rand.nextInt(neighbors.size());
+						CoordinatePair neighbor = neighbors.get(randomIndex);
+						neighbors.remove(neighbor);
+						
+						//TODO possible trouble spot. Maybe only check if the data is 0 or 2?
+						if(neighbor.getX() < data.getNumColumns() - 2 && neighbor.getY() < data.getNumRows() - 2 &&
+						   neighbor.getX() >= 0 && neighbor.getY() >= 0 &&
+						   dungeon.isWalkable(neighbor.getX(), neighbor.getY()) && !known.contains(neighbor)) {
+							
+							ArrayList<CoordinatePair> newPath = new ArrayList<CoordinatePair>(currPath);
+							newPath.add(currPosition);
+							queue.add(new Pair<CoordinatePair, ArrayList<CoordinatePair>>(neighbor, newPath));
+						}
+					}
+					
+					//Mark position as known
+					known.add(currPosition);
+					System.out.println("Considered " + currPosition);
+				}
+			}
+			
+			//If we exit the while loop we couldn't find a path, so let's just pick a random move
+			
+			System.out.println("Had to default to random");
+			return this.getRandomMove();
+			
+		} else  {
+			throw new IllegalStateException("Trying to move enemies while in an illegal state.");
+		}
+	}
+	
+	private boolean adjacentToPlayer(CoordinatePair position) {
 		Player player = dungeon.getPlayer();
 		
 		//If we are above the Player
-		if(this.coordinateX == player.getNextCoordinateX() && this.coordinateY == player.getNextCoordinateY() - 1) {
+		if(position.getX() == player.getNextCoordinateX() && position.getY() == player.getNextCoordinateY() - 1) {
 			return true;
 			
 		//If we are below the Player
-		} else if(this.coordinateX == player.getNextCoordinateX() && this.coordinateY == player.getNextCoordinateY() + 1) {
+		} else if(position.getX() == player.getNextCoordinateX() && position.getY() == player.getNextCoordinateY() + 1) {
 			return true;
 			
 		//If we are the the left of the Player
-		} else if(this.coordinateX == player.getNextCoordinateX() - 1 && this.coordinateY == player.getNextCoordinateY()) {
+		} else if(position.getX() == player.getNextCoordinateX() - 1 && position.getY() == player.getNextCoordinateY()) {
 			return true;
 			
 		//If we are to the right of the Player
-		} else if(this.coordinateX == player.getNextCoordinateX() + 1 && this.coordinateY == player.getNextCoordinateY()) {
+		} else if(position.getX() == player.getNextCoordinateX() + 1 && position.getY() == player.getNextCoordinateY()) {
 			return true;
 			
 		} 
@@ -197,6 +269,16 @@ public class Enemy extends Creature {
 			this.setFacingLeft();
 			
 		} 
+	}
+	
+	private boolean isVisibleToPlayer() {
+		Player player = dungeon.getPlayer();
+		if(this.coordinateX >= player.getCoordinateX() - game.getRenderDistance() && this.coordinateX <= player.getCoordinateX() + game.getRenderDistance() &&
+		   this.coordinateY >= player.getCoordinateY() - game.getRenderDistance() && this.coordinateY <= player.getCoordinateY() + game.getRenderDistance()) {
+			return true;
+		} 
+		
+		return false;
 	}
 
 }

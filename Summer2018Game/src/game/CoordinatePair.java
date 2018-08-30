@@ -1,4 +1,7 @@
 package game;
+
+import java.util.ArrayList;
+
 public class CoordinatePair {
 	
 	// Represents a Cartesian 2D coordinate pair
@@ -29,6 +32,17 @@ public class CoordinatePair {
 	 */
 	public int getY() {
 		return this.y;
+	}
+	
+	public ArrayList<CoordinatePair> getNeighbors() {
+		ArrayList<CoordinatePair> neighbors = new ArrayList<CoordinatePair>();
+		
+		neighbors.add(new CoordinatePair(this.x, this.y - 1));
+		neighbors.add(new CoordinatePair(this.x, this.y + 1));
+		neighbors.add(new CoordinatePair(this.x - 1, this.y));
+		neighbors.add(new CoordinatePair(this.x + 1, this.y));
+		
+		return neighbors;
 	}
 	
 	@Override

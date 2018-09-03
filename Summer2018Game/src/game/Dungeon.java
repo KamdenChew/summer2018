@@ -174,14 +174,8 @@ public class Dungeon {
 		setSeen();
 		
 		//Step 9: Add Enemies to the Dungeon proportional to difficulty
+		addEnemies(difficulty * 3);
 		
-		//Peaceful, add no enemies
-		if(difficulty == 0) {
-			addEnemies(1);
-		}
-		
-		System.out.println(this.numDungeonRows + " rows");
-		System.out.println(this.numDungeonColumns + " columns");
 	}
 
 	/**

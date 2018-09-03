@@ -42,8 +42,8 @@ public class Enemy extends Creature {
 			
 			//If the player can see us, then make a smart move
 			if(this.isVisibleToPlayer()) {
-				System.out.println("Making a smart move!");
 				nextPosition = getBFSMove();
+				System.out.println("My smart move is: " + nextPosition);
 		
 			//Otherwise make a random move
 			} else {
@@ -63,7 +63,7 @@ public class Enemy extends Creature {
 					setFacingLeft();
 					this.nextCoordinateX = this.coordinateX - 1;
 					this.nextX = this.x - 50;
-				} else {
+				} else if(nextPosition.getX() > this.coordinateX){
 					setFacingRight();
 					this.nextCoordinateX = this.coordinateX + 1;
 					this.nextX = this.x + 50;
@@ -165,58 +165,64 @@ public class Enemy extends Creature {
 			
 			Array2D<Integer> data = dungeon.getData();
 			
-			Queue<Pair<CoordinatePair, ArrayList<CoordinatePair>>> queue = new LinkedList<Pair<CoordinatePair, ArrayList<CoordinatePair>>>();
+			Queue<ArrayList<CoordinatePair>> queue = new LinkedList<ArrayList<CoordinatePair>>();
 			
-			//Start by adding our current position with an empty list, representing the path to this point
-			queue.add(new Pair<CoordinatePair, ArrayList<CoordinatePair>>(new CoordinatePair(this.coordinateX, this.coordinateY), new ArrayList<CoordinatePair>()));
+			
+			//Start by adding the first options for propagating through the dungeon
+			CoordinatePair startPosition = new CoordinatePair(this.coordinateX, this.coordinateY);
+			
+			for(CoordinatePair neighbor: startPosition.getNeighbors()) {
+				if(neighbor.getX() <= data.getNumColumns() && neighbor.getY() <= data.getNumRows() &&
+						   neighbor.getX() >= 0 && neighbor.getY() >= 0 &&
+						   dungeon.isWalkable(neighbor.getX(), neighbor.getY())) {
+					ArrayList<CoordinatePair> path = new ArrayList<CoordinatePair>();
+					path.add(neighbor);
+					queue.add(path);
+				}
+			}
 			
 			//Keep track of where we have already explored to avoid running into infinite loops, since dungeons are like cyclical graphs.
 			ArrayList<CoordinatePair> known = new ArrayList<CoordinatePair>();
+			known.add(startPosition);
 			
 			//While we still have tiles to explore
 			while(!queue.isEmpty()) {
-				Pair<CoordinatePair, ArrayList<CoordinatePair>> curr = queue.remove();
+				ArrayList<CoordinatePair> currPath = queue.remove();
 				
-				CoordinatePair currPosition = curr.getFirstElement();
-				ArrayList<CoordinatePair> currPath = curr.getSecondElement();
+				CoordinatePair currPosition = currPath.get(currPath.size() - 1);
 				
 				//This is the goal, get adjacent to the player so we can attack
 				if(this.adjacentToPlayer(currPosition)) {
-					currPath.add(currPosition);
-					System.out.println("Here is my path!: " + currPath);
-					System.out.println("currpos: " + currPosition);
+					
+					//Return the first step on this path to get adjacent to the player
 					return currPath.get(0);
 				}
 				
 				//We just visited this position, so let's mark it as known if it isn't and add all it's adjacent paths
 				if(!known.contains(currPosition)) {
 					ArrayList<CoordinatePair> neighbors = currPosition.getNeighbors();
-					
 					while(!neighbors.isEmpty()) {
 						int randomIndex = rand.nextInt(neighbors.size());
 						CoordinatePair neighbor = neighbors.get(randomIndex);
 						neighbors.remove(neighbor);
 						
 						//TODO possible trouble spot. Maybe only check if the data is 0 or 2?
-						if(neighbor.getX() < data.getNumColumns() - 2 && neighbor.getY() < data.getNumRows() - 2 &&
+						if(neighbor.getX() <= data.getNumColumns() && neighbor.getY() <= data.getNumRows() &&
 						   neighbor.getX() >= 0 && neighbor.getY() >= 0 &&
 						   dungeon.isWalkable(neighbor.getX(), neighbor.getY()) && !known.contains(neighbor)) {
 							
 							ArrayList<CoordinatePair> newPath = new ArrayList<CoordinatePair>(currPath);
-							newPath.add(currPosition);
-							queue.add(new Pair<CoordinatePair, ArrayList<CoordinatePair>>(neighbor, newPath));
+							newPath.add(neighbor);
+							queue.add(newPath);
 						}
 					}
 					
 					//Mark position as known
 					known.add(currPosition);
-					System.out.println("Considered " + currPosition);
 				}
 			}
 			
 			//If we exit the while loop we couldn't find a path, so let's just pick a random move
-			
-			System.out.println("Had to default to random");
 			return this.getRandomMove();
 			
 		} else  {

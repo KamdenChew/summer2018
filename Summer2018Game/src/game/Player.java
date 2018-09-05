@@ -14,10 +14,10 @@ public class Player extends Creature {
 	private ArrayList<Enemy> enemies;
 	private GameCamera camera;
 	
-	public Player(Game game, int coordinateX, int coordinateY, boolean inDungeon, Dungeon dungeon, String direction) {
+	public Player(Game game, int coordinateX, int coordinateY, int currHealth, boolean inDungeon, Dungeon dungeon, String direction) {
 		super(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
 		this.maxHealth = 50;
-		this.health = 50;
+		this.health = currHealth;
 		this.coordinateX = coordinateX;
 		this.coordinateY = coordinateY;
 		this.nextCoordinateX = coordinateX;
@@ -50,6 +50,11 @@ public class Player extends Creature {
 
 	@Override
 	public void tick() {
+		if(this.health == 0) {
+			State.setState(new RespawnState(game));
+			return;
+		}
+		
 		if(tickDelay == 0) {
 			updateDirectionFacing();
 			Array2D<Integer> data;
@@ -78,16 +83,11 @@ public class Player extends Creature {
 				rightWalkable = (Math.abs(data.get(coordinateX + 1, coordinateY)) != 1);
 			}
 			
-			//TODO animate walking
 			//Check if each of the four direction keys are being pressed, the player can move that direction, and the user isn't also holding shift
 			if(game.getKeyManager().up && upWalkable && !game.getKeyManager().beingPressed(KeyEvent.VK_SHIFT)) {
 				setFacingUp();
 				this.nextY = this.y - 50;
 				this.nextCoordinateY = this.coordinateY - 1;
-				
-//				//TODO remove temp code
-//				this.y = this.nextY;
-//				this.coordinateY = this.nextCoordinateY;
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
@@ -101,10 +101,6 @@ public class Player extends Creature {
 				this.nextY = this.y + 50;
 				this.nextCoordinateY = this.coordinateY + 1;
 				
-//				//TODO remove temp code
-//				this.y = this.nextY;
-//				this.coordinateY = this.nextCoordinateY;
-				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				tookTurn = true;
@@ -117,10 +113,6 @@ public class Player extends Creature {
 				this.nextX = this.x - 50;
 				this.nextCoordinateX = this.coordinateX - 1;
 				
-//				//TODO remove temp code
-//				this.x = this.nextX;
-//				this.coordinateX = this.nextCoordinateX;
-				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
 				tookTurn = true;
@@ -132,10 +124,6 @@ public class Player extends Creature {
 				setFacingRight();
 				this.nextX = this.x + 50;
 				this.nextCoordinateX = this.coordinateX + 1;
-
-//				//TODO remove temp code
-//				this.x = this.nextX;
-//				this.coordinateX = this.nextCoordinateX;
 				
 				tickDelay = NUM_TICKS_MOVEMENT_DELAY;
 				updateSeen();
@@ -228,7 +216,6 @@ public class Player extends Creature {
 			
 			//tileVal == -2 means we are on the dungeon floor exit
 			if(tileVal == -2) {
-				System.out.println("Stepped on exit");
 				if(dungeon.onLastFloor()) {
 					State.setState(new ConfirmTownState(game, State.getState(), State.getState().getDifficulty()));
 				} else {
@@ -237,22 +224,18 @@ public class Player extends Creature {
 				
 			//tileVal = -3 means we are on the peaceful warp
 			} else if(tileVal == -3) {
-				System.out.println("Stepped on peaceful warp");
 				State.setState(new ConfirmDungeonState(game, State.getState(), 0));
 				
 			//tileVal = -4 means we are on the easy warp
 			} else if(tileVal == -4) {
-				System.out.println("Stepped on easy warp");
 				State.setState(new ConfirmDungeonState(game, State.getState(), 1));
 				
 			//tileVal = -5 means we are on the medium warp
 			} else if(tileVal == -5) {
-				System.out.println("Stepped on medium warp");
 				State.setState(new ConfirmDungeonState(game, State.getState(), 2));
 				
 			//tileVal = -6 means we are on the hard warp
 			} else if(tileVal == -6) {
-				System.out.println("Stepped on hard warp");
 				State.setState(new ConfirmDungeonState(game, State.getState(), 3));
 			}
 		}
@@ -294,7 +277,6 @@ public class Player extends Creature {
 		}
 		
 		if(facingEnemy) {
-			//TODO animate attack
 			
 			//Deal damage to target
 			target.decreaseHealth(2);

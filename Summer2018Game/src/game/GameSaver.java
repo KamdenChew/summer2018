@@ -23,7 +23,7 @@ public class GameSaver {
 			//We are in a menu state
 			
 			//First line is the positions of the player
-			output.write(game.getPlayer().getCoordinateX() + " " + game.getPlayer().getCoordinateY() + " " + game.getPlayer().getDirectionFacing() + "\n");
+			output.write(game.getPlayer().getCoordinateX() + " " + game.getPlayer().getCoordinateY() + " " + game.getPlayer().getHealth() + " " + game.getPlayer().getDirectionFacing() + "\n");
 			
 			MenuState menuState = (MenuState) State.getState();
 			

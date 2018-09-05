@@ -30,7 +30,6 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -51,7 +50,6 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -64,7 +62,6 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 		}
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1) {
@@ -85,13 +82,11 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }

@@ -5,9 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.Timer;
 
@@ -23,7 +21,7 @@ public class TownState extends State{
 		if(x < 1 || x >= data.getNumColumns() - 1 || y < 1 || y > data.getNumRows() - 1) {
 			throw new IllegalArgumentException("Player position must fall between x: 1-" + (data.getNumColumns() - 1) + " y: 1-" + (data.getNumRows() - 1));
 		}
-		this.player = new Player(game, x, y, false, null, direction);
+		this.player = new Player(game, x, y, 50, false, null, direction);
 		game.setPlayer(this.player);
 		this.camera = player.getCamera();
 		this.creatures = new ArrayList<Creature>();
@@ -46,8 +44,8 @@ public class TownState extends State{
 	public void tick() {
 		this.player.tick();
 		
-		if(this.game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
-			State.setState(new MenuState(this.game, this));
+		if(game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
+			State.setState(new MenuState(game, this));
 		}
 	}
 

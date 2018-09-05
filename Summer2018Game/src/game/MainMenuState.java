@@ -18,9 +18,9 @@ public class MainMenuState extends State {
 		@Override
 		public void onClick() {
 			if(game.isPrimaryWindow()){
-				System.out.println("Load Game Clicked!");
 				game.setPrimaryWindow(false);
 				LoadWindow loadWindow = new LoadWindow(game);
+				loadWindow.show();
 			}
 		}});
 	

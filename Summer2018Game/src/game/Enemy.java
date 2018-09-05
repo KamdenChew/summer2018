@@ -43,7 +43,6 @@ public class Enemy extends Creature {
 			//If the player can see us, then make a smart move
 			if(this.isVisibleToPlayer()) {
 				nextPosition = getBFSMove();
-				System.out.println("My smart move is: " + nextPosition);
 		
 			//Otherwise make a random move
 			} else {

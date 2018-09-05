@@ -145,7 +145,9 @@ public class SaveWindow {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.pack();
+	}
+	
+	public void show() {
 		frame.setVisible(true);
-		
 	}
 }

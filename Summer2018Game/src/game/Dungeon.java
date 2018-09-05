@@ -87,7 +87,8 @@ public class Dungeon {
 	}
 
 	//TODO add javadoc and also add rooms as paramater to this constructor?
-	public Dungeon(Game game, int x, int y, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, String direction, int currFloor) {
+	//Load constructor
+	public Dungeon(Game game, int x, int y, int currHealth, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, String direction, int currFloor) {
 		this.game = game;
 		this.difficulty = difficulty;
 		if(difficulty == 0) {
@@ -104,7 +105,7 @@ public class Dungeon {
 		this.numDungeonColumns = numDungeonColumns;
 		this.numDungeonRows = numDungeonRows;
 		this.currFloor = currFloor;
-		this.player = new Player(game, x, y, true, this, direction);
+		this.player = new Player(game, x, y, currHealth, true, this, direction);
 		setSeen();
 	}
 	
@@ -627,7 +628,7 @@ public class Dungeon {
 			int randomRow = rand.nextInt(data.getNumRows() - 2) + 1;
 			startCoordinates = new CoordinatePair(randomColumn, randomRow);
 		}
-		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY(), true, this, "Down");
+		this.player = new Player(game, startCoordinates.getX(), startCoordinates.getY(), 50, true, this, "Down");
 		game.setPlayer(this.player);
 	}
 	

@@ -8,8 +8,8 @@ public abstract class State {
 	
 	protected static Game game;
 	
-	public State(Game game) {
-		this.game = game;
+	public State(Game passedGame) {
+		game = passedGame;
 	}
 	
 	public static void setState(State state) {

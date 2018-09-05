@@ -22,6 +22,7 @@ public class ConfirmNextFloorState extends State {
 				System.exit(1);
 			}
 			
+			//TODO do we want to reset health each floor or keep health as is?
 			State.setState(new DungeonState(game, dungeonState.getDifficulty(), dungeonState.getDungeon().getCurrFloor() + 1));
 			
 		}});

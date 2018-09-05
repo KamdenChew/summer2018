@@ -3,7 +3,6 @@ package game;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class MenuState extends State {
 
@@ -17,9 +16,7 @@ public class MenuState extends State {
 				System.out.println("Save Game Clicked!");
 				game.setPrimaryWindow(false);
 				SaveWindow saveWindow = new SaveWindow(game);
-//				System.out.print("Please enter a name for your save file: ");
-//				String fileName = game.getScanner().nextLine();
-//				GameSaver.saveGame(game, fileName);
+				saveWindow.show();
 			}
 		}});
 	
@@ -28,7 +25,6 @@ public class MenuState extends State {
 		@Override
 		public void onClick() {
 			if(game.isPrimaryWindow()) {
-				System.out.println("Close Menu Clicked!");
 				State.setState(prevState);
 			}
 		}});
@@ -42,8 +38,7 @@ public class MenuState extends State {
 	public void tick() {
 		saveGameButton.tick();
 		closeMenuButton.tick();
-		if(this.game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
-			System.out.println("M clicked!");
+		if(game.getKeyManager().keyJustPressed(KeyEvent.VK_M)) {
 			State.setState(prevState);
 		}
 	}

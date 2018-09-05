@@ -23,6 +23,7 @@ public class GameLoader {
 		Scanner lineScanner = new Scanner(positionString);
 		int x = Integer.parseInt(lineScanner.next());
 		int y = Integer.parseInt(lineScanner.next());
+		int currHealth = Integer.parseInt(lineScanner.next());
 		String direction = lineScanner.next();
 		lineScanner.close();
 		
@@ -79,7 +80,7 @@ public class GameLoader {
 			
 		//If difficulty falls in our defined dungeon difficulty bounds, then it's a dungeon state
 		} else if(difficulty >= 0 && difficulty <= 3) {
-			Dungeon dungeon = new Dungeon(game, x, y, difficulty, data, seen, height, width, direction, currFloor);
+			Dungeon dungeon = new Dungeon(game, x, y, currHealth, difficulty, data, seen, height, width, direction, currFloor);
 			ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 			
 			//If we have enemy data to read

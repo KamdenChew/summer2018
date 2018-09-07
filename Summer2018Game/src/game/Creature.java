@@ -13,6 +13,16 @@ public abstract class Creature extends Entity{
 	protected int health;
 	protected boolean facingUp = false, facingDown = true, facingLeft = false, facingRight = false, isAttacking = false;
 
+	
+	/**
+	 * Constructs a new Creature
+	 *
+	 * @param game the Game object for this running instance
+	 * @param x the x pixel coordinate for the upper left corner of the Creature
+	 * @param y the y pixel coordinate for the upper left corner of the Creature
+	 * @param coordinateX the x coordinate for where the Creature resides in the grid world
+	 * @param coordinateY the y coordinate for where the Creature resides in the grid world
+	 */
 	public Creature(Game game, float x, float y, int coordinateX, int coordinateY) {
 		super(game, x, y);
 		this.coordinateX = coordinateX;
@@ -22,6 +32,11 @@ public abstract class Creature extends Entity{
 		this.height = 50;
 	}
 
+	/**
+	 * Decreases this creature's health by damage amount
+	 *
+	 * @param damage int representing the amount of damage this creature will take
+	 */
 	public void decreaseHealth(int damage) {
 		if(this.health - damage < 0) {
 			this.health = 0;
@@ -30,6 +45,9 @@ public abstract class Creature extends Entity{
 		}
 	}
 	
+	/**
+	 * Sets facing booleans to represent that we are now facing upwards
+	 */
 	public void setFacingUp() {
 		this.facingUp = true;
 		this.facingDown = false;
@@ -37,6 +55,9 @@ public abstract class Creature extends Entity{
 		this.facingRight = false;
 	}
 	
+	/**
+	 * Sets facing booleans to represent that we are now facing downwards
+	 */
 	public void setFacingDown() {
 		this.facingUp = false;
 		this.facingDown = true;
@@ -44,6 +65,9 @@ public abstract class Creature extends Entity{
 		this.facingRight = false;
 	}
 	
+	/**
+	 * Sets facing booleans to represent that we are now facing left
+	 */
 	public void setFacingLeft() {
 		this.facingUp = false;
 		this.facingDown = false;
@@ -51,6 +75,9 @@ public abstract class Creature extends Entity{
 		this.facingRight = false;
 	}
 	
+	/**
+	 * Sets facing booleans to represent that we are now facing right
+	 */
 	public void setFacingRight() {
 		this.facingUp = false;
 		this.facingDown = false;
@@ -58,18 +85,9 @@ public abstract class Creature extends Entity{
 		this.facingRight = true;
 	}
 	
-	public void updateDirectionFacing() {
-		if(game.getKeyManager().up) {
-			setFacingUp();
-		} else if(game.getKeyManager().down) {
-			setFacingDown();
-		} else if(game.getKeyManager().left) {
-			setFacingLeft();
-		} else if(game.getKeyManager().right) {
-			setFacingRight();
-		}
-	}
-	
+	/**
+	 * @return a String representing the direction this creature is facing. One of either "Up", "Down", "Left", "Right"
+	 */
 	public String getDirectionFacing() {
 		if(this.facingUp) {
 			return "Up";
@@ -82,6 +100,7 @@ public abstract class Creature extends Entity{
 		}
 	}
 	
+	//Getters and Setters
 	public int getCoordinateX() {
 		return coordinateX;
 	}
@@ -140,9 +159,5 @@ public abstract class Creature extends Entity{
 
 	public void setAttacking(boolean isAttacking) {
 		this.isAttacking = isAttacking;
-	}
-	
-	public void handleNewTile() {
-		
 	}
 }

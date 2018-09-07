@@ -47,6 +47,21 @@ public class Player extends Creature {
 	public void setEnemies(ArrayList<Enemy> enemies) {
 		this.enemies = enemies;
 	}
+	
+	/**
+	 * Updates the direction the player is facing based on player input
+	 */
+	public void updateDirectionFacing() {
+		if(game.getKeyManager().up) {
+			setFacingUp();
+		} else if(game.getKeyManager().down) {
+			setFacingDown();
+		} else if(game.getKeyManager().left) {
+			setFacingLeft();
+		} else if(game.getKeyManager().right) {
+			setFacingRight();
+		}
+	}
 
 	@Override
 	public void tick() {
@@ -198,7 +213,6 @@ public class Player extends Creature {
 		}
 	}
 	
-	@Override
 	public void handleNewTile() {
 		//If we are on the peaceful warp tile
 		if(State.getState().isDungeonState() || State.getState().isTownState()) {

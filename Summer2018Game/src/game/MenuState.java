@@ -13,7 +13,6 @@ public class MenuState extends State {
 		@Override
 		public void onClick() {
 			if(game.isPrimaryWindow()) {
-				System.out.println("Save Game Clicked!");
 				game.setPrimaryWindow(false);
 				SaveWindow saveWindow = new SaveWindow(game);
 				saveWindow.show();

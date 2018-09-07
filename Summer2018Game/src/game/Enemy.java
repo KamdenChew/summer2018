@@ -13,6 +13,19 @@ public class Enemy extends Creature {
 	private Dungeon dungeon;
 	private boolean isAggressive = true;
 	
+	
+	/**
+	 * Constructs a new Enemy
+	 *
+	 * @param game the Game object for this running instance
+	 * @param x the x pixel coordinate for the upper left corner of the Creature
+	 * @param y the y pixel coordinate for the upper left corner of the Creature
+	 * @param coordinateX the x coordinate for where the Creature resides in the grid world
+	 * @param coordinateY the y coordinate for where the Creature resides in the grid world
+	 * @param health the amount of health that this enemy has
+	 * @param dungeon the Dungeon that this enemy belongs to
+	 * @param direction String denoting which way this enemy is facing
+	 */
 	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY, int health, Dungeon dungeon, String direction) {
 		super(game, x, y, coordinateX, coordinateY);
 		this.health = health;
@@ -92,6 +105,12 @@ public class Enemy extends Creature {
 		}
 	}
 	
+	/**
+	 * Renders this Enemy's health bar to the graphics object it is passed
+	 * 
+	 * @param graphics the Graphics object to draw the health bar too
+	 * 
+	 */
 	public void renderHealthBar(Graphics graphics) {
 		
 		//Find scaling value
@@ -112,6 +131,10 @@ public class Enemy extends Creature {
 		graphics.fillRect((int) (this.x - player.getCamera().getXOffset()) + numGreenPixels, (int) (this.y - player.getCamera().getYOffset()), numRedPixels, 4);
 	}
 	
+	/**
+	 * Returns a random CoordinatePair that is adjacent to where the enemy is, 
+	 * is walkable in the Dungeon this enemy belongs to, and won't collide with another Creature
+	 */
 	public CoordinatePair getRandomMove() {
 		if(State.getState().isDungeonState()) {
 			
@@ -156,6 +179,11 @@ public class Enemy extends Creature {
 		}
 	}
 	
+	/**
+	 * Returns a CoordinatePair that is adjacent to where the enemy is, 
+	 * is walkable in the Dungeon this enemy belongs to, and won't collide with another Creature,
+	 * obtained by using a Breadth First Search Algorithm with the goal to get adjacent to the player so it can attack
+	 */
 	public CoordinatePair getBFSMove() {
 		if(State.getState().isDungeonState()) {
 			
@@ -172,8 +200,8 @@ public class Enemy extends Creature {
 			
 			for(CoordinatePair neighbor: startPosition.getNeighbors()) {
 				if(neighbor.getX() <= data.getNumColumns() && neighbor.getY() <= data.getNumRows() &&
-						   neighbor.getX() >= 0 && neighbor.getY() >= 0 &&
-						   dungeon.isWalkable(neighbor.getX(), neighbor.getY())) {
+						   neighbor.getX() >= 0 && neighbor.getY() >= 0 && 
+						   (data.get(neighbor.getX(), neighbor.getY()) == 0 || data.get(neighbor.getX(), neighbor.getY()) == 2)) {
 					ArrayList<CoordinatePair> path = new ArrayList<CoordinatePair>();
 					path.add(neighbor);
 					queue.add(path);
@@ -193,8 +221,15 @@ public class Enemy extends Creature {
 				//This is the goal, get adjacent to the player so we can attack
 				if(this.adjacentToPlayer(currPosition)) {
 					
-					//Return the first step on this path to get adjacent to the player
-					return currPath.get(0);
+					//Return the first step on this path to get adjacent to the player if it is walkable
+					if(dungeon.isWalkable(currPath.get(0).getX(), currPath.get(0).getY())) {
+						return currPath.get(0);
+						
+					//If we can't take that position, then another enemy must be there, so let's just wait
+					} else {
+						return new CoordinatePair(this.coordinateX, this.coordinateY);
+					}
+					
 				}
 				
 				//We just visited this position, so let's mark it as known if it isn't and add all it's adjacent paths
@@ -207,8 +242,8 @@ public class Enemy extends Creature {
 						
 						//TODO possible trouble spot. Maybe only check if the data is 0 or 2?
 						if(neighbor.getX() <= data.getNumColumns() && neighbor.getY() <= data.getNumRows() &&
-						   neighbor.getX() >= 0 && neighbor.getY() >= 0 &&
-						   dungeon.isWalkable(neighbor.getX(), neighbor.getY()) && !known.contains(neighbor)) {
+						   neighbor.getX() >= 0 && neighbor.getY() >= 0 && 
+						   (data.get(neighbor.getX(), neighbor.getY()) == 0 || data.get(neighbor.getX(), neighbor.getY()) == 2)) {
 							
 							ArrayList<CoordinatePair> newPath = new ArrayList<CoordinatePair>(currPath);
 							newPath.add(neighbor);
@@ -229,6 +264,9 @@ public class Enemy extends Creature {
 		}
 	}
 	
+	/**
+	 * Returns true if the Player is directly adjacent to this enemy (either above, below, to the left, or to the right)
+	 */
 	private boolean adjacentToPlayer(CoordinatePair position) {
 		Player player = dungeon.getPlayer();
 		
@@ -254,6 +292,9 @@ public class Enemy extends Creature {
 		return false;
 	}
 	
+	/**
+	 * Sets this Enemy to be facing the player
+	 */
 	private void facePlayer() {
 		Player player = dungeon.getPlayer();
 		
@@ -276,6 +317,9 @@ public class Enemy extends Creature {
 		} 
 	}
 	
+	/**
+	 * Returns true if this Enemy is being rendered such that the player can see them (i.e. within render distance of the player)
+	 */
 	private boolean isVisibleToPlayer() {
 		Player player = dungeon.getPlayer();
 		if(this.coordinateX >= player.getCoordinateX() - game.getRenderDistance() && this.coordinateX <= player.getCoordinateX() + game.getRenderDistance() &&

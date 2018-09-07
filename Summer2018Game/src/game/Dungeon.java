@@ -8,6 +8,12 @@ public class Dungeon {
 	 * Dungeons are represented with Array2D's of ints. -1's represent the
 	 * dungeon outer boundary, 0's represent a walkable room, 1's represent a wall
 	 * (not walkable), 2's represent a walkable path, -2's represent an exit from the dungeon
+	 * 
+	 * Difficulty is handled as follows:
+	 * 0: Peaceful, no enemies, size is 10x10
+	 * 1: easy, 3 enemies per floor, size is (10 - 15)x(10 - 15)
+	 * 2: normal, 6 enemies per floor, size is (15 - 20)x(15 - 20)
+	 * 3: hard, 9 enemies per floor, size is (20 - 25)x(20 - 25)
 	 */
 
 	private Random rand = new Random();
@@ -36,8 +42,9 @@ public class Dungeon {
 	/**
 	 * Constructs a new Dungeon with a specified difficulty level
 	 *
+	 * @param game the Game object for this running instance
 	 * @param difficulty an int representing the difficulty level of the Dungeon
-	 *  @throws IllegalArgumentException if not passes a valid difficulty int
+	 * @throws IllegalArgumentException if not passes a valid difficulty int
 	 * 
 	 */
 	public Dungeon(Game game, int difficulty)  {
@@ -86,9 +93,25 @@ public class Dungeon {
 		generateDungeon(data);
 	}
 
-	//TODO add javadoc and also add rooms as paramater to this constructor?
-	//Load constructor
-	public Dungeon(Game game, int x, int y, int currHealth, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, String direction, int currFloor) {
+	//TODO add rooms as paramater to this constructor?
+	/**
+	 * Loads a Dungeon with specified parameters
+	 *
+	 * @param game the Game object for this running instance
+	 * @param coordinateX int representing the x coordinate position of the player
+	 * @param coordinateY int representing the y coordinate position of the player
+	 * @param currHealth an int representing the current health of the player
+	 * @param difficulty an int representing the difficulty level of the dungeon
+	 * @param data an Array2D of ints containing the saved layout of the dungeon
+	 * @param seen an Array2D of booleans which has the same dimension as data, and contains knowledge of whether or not the player has explored parts of the dungeon
+	 * @param numDungeonRows the number of rows in the data Array2D
+	 * @param numDungeonColumns the number of columns in the data Array2D
+	 * @param direction String that denotes the direction that the player is facing
+	 * @param currFloor int representing what floor number we are on in the dungeon
+	 * @throws IllegalArgumentException if not passes a valid difficulty int
+	 * 
+	 */
+	public Dungeon(Game game, int coordinateX, int coordinateY, int currHealth, int difficulty, Array2D<Integer> data, Array2D<Boolean> seen, int numDungeonRows, int numDungeonColumns, String direction, int currFloor) {
 		this.game = game;
 		this.difficulty = difficulty;
 		if(difficulty == 0) {
@@ -99,13 +122,15 @@ public class Dungeon {
 			this.numFloors = 12;
 		} else if(difficulty == 3) {
 			this.numFloors = 20;
+		} else {
+			throw new IllegalArgumentException("Difficulty should be an integer value from 0-3.");
 		}
 		this.data = data;
 		this.seen = seen;
 		this.numDungeonColumns = numDungeonColumns;
 		this.numDungeonRows = numDungeonRows;
 		this.currFloor = currFloor;
-		this.player = new Player(game, x, y, currHealth, true, this, direction);
+		this.player = new Player(game, coordinateX, coordinateY, currHealth, true, this, direction);
 		setSeen();
 	}
 	
@@ -118,26 +143,6 @@ public class Dungeon {
 				this.seen.set(x, y, false);
 			}
 		}
-	}
-	
-	public int getCurrFloor() {
-		return this.currFloor;
-	}
-
-	public void setCurrFloor(int currFloor) {
-		this.currFloor = currFloor;
-	}
-	
-	public Array2D<Integer> getData() { 
-		return new Array2D<Integer>(this.data);
-	}
-	
-	public Array2D<Boolean> getSeen() {
-		return this.seen;
-	}
-	
-	public int getNumFloors() {
-		return numFloors;
 	}
 
 	/**
@@ -621,6 +626,9 @@ public class Dungeon {
 		}
 	}
 	
+	/**
+	 * Randomly selects a point in the Dungeon that is inside a room to place the player.
+	 */
 	private void setPlayer() {
 		CoordinatePair startCoordinates = null;
 		while(startCoordinates == null || data.get(startCoordinates.getX(), startCoordinates.getY()) != 0) {
@@ -632,6 +640,9 @@ public class Dungeon {
 		game.setPlayer(this.player);
 	}
 	
+	/**
+	 * Sets values in the Array2D of booleans seen to true if they are being rendered for the player to see
+	 */
 	private void setSeen() {
 	//Set the nearby tile values to seen
 		for(int x = player.getCoordinateX() - game.getRenderDistance(); x <= player.getCoordinateX() + game.getRenderDistance(); x++) {
@@ -647,14 +658,11 @@ public class Dungeon {
 			}
 		}
 	}
-	
-	/**
-	 * Returns the Player for this Dungeon
-	 */
-	public Player getPlayer() {
-		return player;
-	}
 
+	/**
+	 * Adds numEnemies number of enemies to the dungeon. Enemies are spawned randomly in the dungeon with at least a Manhattan Distance of 8 from the player
+	 * @param numEnemies int representing the number of enemies to add to this dungeon.
+	 */
 	private void addEnemies(int numEnemies) {
 		
 		ArrayList<CoordinatePair> validLocations = new ArrayList<>();
@@ -667,6 +675,7 @@ public class Dungeon {
 				}
 			}
 		}
+		
 		int randomIndex;
 		
 		while(numEnemies > 0) {
@@ -682,12 +691,11 @@ public class Dungeon {
 		}
 	}
 	
-	public ArrayList<Enemy> getEnemies() {
-		return this.enemies;
-	}
-	
-	public void setEnemies(ArrayList<Enemy> enemies) {
-		this.enemies = enemies;
+	/**
+	 * Returns true if the player is on the last floor of the dungeon, otherwise false.
+	 */
+	public boolean onLastFloor() {
+		return (currFloor == numFloors);
 	}
 	
 	/**
@@ -712,11 +720,41 @@ public class Dungeon {
 		return (data != null && (data.get(x, y) == 0 || data.get(x, y) == 2 || data.get(x, y) == -2) && !occupied);
 	}
 	
+	
+	//Getters and Setters
+	public ArrayList<Enemy> getEnemies() {
+		return this.enemies;
+	}
+	
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+	
 	public int getDifficulty() {
 		return difficulty;
 	}
+	
+	public int getCurrFloor() {
+		return this.currFloor;
+	}
 
-	public boolean onLastFloor() {
-		return (currFloor == numFloors);
+	public void setCurrFloor(int currFloor) {
+		this.currFloor = currFloor;
+	}
+	
+	public Array2D<Integer> getData() { 
+		return new Array2D<Integer>(this.data);
+	}
+	
+	public Array2D<Boolean> getSeen() {
+		return this.seen;
+	}
+	
+	public int getNumFloors() {
+		return numFloors;
+	}
+	
+	public Player getPlayer() {
+		return player;
 	}
 }

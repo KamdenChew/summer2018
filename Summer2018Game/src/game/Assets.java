@@ -6,14 +6,18 @@ import java.awt.image.BufferedImage;
 public class Assets {
 	
 	//For future use if using spritesheet
-//	private static final int WIDTH = 50;
-//	private static final int HEIGHT = 50;
+	//	private static final int WIDTH = 50;
+	//	private static final int HEIGHT = 50;
 	
+	//Static Images to access in rendering methods of other objects
 	public static BufferedImage dirt, stone, wall, empty, exit,  newGame, newGameHover, loadGame, loadGameHover, saveGame, saveGameHover, 
 								closeMenu, closeMenuHover, peacefulWarp, easyWarp, mediumWarp, hardWarp, continueToDungeon, continueToDungeonHover,
 								exitToTown, exitToTownHover, enemy, player, playerUp, playerDown, playerLeft, playerRight, continueToNextFloor,
 								continueToNextFloorHover, enemyUp, enemyDown, enemyLeft, enemyRight, respawn, respawnHover;
 	
+	/**
+	 * Initializes static image assets for rendering
+	 */
 	public static void init() {
 		dirt = ImageLoader.loadImage("/textures/Dirt.png");
 		stone = ImageLoader.loadImage("/textures/Stone.png");

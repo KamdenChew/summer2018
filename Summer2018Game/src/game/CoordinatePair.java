@@ -34,6 +34,10 @@ public class CoordinatePair {
 		return this.y;
 	}
 	
+	
+	/**
+	 * @return an ArrayList of CoordinatePairs representing the 4 adjacent integer Cartesian coordinates to this CoordinatePair
+	 */
 	public ArrayList<CoordinatePair> getNeighbors() {
 		ArrayList<CoordinatePair> neighbors = new ArrayList<CoordinatePair>();
 		

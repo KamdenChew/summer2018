@@ -12,7 +12,6 @@ public class ConfirmNextFloorState extends State {
 
 		@Override
 		public void onClick() {
-			System.out.println("Continue to Next Floor Clicked!");
 			
 			//Being in this State should imply that the prevState is a DungeonState.
 			DungeonState dungeonState = null;
@@ -27,16 +26,20 @@ public class ConfirmNextFloorState extends State {
 			
 		}});
 	
-	
-	//TODO add assets for "Stay in Dungeon" 
 	private UIImageButton closeMenuButton = new UIImageButton(game.getWidth() / 2 - 50, game.getHeight() / 2 + 25, 100, 50, Assets.closeMenu, Assets.closeMenuHover, new ClickListener(){
 
 		@Override
 		public void onClick() {
-			System.out.println("Close Menu Clicked!");
 			State.setState(prevState);
 		}});
 	
+	/**
+	 * Constructs a new ConfirmNextFloorState
+	 *
+	 * @param game the Game object for this running instance
+	 * @param prevState the previous state we were in, saved in case the user decides to close the menu, in which case we return the player to where they were
+	 * @param difficulty the dungeon difficulty for the dungeon type that we're in
+	 */
 	public ConfirmNextFloorState(Game game, State prevState, int difficulty) {
 		super(game);
 		this.prevState = prevState;

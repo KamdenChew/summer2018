@@ -89,8 +89,8 @@ public class TownState extends State{
 			        		Creature creature = creatures.get(i);
 			        		
 			        		if(creature.isAttacking()) {
-//				    				drawDungeonAndPlayer(graphics);
 			    				creature.setAttacking(false);
+			    				
 			    			//This creature is moving up
 			    			} else if(creature.getNextCoordinateY() < creature.getCoordinateY()) {
 			    				creature.setY(creature.getY() - Creature.STEP_SIZE);

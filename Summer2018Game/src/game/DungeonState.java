@@ -18,6 +18,14 @@ public class DungeonState extends State{
 	private GameCamera camera;
 	private ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
+	/**
+	 * Constructs a new DungeonState
+	 *
+	 * @param game the Game object for this running instance
+	 * @param difficulty an int representing the difficulty level of the Dungeon
+	 * @param currFloor int representing the floor number that we are currently on
+	 * 
+	 */
 	public DungeonState(Game game, int difficulty, int currFloor) {
 		super(game);
 		this.difficulty = difficulty;
@@ -32,6 +40,13 @@ public class DungeonState extends State{
 		}
 	}
 	
+	/**
+	 * Constructs a new DungeonState
+	 *
+	 * @param game the Game object for this running instance
+	 * @param dungeon the Dungeon that the player is in
+	 * 
+	 */
 	public DungeonState(Game game, Dungeon dungeon) {
 		super(game);
 		this.difficulty = dungeon.getDifficulty();
@@ -46,17 +61,6 @@ public class DungeonState extends State{
 		}
 	}
 	
-	public Dungeon getDungeon() {
-		return this.dungeon;
-	}
-	
-	public int getDifficulty() {
-		return difficulty;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
 	@Override
 	public void tick() {
 		this.player.tick();
@@ -177,13 +181,18 @@ public class DungeonState extends State{
 		}
 	}
 	
+	/**
+	 * Renders the dungeon grid to the graphics object it is passed
+	 * 
+	 * @param graphics the Graphics object to draw the Dungeon too
+	 * 
+	 */
 	private void drawDungeon(Graphics graphics) {
 		for(int x = player.getNextCoordinateX() - game.getRenderDistance() - 1; x < player.getNextCoordinateX() + game.getRenderDistance() + 2; x++) {
 			for(int y = player.getNextCoordinateY() - game.getRenderDistance() - 1; y < player.getNextCoordinateY() + game.getRenderDistance() + 2; y++) { 
 				
 				//If it's off the board just visualize it as a wall
 				if(x < 0 || x >= dungeon.getData().getNumColumns() || y < 0 || y >= dungeon.getData().getNumRows()) {
-//					System.out.println("graphics?: " + graphics);
 					graphics.drawImage(Assets.wall, (int) (x * 50 - camera.getXOffset()), (int) (y * 50 - camera.getYOffset()), null);
 				} else {
 					int val = dungeon.getData().get(x, y);
@@ -201,10 +210,22 @@ public class DungeonState extends State{
 		}
 	}
 	
+	/**
+	 * Renders the player to the graphics object it is passed
+	 * 
+	 * @param graphics the Graphics object to draw the Player too
+	 * 
+	 */
 	private void drawPlayer(Graphics graphics) {
 		player.render(graphics);
 	}
 	
+	/**
+	 * Renders the enemies of the dungeon to the graphics object it is passed
+	 * 
+	 * @param graphics the Graphics object to draw the enemies too
+	 * 
+	 */
 	private void drawEnemies(Graphics graphics) {
 		for(Enemy enemy: enemies) {
 			
@@ -218,6 +239,7 @@ public class DungeonState extends State{
 		}
 	}
 	
+	//Getters
 	public ArrayList<Creature> getCreatures() {
 		return creatures;
 	}
@@ -229,5 +251,17 @@ public class DungeonState extends State{
 	@Override
 	public ArrayList<UIObject> getUIOBjects() {
 		return null;
+	}
+	
+	public Dungeon getDungeon() {
+		return this.dungeon;
+	}
+	
+	public int getDifficulty() {
+		return difficulty;
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 }

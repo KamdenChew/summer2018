@@ -9,7 +9,7 @@ public class Assets {
 	//	private static final int WIDTH = 50;
 	//	private static final int HEIGHT = 50;
 	
-	//Static Images to access in rendering methods of other objects
+	//Static Images to access in rendering methods of other classes
 	public static BufferedImage dirt, stone, wall, empty, exit,  newGame, newGameHover, loadGame, loadGameHover, saveGame, saveGameHover, 
 								closeMenu, closeMenuHover, peacefulWarp, easyWarp, mediumWarp, hardWarp, continueToDungeon, continueToDungeonHover,
 								exitToTown, exitToTownHover, enemy, player, playerUp, playerDown, playerLeft, playerRight, continueToNextFloor,

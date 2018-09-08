@@ -1,7 +1,6 @@
 package game;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.util.Scanner;
 
 public class Game implements Runnable {
 
@@ -11,14 +10,13 @@ public class Game implements Runnable {
 	private final int RENDER_DISTANCE = 6;
 	private final int WIDTH = 50 * (RENDER_DISTANCE * 2 + 1);
 	private final int HEIGHT = 50 * (RENDER_DISTANCE * 2 + 1);
-
-	private static final String TITLE = "Dungeon Explorer";
-	private boolean running;
-	private boolean primaryWindow;
-	private Display display;
-	
 	private BufferStrategy bs;
 	private Graphics graphics;
+	private static final String TITLE = "Dungeon Explorer";
+	private Display display;
+	
+	private boolean running;
+	private boolean primaryWindow;
 	
 	private Thread thread;
 	private Player player;
@@ -26,7 +24,6 @@ public class Game implements Runnable {
 	//User Inputs
 	private KeyManager keyManager;
 	private MouseManager mouseManager;
-	private Scanner scanner = new Scanner(System.in);
 	
 	//Game Statistics
 	private String saveName;
@@ -36,7 +33,9 @@ public class Game implements Runnable {
 	private int numMediumCompleted;
 	private int numHardCompleted;
 	
-	
+	/**
+	 * Constructs a new Game
+	 */
 	public Game() {
 		this.primaryWindow = true;
 		this.score = 0;
@@ -50,86 +49,17 @@ public class Game implements Runnable {
 		mouseManager = new MouseManager();
 	}
 	
-	public boolean isInDungeon() {
-		return State.getState().isDungeonState();
-	}
-
-	public String getSaveName() {
-		return saveName;
-	}
-
-	public void setSaveName(String saveName) {
-		this.saveName = saveName;
-	}
-
-	public boolean isPrimaryWindow() {
-		return primaryWindow;
-	}
-
-	public void setPrimaryWindow(boolean primaryWindow) {
-		this.primaryWindow = primaryWindow;
-	}
-
-	public int getWidth() {
-		return WIDTH;
-	}
-
-	public int getHeight() {
-		return HEIGHT;
-	}
-	
-	public Player getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-
-	public int getScore() {
-		return score;
-	}
-
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	public int getNumPeacefulCompleted() {
-		return numPeacefulCompleted;
-	}
-
-	public void setNumPeacefulCompleted(int numPeacefulCompleted) {
-		this.numPeacefulCompleted = numPeacefulCompleted;
-	}
-
-	public int getNumEasyCompleted() {
-		return numEasyCompleted;
-	}
-
-	public void setNumEasyCompleted(int numEasyCompleted) {
-		this.numEasyCompleted = numEasyCompleted;
-	}
-
-	public int getNumMediumCompleted() {
-		return numMediumCompleted;
-	}
-
-	public void setNumMediumCompleted(int numMediumCompleted) {
-		this.numMediumCompleted = numMediumCompleted;
-	}
-
-	public int getNumHardCompleted() {
-		return numHardCompleted;
-	}
-
-	public void setNumHardCompleted(int numHardCompleted) {
-		this.numHardCompleted = numHardCompleted;
-	}
-	
+	/**
+	 * Forces the Buffer Strategy to update what is rendered to the screen
+	 */
 	public void forceBs() {
 		bs.show();
 	}
 
+	/**
+	 * Initializes this game's display, all the assets for rendering, 
+	 * fonts for rendering, and starts the game off in the Main Menu
+	 */
 	private void init() {
 		//Prepare Display
 		this.display = new Display(TITLE, WIDTH, HEIGHT);
@@ -148,26 +78,9 @@ public class Game implements Runnable {
 		State.setState(new MainMenuState(this));
 	}
 	
-	public Scanner getScanner() {
-		return scanner;
-	}
-
-	public Display getDisplay() {
-		return display;
-	}
-	
-	public int getRenderDistance() {
-		return RENDER_DISTANCE;
-	}
-
-	public KeyManager getKeyManager() {
-		return this.keyManager;
-	}
-	
-	public MouseManager getMouseManager() {
-		return this.mouseManager;
-	}
-	
+	/**
+	 * Processes and updates this Game's variables
+	 */
 	private void tick() {
 		if(isPrimaryWindow()) {
 			keyManager.tick();
@@ -177,6 +90,11 @@ public class Game implements Runnable {
 		}
 	}
 	
+	/**
+	 * Renders this game to the specified Graphics object
+	 * 
+	 * @param graphics the Graphics object to render this game too
+	 */
 	private void render() {
 		if(isPrimaryWindow()) {
 			this.bs = this.display.getCanvas().getBufferStrategy();
@@ -253,6 +171,9 @@ public class Game implements Runnable {
 		stop();
 	}
 	
+	/**
+	 * Starts the game running on our thread if not already running
+	 */
 	public synchronized void start() {
 		if(!running) {
 			running = true;
@@ -263,6 +184,9 @@ public class Game implements Runnable {
 		}
 	}
 	
+	/**
+	 * Stops the game running on our thread if already running
+	 */
 	public synchronized void stop() {
 		if(running) {
 			running = false;
@@ -272,6 +196,95 @@ public class Game implements Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	//Getters and Setters
+	public String getSaveName() {
+		return saveName;
+	}
+
+	public void setSaveName(String saveName) {
+		this.saveName = saveName;
+	}
+
+	public boolean isPrimaryWindow() {
+		return primaryWindow;
+	}
+
+	public void setPrimaryWindow(boolean primaryWindow) {
+		this.primaryWindow = primaryWindow;
+	}
+
+	public int getWidth() {
+		return WIDTH;
+	}
+
+	public int getHeight() {
+		return HEIGHT;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getNumPeacefulCompleted() {
+		return numPeacefulCompleted;
+	}
+
+	public void setNumPeacefulCompleted(int numPeacefulCompleted) {
+		this.numPeacefulCompleted = numPeacefulCompleted;
+	}
+
+	public int getNumEasyCompleted() {
+		return numEasyCompleted;
+	}
+
+	public void setNumEasyCompleted(int numEasyCompleted) {
+		this.numEasyCompleted = numEasyCompleted;
+	}
+
+	public int getNumMediumCompleted() {
+		return numMediumCompleted;
+	}
+
+	public void setNumMediumCompleted(int numMediumCompleted) {
+		this.numMediumCompleted = numMediumCompleted;
+	}
+
+	public int getNumHardCompleted() {
+		return numHardCompleted;
+	}
+
+	public void setNumHardCompleted(int numHardCompleted) {
+		this.numHardCompleted = numHardCompleted;
+	}
+	
+	public Display getDisplay() {
+		return display;
+	}
+	
+	public int getRenderDistance() {
+		return RENDER_DISTANCE;
+	}
+
+	public KeyManager getKeyManager() {
+		return this.keyManager;
+	}
+	
+	public MouseManager getMouseManager() {
+		return this.mouseManager;
 	}
 
 }

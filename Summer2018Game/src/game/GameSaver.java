@@ -7,6 +7,13 @@ import java.util.ArrayList;
 
 public class GameSaver {
 
+	/**
+	 * Saves a game instance to a specified save file
+	 *
+	 *@throws IllegalStateException if called when the game is not in a menu state
+	 * @param game the Game object for this running instance
+	 * @param fileName String name for the file to be saved too
+	 */
 	public static void saveGame(Game game, String fileName) {
 		String filePath = "./res/saves/" + fileName;
 		File file = new File(filePath);

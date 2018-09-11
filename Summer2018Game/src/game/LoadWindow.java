@@ -26,7 +26,11 @@ public class LoadWindow {
 	private JComboBox box;
 	private String selected = "";
 	
-	
+	/**
+	 * Constructs a new LoadWindow
+	 * 
+	 * @param game the Game object for this running instance
+	 */
 	public LoadWindow(final Game game) {
 		
 		//Initialize load button
@@ -116,6 +120,9 @@ public class LoadWindow {
 		frame.pack();
 	}
 	
+	/**
+	 * Makes this LoadWindow visible
+	 */
 	public void show() {
 		frame.setVisible(true);
 	}

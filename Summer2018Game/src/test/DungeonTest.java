@@ -15,6 +15,10 @@ public class DungeonTest {
 	
 	private Random rand = new Random();
 
+	/**
+	 * Constructs 25,000 random Dungeons of each difficulty, peaceful, easy, normal, and hard 
+	 * (100,000 total) and checks if each Dungeon is valid or not (see isValidDungeon())
+	 */
 	@Test
 	public void testDungeonConstruction()  {
 		boolean passed = true;
@@ -56,9 +60,10 @@ public class DungeonTest {
 		assert(passed);
 	}
 	
+	/**
+	 * Returns true iff all paths and rooms are connected in the Dungeon (i.e. no parts where the Player could not explore)
+	 */
 	public boolean isValidDungeon(Dungeon dungeon) {
-//		System.out.println("Checking: ");
-//		System.out.println(dungeon.getData());
 		Array2D<Integer> data = dungeon.getData();
 		HashSet<CoordinatePair> allWalkableTiles = new HashSet<CoordinatePair>();
 		
@@ -85,8 +90,10 @@ public class DungeonTest {
 		ArrayList<CoordinatePair> boundary = new ArrayList<CoordinatePair>();
 		
 		boundary.add(tile);
+		
 		//Keep "walking" until there are no tiles to walk from
 		while(boundary.size() > 0) {
+			
 			//Pick the first tile on the boundary
 			CoordinatePair boundaryTile = boundary.get(0);
 				

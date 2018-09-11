@@ -16,6 +16,14 @@ public class TownState extends State{
 	private GameCamera camera;
 	private ArrayList<Creature> creatures;
 	
+	/**
+	 * Constructs a new TownState
+	 *
+	 * @param game the Game object for this running instance
+	 * @param x the tile x coordinate position for the player to appear on
+	 * @param y the tile y coordinate position for the player to appear on
+	 * @param direction String representing what direction the Player will be facing
+	 */
 	public TownState(Game game, int x, int y, String direction) {
 		super(game);
 		if(x < 1 || x >= data.getNumColumns() - 1 || y < 1 || y > data.getNumRows() - 1) {
@@ -26,18 +34,6 @@ public class TownState extends State{
 		this.camera = player.getCamera();
 		this.creatures = new ArrayList<Creature>();
 		this.creatures.add(player);
-	}
-	
-	public GameCamera getCamera() {
-		return camera;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public Array2D<Integer> getData() {
-		return this.data;
 	}
 
 	@Override
@@ -128,6 +124,12 @@ public class TownState extends State{
 		}
 	}
 	
+	/**
+	 * Renders the town grid to the graphics object it is passed
+	 * 
+	 * @param graphics the Graphics object to draw the Town too
+	 * 
+	 */
 	private void drawTown(Graphics graphics) {
 		for(int x = player.getNextCoordinateX() - game.getRenderDistance() - 1; x < player.getNextCoordinateX() + game.getRenderDistance() + 2; x++) {
 			for(int y = player.getNextCoordinateY() - game.getRenderDistance() - 1; y < player.getNextCoordinateY() + game.getRenderDistance() + 2; y++) { 
@@ -157,6 +159,11 @@ public class TownState extends State{
 		}
 	}
 	
+	/**
+	 * Renders the player to the graphics object it is passed
+	 * 
+	 * @param graphics the Graphics object to draw the Player too
+	 */
 	private void drawPlayer(Graphics graphics) {
 		player.render(graphics);
 	}
@@ -166,6 +173,9 @@ public class TownState extends State{
 		return null;
 	}
 
+	/**
+	 * Returns a copy of the Array2D<Boolean> for which tiles have been seen by the Player
+	 */
 	public Array2D<Boolean> getSeen() {
 		Array2D<Boolean> seen = new Array2D<Boolean>(this.data.getNumColumns(), this.data.getNumRows());
 		//Everything is considered visible in town
@@ -181,6 +191,19 @@ public class TownState extends State{
 	@Override
 	public int getDifficulty() {
 		return -1;
+	}
+	
+	//Getters
+	public GameCamera getCamera() {
+		return camera;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public Array2D<Integer> getData() {
+		return this.data;
 	}
 	
 //Code for rendering a map

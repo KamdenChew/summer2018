@@ -16,12 +16,18 @@ public class KeyManager implements KeyListener{
 	public boolean right;
 	public boolean space;
 	
+	/**
+	 * Constructs a new KeyManager
+	 */
 	public KeyManager() {
 		keys = new boolean [MAX_KEY_CODE];
 		justPressed = new boolean [MAX_KEY_CODE];
 		cantPress = new boolean [MAX_KEY_CODE];
 	}
 	
+	/**
+	 * Processes and updates this KeyManager's variables
+	 */
 	public void tick() {
 		for(int i = 0; i < keys.length; i++) {
 			if(cantPress[i] && !keys[i]) {
@@ -42,6 +48,11 @@ public class KeyManager implements KeyListener{
 		this.space = keys[KeyEvent.VK_SPACE];
 	}
 	
+	/**
+	 * Returns whether or not the given key was just pressed
+	 * 
+	 * @param keyCode the keyCode to check to see if the corresponding key was just pressed
+	 */
 	public boolean keyJustPressed(int keyCode){
 		if(keyCode < 0 || keyCode >= keys.length) {
 			return false;
@@ -50,6 +61,11 @@ public class KeyManager implements KeyListener{
 		}
 	}
 	
+	/**
+	 * Returns whether or not the given key is being pressed
+	 * 
+	 * @param keyCode the keyCode to check to see if the corresponding key is being pressed
+	 */
 	public boolean beingPressed(int keyCode) {
 		if(keyCode < 0 || keyCode >= keys.length) {
 			return false;

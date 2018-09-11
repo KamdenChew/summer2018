@@ -14,6 +14,19 @@ public class Player extends Creature {
 	private ArrayList<Enemy> enemies;
 	private GameCamera camera;
 	
+	/**
+	 * Constructs a new Creature
+	 *
+	 * @param game the Game object for this running instance
+	 * @param x the x pixel coordinate for the upper left corner of the Player
+	 * @param y the y pixel coordinate for the upper left corner of the Player
+	 * @param coordinateX the x coordinate for where the Player resides in the grid world
+	 * @param coordinateY the y coordinate for where the Player resides in the grid world
+	 * @param currHealth the amount of health that this Player has
+	 * @param inDungeon whether or not the Player is inside a DungeonState
+	 * @param dungeon the Dungeon this Player is in
+	 * @param direction String denoting which way this Player is facing
+	 */
 	public Player(Game game, int coordinateX, int coordinateY, int currHealth, boolean inDungeon, Dungeon dungeon, String direction) {
 		super(game, coordinateX * 50, coordinateY * 50, coordinateX, coordinateY);
 		this.maxHealth = 50;
@@ -38,14 +51,6 @@ public class Player extends Creature {
 		}
 		this.camera = new GameCamera(game, 0, 0);
 		this.camera.centerOnEntity(this);
-	}
-
-	public GameCamera getCamera() {
-		return camera;
-	}
-
-	public void setEnemies(ArrayList<Enemy> enemies) {
-		this.enemies = enemies;
 	}
 	
 	/**
@@ -169,15 +174,10 @@ public class Player extends Creature {
 			townState.getCamera().centerOnEntity(this);
 		}
 	}
-	
-	public boolean hasTakenTurn() {
-		return tookTurn;
-	}
 
-	public void setTookTurn(boolean tookTurn) {
-		this.tookTurn = tookTurn;
-	}
-
+	/**
+	 * Updates the Array2D of booleans that mark whether or not the Player has seen parts of the Dungeon
+	 */
 	private void updateSeen() {
 		if(State.getState().isDungeonState() || State.getState().isTownState()) {
 			for(int x = coordinateX - RENDER_DISTANCE; x <= coordinateX + RENDER_DISTANCE; x++) {
@@ -213,6 +213,9 @@ public class Player extends Creature {
 		}
 	}
 	
+	/**
+	 * Checks to see if the Player is standing on a tile that triggers an event
+	 */
 	public void handleNewTile() {
 		//If we are on the peaceful warp tile
 		if(State.getState().isDungeonState() || State.getState().isTownState()) {
@@ -255,6 +258,9 @@ public class Player extends Creature {
 		}
 	}
 	
+	/**
+	 * Handles distributing damage to enemies when this Player performs an attack action
+	 */
 	public void handleAttack() {
 		boolean facingEnemy = false;
 		Enemy target = null;
@@ -305,6 +311,9 @@ public class Player extends Creature {
 		}
 	}
 	
+	/**
+	 * Calls the tick methods of all the enemies in the Dungeon that this Player is in
+	 */
 	private void tickEnemies() {
 		for(Enemy enemy: enemies) {
 			enemy.tick();
@@ -327,6 +336,12 @@ public class Player extends Creature {
 		renderHealthBar(graphics);
 	}
 	
+	/**
+	 * Renders this Player's health bar to the graphics object it is passed
+	 * 
+	 * @param graphics the Graphics object to draw the health bar too
+	 * 
+	 */
 	public void renderHealthBar(Graphics graphics) {
 		if(inDungeon) {
 			
@@ -348,4 +363,20 @@ public class Player extends Creature {
 		}
 	}
 	
+	//Getters and Setters
+	public GameCamera getCamera() {
+		return camera;
+	}
+
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+	
+	public boolean hasTakenTurn() {
+		return tookTurn;
+	}
+
+	public void setTookTurn(boolean tookTurn) {
+		this.tookTurn = tookTurn;
+	}
 }

@@ -12,22 +12,6 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 	public int mouseX;
 	public int mouseY;
 	
-	private boolean isLeftPressed() {
-		return leftPressed;
-	}
-	
-	private boolean isRightPressed() {
-		return rightPressed;
-	}
-	
-	private int getMouseX() {
-		return mouseX;
-	}
-	
-	private int getMouseY() {
-		return mouseY;
-	}
-	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		
@@ -88,5 +72,22 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 	@Override
 	public void mouseExited(MouseEvent e) {
 		
+	}
+	
+	//Getters and Setters
+	private boolean isLeftPressed() {
+		return leftPressed;
+	}
+	
+	private boolean isRightPressed() {
+		return rightPressed;
+	}
+	
+	private int getMouseX() {
+		return mouseX;
+	}
+	
+	private int getMouseY() {
+		return mouseY;
 	}
 }

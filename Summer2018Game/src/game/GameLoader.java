@@ -7,6 +7,13 @@ import java.util.Scanner;
 
 public class GameLoader {
 
+	/**
+	 * Loads a game instance from a specified save file. If the file can't be found, 
+	 * then System.exit(1) is called
+	 *
+	 * @param game the Game object for this running instance
+	 * @param fileName String name for the save file to be loaded
+	 */
 	public static void loadGame(Game game, String fileName) {
 		String filePath = "./res/saves/" + fileName;
 		File file = new File(filePath);

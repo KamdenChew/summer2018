@@ -22,13 +22,13 @@ public class Enemy extends Creature {
 	 * @param y the y pixel coordinate for the upper left corner of the Creature
 	 * @param coordinateX the x coordinate for where the Creature resides in the grid world
 	 * @param coordinateY the y coordinate for where the Creature resides in the grid world
-	 * @param health the amount of health that this enemy has
+	 * @param currHealth the amount of health that this enemy has
 	 * @param dungeon the Dungeon that this enemy belongs to
 	 * @param direction String denoting which way this enemy is facing
 	 */
-	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY, int health, Dungeon dungeon, String direction) {
+	public Enemy(Game game, float x, float y, int coordinateX, int coordinateY, int currHealth, Dungeon dungeon, String direction) {
 		super(game, x, y, coordinateX, coordinateY);
-		this.health = health;
+		this.health = currHealth;
 		if(direction.equals("Up")) {
 			setFacingUp();
 		} else if(direction.equals("Down")) {

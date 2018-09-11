@@ -24,6 +24,11 @@ public class MainMenuState extends State {
 			}
 		}});
 	
+	/**
+	 * Constructs a new MainMenuState
+	 *
+	 * @param game the Game object for this running instance
+	 */
 	public MainMenuState(Game game) {
 		super(game);
 	}

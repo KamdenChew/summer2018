@@ -24,7 +24,6 @@ public class DungeonState extends State{
 	 * @param game the Game object for this running instance
 	 * @param difficulty an int representing the difficulty level of the Dungeon
 	 * @param currFloor int representing the floor number that we are currently on
-	 * 
 	 */
 	public DungeonState(Game game, int difficulty, int currFloor) {
 		super(game);
@@ -45,7 +44,6 @@ public class DungeonState extends State{
 	 *
 	 * @param game the Game object for this running instance
 	 * @param dungeon the Dungeon that the player is in
-	 * 
 	 */
 	public DungeonState(Game game, Dungeon dungeon) {
 		super(game);
@@ -185,7 +183,6 @@ public class DungeonState extends State{
 	 * Renders the dungeon grid to the graphics object it is passed
 	 * 
 	 * @param graphics the Graphics object to draw the Dungeon too
-	 * 
 	 */
 	private void drawDungeon(Graphics graphics) {
 		for(int x = player.getNextCoordinateX() - game.getRenderDistance() - 1; x < player.getNextCoordinateX() + game.getRenderDistance() + 2; x++) {
@@ -214,7 +211,6 @@ public class DungeonState extends State{
 	 * Renders the player to the graphics object it is passed
 	 * 
 	 * @param graphics the Graphics object to draw the Player too
-	 * 
 	 */
 	private void drawPlayer(Graphics graphics) {
 		player.render(graphics);
@@ -224,7 +220,6 @@ public class DungeonState extends State{
 	 * Renders the enemies of the dungeon to the graphics object it is passed
 	 * 
 	 * @param graphics the Graphics object to draw the enemies too
-	 * 
 	 */
 	private void drawEnemies(Graphics graphics) {
 		for(Enemy enemy: enemies) {

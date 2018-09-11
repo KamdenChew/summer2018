@@ -14,6 +14,11 @@ public class RespawnState extends State {
 			}
 		}});
 	
+	/**
+	 * Constructs a new RespawnState
+	 *
+	 * @param game the Game object for this running instance
+	 */
 	public RespawnState(Game game) {
 		super(game);
 		game.setScore(game.getScore() - 100);

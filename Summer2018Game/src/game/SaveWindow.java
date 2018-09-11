@@ -27,6 +27,11 @@ public class SaveWindow {
 	private JTextField textField;
 	private ArrayList<String> fileNames;
 	
+	/**
+	 * Constructs a new SaveWindow
+	 * 
+	 * @param game the Game object for this running instance
+	 */
 	public SaveWindow(final Game game) {
 		
 		//Store all known saves
@@ -147,6 +152,9 @@ public class SaveWindow {
 		frame.pack();
 	}
 	
+	/**
+	 * Makes this SaveWindow visible
+	 */
 	public void show() {
 		frame.setVisible(true);
 	}

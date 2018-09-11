@@ -28,6 +28,12 @@ public class MenuState extends State {
 			}
 		}});
 	
+	/**
+	 * Constructs a new MenuState
+	 *
+	 * @param game the Game object for this running instance
+	 * @param prevState the previous state we were in, saved in case the user decides to close the menu, in which case we return the player to where they were
+	 */
 	public MenuState(Game game, State prevState) {
 		super(game);
 		this.prevState = prevState;
